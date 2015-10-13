@@ -1,0 +1,86 @@
+{
+    "data" : {
+        "babies" : [
+                    {
+                    "id" : 7490,
+                    "created_on" : "2015-09-29T22:34:13.886Z",
+                    "name" : "Baby 1",
+                    "timers" : [
+                                {
+                                "push" : false,
+                                "updated_on" : "2015-09-29T22:34:13.886Z",
+                                "enabled" : true,
+                                "activityID" : 7487,
+                                "id" : 7491,
+                                "resetDate" : "2015-09-29T22:34:13.886Z",
+                                "created_on" : "2015-09-29T22:34:13.886Z"
+                                },
+                                {
+                                "push" : false,
+                                "updated_on" : "2015-09-29T22:34:13.886Z",
+                                "enabled" : true,
+                                "activityID" : 7488,
+                                "id" : 7492,
+                                "resetDate" : "2015-09-29T22:34:13.886Z",
+                                "created_on" : "2015-09-29T22:34:13.886Z"
+                                },
+                                {
+                                "push" : false,
+                                "updated_on" : "2015-09-29T22:34:13.886Z",
+                                "enabled" : true,
+                                "activityID" : 7489,
+                                "id" : 7493,
+                                "resetDate" : "2015-09-29T22:34:13.886Z",
+                                "created_on" : "2015-09-29T22:34:13.886Z"
+                                }
+                                ],
+                    "updated_on" : "2015-09-29T22:34:13.886Z"
+                    }
+                    ],
+        "activities" : [
+                        {
+                        "critical" : 10800,
+                        "updated_on" : "2015-09-29T22:34:13.886Z",
+                        "warn" : 7200,
+                        "id" : 7487,
+                        "created_on" : "2015-09-29T22:34:13.886Z",
+                        "name" : "Diaper",
+                        "icon" : "Diaper"
+                        },
+                        {
+                        "critical" : 10800,
+                        "updated_on" : "2015-09-29T22:34:13.886Z",
+                        "warn" : 7200,
+                        "id" : 7488,
+                        "created_on" : "2015-09-29T22:34:13.886Z",
+                        "name" : "Food",
+                        "icon" : "Food"
+                        },
+                        {
+                        "critical" : 10800,
+                        "updated_on" : "2015-09-29T22:34:13.886Z",
+                        "warn" : 7200,
+                        "id" : 7489,
+                        "created_on" : "2015-09-29T22:34:13.886Z",
+                        "name" : "Sleep",
+                        "icon" : "Sleep"
+                        }
+                        ],
+        "parents" : [
+                     {
+                     "facebookID" : "1234567",
+                     "email" : "david@david.com",
+                     "id" : 7485,
+                     "created_on" : "2015-09-29T22:34:13.886Z",
+                     "name" : "David",
+                     "updated_on" : "2015-09-29T22:34:13.886Z"
+                     }
+                     ],
+        "family" : {
+            "id" : 7486,
+            "created_on" : "2015-09-29T22:34:13.886Z",
+            "name" : "My Family",
+            "updated_on" : "2015-09-29T22:34:13.886Z"
+        }
+    }
+}
