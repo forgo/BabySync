@@ -1,0 +1,4 @@
+node_modules
+v1/auth/ssl/*
+*.log
+*.txt
