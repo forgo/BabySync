@@ -20,42 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function REST(fxns, schema, validate, errors, label) {
+module.exports = function REST(label, alias, schema, db, validate, errors, response) {
 
     var parse = require('co-body');
     var _ = require('lodash');
 
     var rest = {
-        json_response: function(data, errorsArray) {
-            var obj = {};
-            if (data) {
-                obj.data = data;
-            }
-            if (errorsArray) {
-                obj.errors = errorsArray;
-            }
-            return JSON.stringify(obj, null, 4);
-        },
-        success: function(data) {
-            return function * (next) {
-                var json = rest.json_response(data, null);
-                this.type = "application/json";
-                this.body = json;
-            };
-        },
-        invalid: function(errors) {
-            return function * (next) {
-                var json = rest.json_response(null, errors);
-                this.type = "application/json";
-                this.body = json;
-            };
-        },
-        invalidPost: function(pre, errors) {
-            return function * (next) {
-                var json = rest.json_response(pre, errors);
-                this.type = "application/json";
-                this.body = json;
-            };
+        schemaAttributes: function(schema) {
+            var attributes = Array();
+            schema.forEach(function(scheme, index) {
+                attributes.push(scheme.attribute);
+            });
+            return attributes;
         },
         post: function * (next) {
             try {
@@ -66,24 +42,22 @@ module.exports = function REST(fxns, schema, validate, errors, label) {
                 if (object_test.valid) {
 
                     // Add automatic date fields
-                    // TODO: actually use schema to determine auto and create?
-                    // OR? Remove autos from schema, are they needed for anything else?
                     var now = new Date();
                     object_test.data.created_on = now;
                     object_test.data.updated_on = now;
                     // Request DB Create Node and Respond Accordingly
-                    var create = yield fxns.post(object_test.data);
+                    var create = yield db.object_create(object_test.data, label, alias, rest.schemaAttributes(schema));
                     if (create.success) {
-                        return yield rest.success(create.data);
+                        return yield response.success(create.data);
                     } else {
-                        return yield rest.invalidPost(object_pre, create.errors);
+                        return yield response.invalidPost(object_pre, create.errors);
                     }
                 } else {
                     // Request was not valid,
-                    return yield rest.invalidPost(object_pre, object_test.errors);
+                    return yield response.invalidPost(object_pre, object_test.errors);
                 }
             } catch (e) {
-                return yield rest.catchErrors(e, object_pre);
+                return yield response.catchErrors(e, object_pre);
             }
         },
         get: function * (next) {
@@ -93,11 +67,11 @@ module.exports = function REST(fxns, schema, validate, errors, label) {
                 // No parameter provided in URL
                 if ((this.params.id == undefined || this.params.id == null) && _.isEmpty(this.query)) {
                     // Return all families
-                    var allObjects = yield fxns.getAll();
+                    var allObjects = yield db.object_all(label, alias, rest.schemaAttributes(schema));
                     if (allObjects.success) {
-                        return yield rest.success(allObjects.data);
+                        return yield response.success(allObjects.data);
                     } else {
-                        return yield rest.invalid(allObjects.errors);
+                        return yield response.invalid(allObjects.errors);
                     }
                 }
                 // Parameter exists in URL
@@ -105,24 +79,24 @@ module.exports = function REST(fxns, schema, validate, errors, label) {
                     // Validate the ID provided
                     var id_test = validate.id(this.params.id);
                     if (id_test.valid) {
-                        var oneObject = yield fxns.getOne(id_test.data.toString());
+                        var oneObject = yield db.object_by_id(id_test.data.toString(), label, alias, rest.schemaAttributes(schema));
                         if (oneObject.success) {
                             // Need to be sure this gives back an object and not empty array!
                             if (oneObject.data.length == 0) {
-                                return yield rest.invalid([errors.UNIDENTIFIABLE(this.params.id)]);
+                                return yield response.invalid([errors.UNIDENTIFIABLE(this.params.id)]);
                             }
-                            return yield rest.success(oneObject.data);
+                            return yield response.success(oneObject.data);
                         } else {
-                            return yield rest.invalid(oneObject.errors);
+                            return yield response.invalid(oneObject.errors);
                         }
 
                     } else {
-                        return yield rest.invalid([errors.UNIDENTIFIABLE(this.params.id)]);
+                        return yield response.invalid([errors.UNIDENTIFIABLE(this.params.id)]);
                     }
                 }
             } catch (e) {
                 // Unknown Error
-                return yield rest.catchErrors(e, null);
+                return yield response.catchErrors(e, null);
             }
         },
         put: function * (next) {
@@ -141,9 +115,9 @@ module.exports = function REST(fxns, schema, validate, errors, label) {
                     //     // Loop through validated data and perform updates
                     // }
                     // else {
-                    //     return yield rest.invalidPost(object_pre, batch_test.errors);
+                    //     return yield response.invalidPost(object_pre, batch_test.errors);
                     // }
-                    return yield rest.invalidPost(object_pre, [errors.UNSUPPORTED()]);
+                    return yield response.invalidPost(object_pre, [errors.UNSUPPORTED()]);
                 }
                 // Parameter exists in URL
                 else {
@@ -153,17 +127,17 @@ module.exports = function REST(fxns, schema, validate, errors, label) {
                     // Validate the ID provided
                     var id_test = validate.id(this.params.id);
                     if (id_test.valid) {
-                        existingObject = yield fxns.getOne(id_test.data.toString());
+                        existingObject = yield db.object_by_id(id_test.data.toString(), label, alias, rest.schemaAttributes(schema));
                         if (!existingObject.success) {
-                            return yield rest.invalidPost(object_pre, existingObject.errors);
+                            return yield response.invalidPost(object_pre, existingObject.errors);
                         }
                     } else {
-                        return yield rest.invalidPost(object_pre, [errors.UNIDENTIFIABLE(this.params.id)]);
+                        return yield response.invalidPost(object_pre, [errors.UNIDENTIFIABLE(this.params.id)]);
                     }
 
                     // Need to be sure this gives back an object and not empty array!
                     if (existingObject.data.length == 0) {
-                        return yield rest.invalidPost(object_pre, [errors.UNIDENTIFIABLE(this.params.id)]);
+                        return yield response.invalidPost(object_pre, [errors.UNIDENTIFIABLE(this.params.id)]);
                     }
 
                     // If we got this far, we must have found a match.
@@ -171,23 +145,21 @@ module.exports = function REST(fxns, schema, validate, errors, label) {
                     object_test = validate.schemaForUpdate(schema, object_pre);
                     if (object_test.valid) {
                         // Add automatic date fields
-                        // TODO: actually use schema to determine auto and create?
-                        // OR? Remove autos from schema, are they needed for anything else?
                         var now = new Date();
                         object_test.data.updated_on = now;
                         // Request DB update
-                        var objectUpdate = yield fxns.put(object_test.data, existingObject.data.id);
+                        var objectUpdate = yield db.object_update(existingObject.data.id, object_test.data, label, alias, rest.schemaAttributes(schema));
                         if (objectUpdate.success) {
-                            return yield rest.success(objectUpdate.data);
+                            return yield response.success(objectUpdate.data);
                         } else {
-                            return yield rest.invalidPost(object_pre, objectUpdate.errors);
+                            return yield response.invalidPost(object_pre, objectUpdate.errors);
                         }
                     } else {
-                        return yield rest.invalidPost(object_pre, object_test.errors);
+                        return yield response.invalidPost(object_pre, object_test.errors);
                     }
                 }
             } catch (e) {
-                return yield rest.catchErrors(e, object_pre);
+                return yield response.catchErrors(e, object_pre);
             }
         },
         del: function * (next) {
@@ -206,9 +178,9 @@ module.exports = function REST(fxns, schema, validate, errors, label) {
                     //     // Loop through validated data and perform deletes
                     // }
                     // else {
-                    //     return yield rest.invalidPost(object_pre, batch_test.errors);
+                    //     return yield response.invalidPost(object_pre, batch_test.errors);
                     // }
-                    return yield rest.invalidPost(object_pre, [errors.UNSUPPORTED()]);
+                    return yield response.invalidPost(object_pre, [errors.UNSUPPORTED()]);
                 }
                 // Parameter exists in URL
                 else {
@@ -218,39 +190,30 @@ module.exports = function REST(fxns, schema, validate, errors, label) {
                     // Validate the ID provided
                     var id_test = validate.id(this.params.id);
                     if (id_test.valid) {
-                        existingObject = yield fxns.getOne(id_test.data.toString());
+                        existingObject = yield db.object_by_id(id_test.data.toString(), label, alias, rest.schemaAttributes(schema));
                         if (!existingObject.success) {
-                            return yield rest.invalid(existingObject.errors);
+                            return yield response.invalid(existingObject.errors);
                         }
                     } else {
-                        return yield rest.invalid([errors.UNIDENTIFIABLE(this.params.id)]);
+                        return yield response.invalid([errors.UNIDENTIFIABLE(this.params.id)]);
                     }
 
                     // Need to be sure this gives back an object and not empty array!
                     if (existingObject.data.length == 0) {
-                        return yield rest.invalid([errors.UNIDENTIFIABLE(this.params.id)]);
+                        return yield response.invalid([errors.UNIDENTIFIABLE(this.params.id)]);
                     }
 
                     // If we got this far, we must have found a match to delete.
-                    var objectDelete = yield fxns.del(existingObject.data.id);
+                    var objectDelete = yield db.object_delete_by_id(existingObject.data.id, label, alias)
                     if (objectDelete.success) {
-                        return yield rest.success(objectDelete.data);
+                        return yield response.success(objectDelete.data);
                     } else {
-                        return yield rest.invalid(objectDelete.errors);
+                        return yield response.invalid(objectDelete.errors);
                     }
                 }
             } catch (e) {
-                return yield rest.catchErrors(e, object_pre);
+                return yield response.catchErrors(e, object_pre);
             }
-        },
-        catchErrors: function(err, pre) {
-            return function * (next) {
-                var errs = [errors.UNKNOWN_ERROR(label)];
-                if (!err.success && err.errors) {
-                    errs = err.errors;
-                }
-                return yield rest.invalidPost(pre, errs);
-            };
         }
     }
     return rest;

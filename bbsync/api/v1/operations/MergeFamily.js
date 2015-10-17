@@ -20,23 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Private(babySync) {
+module.exports = function MergeFamily(db, validate, errors, response, parentSchema) {
+    var dbMergeFamily = function(parent) {
 
-    var Router = require('koa-router');
-    var Private = new Router();
+    };
+    
+    var mergeFamily = function * (next) {
 
-    // Logout Route
-    Private.get('/auth/logout', function * (next) {
-        this.body = "authController.logout";
-    });
-
-    // User routes
-    // Private.get('/user', babySync.user.get);
-    // Private.get('/user/:id', babySync.user.get);
-    // Private.put('/user', babySync.user.put);
-    // Private.put('/user/:id', babySync.user.put);
-    // Private.del('/user', babySync.user.del);
-    // Private.del('/user/:id', babySync.user.del);
-
-    return Private;
+    }
+    return mergeFamily;
 };

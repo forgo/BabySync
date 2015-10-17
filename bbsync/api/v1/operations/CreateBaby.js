@@ -20,28 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function TimerValidate(errors) {
+module.exports = function CreateBaby(db, validate, errors, response) {
+    var dbCreateBaby = function(parent) {
 
-    var moment = require('moment');
-
-    var timerValidate = {
-        timer_reset_date: function() {
-        	// Reset date should be the moment it is reset
-        	// so this is a sanity check to see that the date occured
-        	// in a two minute window around 'now'
-            var minMoment = moment().subtract(1, 'minutes');
-            var maxMoment = moment().add(1, 'minutes');
-            return this.dateInRange({
-                min: minMoment,
-                max: maxMoment
-            });
-        },
-        timer_enabled: function() {
-			return this.bool();
-        },
-        timer_push: function() {
-        	return this.bool();
-        }
     };
-    return timerValidate;
-}
+    
+    var createBaby = function * (next) {
+
+    }
+    return createBaby;
+};

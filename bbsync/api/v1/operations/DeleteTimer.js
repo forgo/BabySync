@@ -20,41 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Baby(REST, db, validate, errors) {
+module.exports = function DeleteTimer(db, validate, errors, response) {
+    var dbDeleteTimer = function(parent) {
 
-    var schema = [{
-        attribute: "name",
-        type: "String",
-        required: true,
-        auto: false,
-        test: validate.baby_name()
-    }, {
-        attribute: "created_on",
-        type: "Date",
-        required: false,
-        auto: true
-    }, {
-        attribute: "updated_on",
-        type: "Date",
-        required: false,
-        auto: true
-    }];
-
-    var fxns = {
-        post: db.baby_create.bind(db),
-        getOne: db.baby_by_id.bind(db),
-        getAll: db.babies_all.bind(db),
-        put: db.baby_update.bind(db),
-        del: db.baby_delete_by_id.bind(db)
     };
-    var babyREST = new REST(fxns, schema, validate, errors, "Baby");
+    
+    var deleteTimer = function * (next) {
 
-    var baby = {
-        schema: schema,
-        post: babyREST.post,
-        get: babyREST.get,
-        put: babyREST.put,
-        del: babyREST.del
     }
-    return baby;
+    return deleteTimer;
 };

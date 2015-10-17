@@ -20,10 +20,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     var userData: UserData = UserData()
     
-    var family: Family = Family()
-    var parents: Array<Parent> = Array()
-    var activities: Array<Activity> = Array()
-    var babies: Array<Baby> = Array()
+
     
     @IBOutlet weak var imageUser: UIImageView!
     @IBOutlet weak var labelName: UILabel!
@@ -51,68 +48,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         self.imageUser.image = userData.pic
         self.labelName.text = userData.name
         self.labelEmail.text = userData.email
-        
-        var urlParent: String = ""
-        if (UIApplication.inSimulator()) {
-            urlParent = "http://localhost:8111/api/v1/parent/1234567"
-        }
-        else {
-            urlParent = "http://beyondaphelion/babysync/api/v1/parent/1234567"
-        }
     
-        Alamofire.request(.GET, urlParent).responseJSON { response in
-            //print(response.request)  // original URL request
-            //print(response.response) // URL response
-            //print(response.data)     // server data
-            //print(response.result)   // result of response serialization
-            
-            if let res = response.result.value {
-                let json: JSON = JSON(res)
-                let data: JSON = json["data"]
-                let errors: JSON = json["errors"]
-                
-                print("\(json)")
-                
-                if(errors != nil) {
-                    for error in errors.arrayValue {
-                        let code: Int = error["code"].intValue
-                        let message: String = error["message"].stringValue
-                        self.alert = UIAlertController(title: "Code: \(code)", message: message, preferredStyle: UIAlertControllerStyle.Alert)
-                        self.alertAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
-                        })
-                        self.alert.addAction(self.alertAction)
-                        self.presentViewController(self.alert, animated: true, completion: nil)
-                    }
-                    return
-                }
-                
-                self.family = Family(family: data["family"])
-                
-                for parent in data["parents"].arrayValue {
-                    self.parents.append(Parent(parent: parent))
-                }
-                self.parents.sortInPlace {
-                    return $0.id < $1.id
-                }
-                
-                for activity in data["activities"].arrayValue {
-                    self.activities.append(Activity(activity: activity))
-                }
-                self.activities.sortInPlace {
-                    return $0.id < $1.id
-                }
-                
-                for baby in data["babies"].arrayValue {
-                    self.babies.append(Baby(baby: baby))
-                }
-                self.babies.sortInPlace {
-                    return $0.id < $1.id
-                }
-                
-                // REFRESH DATA HERE
-                self.reloadCollections()
-            }
-        }
     }
     
     override func didReceiveMemoryWarning() {

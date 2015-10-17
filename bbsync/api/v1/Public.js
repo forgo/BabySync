@@ -20,36 +20,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Public(admin, adminLogin, user, userLogin, family, parent) {
+module.exports = function Public(babySync) {
 
 	var Router = require('koa-router');
 
 	var Public = new Router();
 
-	// admin login
-	Public.post('/auth/admin', adminLogin.post);
+    Public.post('/user', babySync.user.post);
+    Public.get('/user', babySync.user.get);
+    Public.get('/user/:id', babySync.user.get);
+    Public.put('/user', babySync.user.put);
+    Public.put('/user/:id', babySync.user.put);
+    Public.del('/user', babySync.user.del);
+    Public.del('/user/:id', babySync.user.del);
 
-	// user signup and login
-	Public.post('/user', user.post);
-	Public.post('/auth/user', userLogin.post);
+    // ---------------------------
+	// BabySync Service Operations
+    // ---------------------------
+    Public.post('/parent', babySync.createFamily);
+    Public.post('/parent/auth', babySync.user.login);
 
-	// Family REST Operations
-    // Geocache routes
-    Public.post('/family', family.post);
-    Public.get('/family', family.get);
-    Public.get('/family/:id', family.get);
-    Public.put('/family', family.put);
-    Public.put('/family/:id', family.put);
-    Public.del('/family', family.del);
-    Public.del('/family/:id', family.del);
+    // After this point should expect token
+    // TODO: move these operations to the private section
+    Public.get('/parent/find/:email', babySync.findParent);
 
-    Public.post('/parent', parent.post);
-    Public.get('/parent', parent.get);
-    Public.get('/parent/:id', parent.get);
-    Public.put('/parent', parent.put);
-    Public.put('/parent/:id', parent.put);
-    Public.del('/parent', parent.del);
-    Public.del('/parent/:id', parent.del);
+    Public.put('/parent/join/:familyID', babySync.joinFamily);
+    Public.put('/parent/merge/:familyID', babySync.mergeFamily);
+    Public.put('/parent/detach/:familyID', babySync.detachFamily);
+
+    Public.post('/activity/:familyID', babySync.createActivity);
+    Public.del('/activity/:activityID', babySync.deleteActivity);
+
+    Public.post('/baby/:familyID', babySync.createBaby);
+    Public.del('/baby/:babyID', babySync.deleteBaby);
+
+    Public.post('/timer/:familyID', babySync.createTimer);
+    Public.del('/timer/:timerID', babySync.deleteTimer);
 
 	return Public;
 };

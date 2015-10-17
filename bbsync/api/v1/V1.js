@@ -76,76 +76,39 @@ module.exports = function V1() {
         // Use Error Handler
     }
 
-    var REST = require('./REST.js');
+    var Errors      = require('./Errors.js');
+    var Response    = require('./Response.js');
+    var Utility     = require('./Utility.js');
+    var Validate    = require('./Validate.js');
+    var Database    = require('./Database.js');
 
-    var Utility = require('./Utility.js');
-
-    var Errors = require('./Errors.js');
-    var Validate = require('./Validate.js');
-
-    var WebLogin = require('./web/WebLogin.js');
-
-    var AdminLogin = require('./auth/AdminLogin.js');
-    var Admin = require('./admin/Admin.js');
-
-    var UserLogin = require('./auth/UserLogin.js');
-    var User = require('./user/User.js');
-
-    //
-
-    var Family = require('./family/Family.js');
-    var Parent = require('./parent/Parent.js');
-    var Activity = require('./activity/Activity.js');
-    var Baby = require('./baby/Baby.js');
-    var Timer = require('./timer/Timer.js');
-
-
-    //
-
-    var Geocache = require('./geocache/Geocache.js');
+    var WebLogin    = require('./web/WebLogin.js');
+    var BabySync    = require('./BabySync.js');
 
     var errors = new Errors();
-    var db = require('./Database.js')('http://localhost:7474');
-
+    var response = new Response(errors);
     var utility = new Utility(errors);
     var validate = new Validate(errors);
+    var db = new Database('http://neo4j:Tddktlzv@localhost:7474', errors);
 
     var webLogin = new WebLogin(readFilePromise);
-
-    var adminLogin = new AdminLogin(db, bcrypt, fs, jwt, parse, errors, validate, utility);
-    var admin = new Admin(db, bcrypt, parse, errors, validate, jwt, utility, _);
-
-    var userLogin = new UserLogin(db, bcrypt, fs, jwt, parse, errors, validate, utility);
-    var user = new User(db, bcrypt, parse, errors, validate, jwt, utility, _);
-
-    var geocache = new Geocache(db, bcrypt, parse, errors, validate, jwt, utility, _, user.schema);  
-
-///
-    var family = new Family(REST, db, validate, errors);
-    var parent = new Parent(REST, db, validate, errors);
-    var activity = new Activity(REST, db, validate, errors);
-    var baby = new Baby(REST, db, validate, errors);
-    var timer = new Timer(REST, db, validate, errors);
-
-////
+    var babySync = new BabySync(db, validate, errors, response);
 
     // Routing
     var Web = require('./Web.js');
     var web = new Web(webLogin);
     var Public = require('./Public.js');
-    var pub = new Public(admin, adminLogin, user, userLogin, family, parent);
+    var pub = new Public(babySync);
     var Private = require('./Private.js');
-    var pvt = new Private(admin,user,geocache);
+    var pvt = new Private(babySync);
 
     // Custom 401 handling if you don't want to expose koa-jwt errors to users
     app.use(utility.middleware.custom401);
 
-
-
     // Public Routes (do not require valid JWT)
     app.use(mount('/api/v1', pub.middleware()));
 
-        // Public Web Pages for Angular Front End
+    // Public Web Pages for Angular Front End
     app.use(mount('/web', web.middleware()));
 
     // Public Key Used for JWT Verification

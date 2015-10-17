@@ -31,8 +31,7 @@ class LoginViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         self.hideActivity(true)
         
-        // Conditionally show bypass switch in test mode
-        // TODO: Environment bool to check if in test
+        // Conditionally show bypass switch in DEBUG mode
         #if DEBUG
             disableSwitchBypass(false)
         #else

@@ -20,41 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Family(REST, db, validate, errors) {
+module.exports = function DetachFamily(db, validate, errors, response, parentSchema) {
+    var dbDetachFamily = function(parent) {
 
-    var schema = [{
-        attribute: "name",
-        type: "String",
-        required: true,
-        auto: false,
-        test: validate.family_name()
-    }, {
-        attribute: "created_on",
-        type: "Date",
-        required: false,
-        auto: true
-    }, {
-        attribute: "updated_on",
-        type: "Date",
-        required: false,
-        auto: true
-    }];
-
-    var fxns = {
-        post: db.family_create.bind(db),
-        getOne: db.family_by_id.bind(db),
-        getAll: db.families_all.bind(db),
-        put: db.family_update.bind(db),
-        del: db.family_delete_by_id.bind(db)
     };
-    var familyREST = new REST(fxns, schema, validate, errors, "Family");
+    
+    var detachFamily = function * (next) {
 
-    var family = {
-        schema: schema,
-        post: familyREST.post,
-        get: familyREST.get,
-        put: familyREST.put,
-        del: familyREST.del
     }
-    return family;
+    return detachFamily;
 };

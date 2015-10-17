@@ -20,59 +20,63 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Activity(REST, db, validate, errors) {
+module.exports = function Activity(REST, db, validate, errors, response) {
 
-    var schema = [{
+    // ---------------------------------------------------------------------
+    // Activity Validations
+    // ---------------------------------------------------------------------
+    var activityValidate = {
+        name: function() {
+            return validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
+        },
+        icon: function() {
+            return validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
+        },
+        warn: function() {
+            return validate.doubleRange({
+                min: 600.0,
+                max: 604800.0
+            });
+        },
+        critical: function() {
+            return validate.doubleRange({
+                min: 600.0,
+                max: 604800.0
+            });
+        }
+    };
+    
+    // ---------------------------------------------------------------------
+    // Activity Schema
+    // ---------------------------------------------------------------------
+    var activitySchema = [{
         attribute: "name",
         type: "String",
         required: true,
         auto: false,
-        test: validate.activity_name()
+        test: activityValidate.name()
     }, {
         attribute: "icon",
         type: "String",
         required: true,
         auto: false,
-        test: validate.activity_icon()
+        test: activityValidate.icon()
     }, {
         attribute: "warn",
         type: "Double",
         required: true,
         auto: false,
-        test: validate.activity_warn()
+        test: activityValidate.warn()
     }, {
         attribute: "critical",
         type: "Double",
         required: true,
         auto: false,
-        test: validate.activity_critical()
-    }, {
-        attribute: "created_on",
-        type: "Date",
-        required: false,
-        auto: true
-    }, {
-        attribute: "updated_on",
-        type: "Date",
-        required: false,
-        auto: true
+        test: activityValidate.critical()
     }];
 
-    var fxns = {
-        post: db.activity_create.bind(db),
-        getOne: db.activity_by_id.bind(db),
-        getAll: db.activities_all.bind(db),
-        put: db.activity_update.bind(db),
-        del: db.activity_delete_by_id.bind(db)
-    };
-    var activityREST = new REST(fxns, schema, validate, errors, "Activity");
-
-    var activity = {
-        schema: schema,
-        post: activityREST.post,
-        get: activityREST.get,
-        put: activityREST.put,
-        del: activityREST.del
-    }
+    var activity = new REST("Activity", "a", activitySchema, db, validate, errors, response);
+    activity["schema"] = activitySchema;
+    activity["validate"] = activityValidate;
     return activity;
 };

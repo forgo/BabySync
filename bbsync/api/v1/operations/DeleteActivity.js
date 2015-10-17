@@ -20,14 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function BabyValidate(errors) {
+module.exports = function DeleteActivity(db, validate, errors, response) {
+    var dbDeleteActivity = function(parent) {
 
-    var moment = require('moment');
-
-    var babyValidate = {
-        baby_name: function() {
-            return this.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
-        }
     };
-    return babyValidate;
-}
+    
+    var deleteActivity = function * (next) {
+
+    }
+    return deleteActivity;
+};

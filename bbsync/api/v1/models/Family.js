@@ -20,53 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Parent(REST, db, validate, errors) {
+module.exports = function Family(REST, db, validate, errors, response) {
 
-    var schema = [{
+    // ---------------------------------------------------------------------
+    // Family Validations
+    // ---------------------------------------------------------------------
+    var familyValidate = {
+        name: function() {
+            return validate.regex(/^[a-zA-Z][a-zA-Z0-9' _]{2,29}$/);
+        }
+    };
+    
+    // ---------------------------------------------------------------------
+    // Family Schema
+    // ---------------------------------------------------------------------
+    var familySchema = [{
         attribute: "name",
         type: "String",
         required: true,
         auto: false,
-        test: validate.parent_name()
-    }, {
-        attribute: "email",
-        type: "String",
-        required: true,
-        auto: false,
-        test: validate.parent_email()
-    }, {
-        attribute: "facebookID",
-        type: "String",
-        required: true,
-        auto: false,
-        test: validate.parent_facebook_id()
-    }, {
-        attribute: "created_on",
-        type: "Date",
-        required: false,
-        auto: true
-    }, {
-        attribute: "updated_on",
-        type: "Date",
-        required: false,
-        auto: true
+        test: familyValidate.name()
     }];
 
-    var fxns = {
-        post: db.parent_create.bind(db),
-        getOne: db.parent_by_facebook_id.bind(db),
-        getAll: db.parents_all.bind(db),
-        put: db.parent_update.bind(db),
-        del: db.parent_delete_by_id.bind(db)
-    };
-    var parentREST = new REST(fxns, schema, validate, errors, "Parent");
-
-    var parent = {
-        schema: schema,
-        post: parentREST.post,
-        get: parentREST.get,
-        put: parentREST.put,
-        del: parentREST.del
-    }
-    return parent;
+    var family = new REST("Family", "f", familySchema, db, validate, errors, response);
+    family["schema"] = familySchema;
+    family["validate"] = familyValidate;
+    return family;
 };

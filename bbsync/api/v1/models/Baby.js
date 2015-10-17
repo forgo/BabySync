@@ -20,53 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Timer(REST, db, validate, errors) {
+module.exports = function Baby(REST, db, validate, errors, response) {
 
-    var schema = [{
-        attribute: "resetDate",
-        type: "Date",
+    // ---------------------------------------------------------------------
+    // Baby Validations
+    // ---------------------------------------------------------------------
+    var babyValidate = {
+        name: function() {
+            return validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
+        }
+    };
+
+    // ---------------------------------------------------------------------
+    // Baby Schema
+    // ---------------------------------------------------------------------
+    var babySchema = [{
+        attribute: "name",
+        type: "String",
         required: true,
         auto: false,
-        test: validate.timer_reset_date()
-    }, {
-        attribute: "enabled",
-        type: "Boolean",
-        required: true,
-        auto: false,
-        test: validate.timer_enabled()
-    }, {
-        attribute: "push",
-        type: "Boolean",
-        required: true,
-        auto: false,
-        test: validate.timer_push()
-    }, {
-        attribute: "created_on",
-        type: "Date",
-        required: false,
-        auto: true
-    }, {
-        attribute: "updated_on",
-        type: "Date",
-        required: false,
-        auto: true
+        test: babyValidate.name()
     }];
 
-    var fxns = {
-        post: db.timer_create.bind(db),
-        getOne: db.timer_by_id.bind(db),
-        getAll: db.timers_all.bind(db),
-        put: db.timer_update.bind(db),
-        del: db.timer_delete_by_id.bind(db)
-    };
-    var timerREST = new REST(fxns, schema, validate, errors, "Timer");
-
-    var timer = {
-        schema: schema,
-        post: timerREST.post,
-        get: timerREST.get,
-        put: timerREST.put,
-        del: timerREST.del
-    }
-    return timer;
+    var baby = new REST("Baby", "b", babySchema, db, validate, errors, response);
+    baby["schema"] = babySchema;
+    baby["validate"] = babyValidate;
+    return baby;
 };

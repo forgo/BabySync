@@ -20,14 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function FamilyValidate(errors) {
+module.exports = function JoinFamily(db, validate, errors, response, parentSchema) {
+    var dbJoinFamily = function(parent) {
 
-    var moment = require('moment');
-
-    var familyValidate = {
-        family_name: function() {
-            return this.regex(/^[a-zA-Z][a-zA-Z0-9' _]{2,29}$/);
-        }
     };
-    return familyValidate;
-}
+    
+    var joinFamily = function * (next) {
+
+    }
+    return joinFamily;
+};

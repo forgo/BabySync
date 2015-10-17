@@ -20,27 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function DB(config) {
-
+module.exports = function Database(config, errors) {
     var neo4j = require('neo4j');
-    var ndb = new neo4j.GraphDatabase('http://neo4j:Tddktlzv@localhost:7474');
+    var ndb = new neo4j.GraphDatabase(config);
     var Q = require('q');
     var _ = require('lodash');
-
-    var errors = require('./Errors.js')();
-
-    var adminDB = require('./admin/AdminDB.js')();
-    var userDB = require('./user/UserDB.js')();
-    var geocacheDB = require('./geocache/GeocacheDB.js')();
-
-    var familyDB = require('./family/FamilyDB.js')();
-    var parentDB = require('./parent/ParentDB.js')();
-    var babyDB = require('./baby/BabyDB.js')();
-    var activityDB = require('./activity/ActivityDB.js')();
-    var timerDB = require('./timer/TimerDB.js')();
-
     var db = {
         ndb: ndb,
+        // ---------------------------------------------------------------------
+        // Cypher Async Promises
+        // ---------------------------------------------------------------------
         cypher: function(input) {
             // console.log("----------------------");
             // console.log("EXECUTING CYPHER QUERY");
@@ -63,10 +52,6 @@ module.exports = function DB(config) {
                 response.errors = [errors.NEO4J_UNDEFINED_RESULT()];
                 deferred.reject(response);
             } else if (results.length > 1) {
-
-                console.log("results elliott = ", results);
-                console.log("resutls length = ", results.length);
-
                 response.success = false;
                 response.errors = [errors.NEO4J_EXPECTED_ONE_RESULT()];
                 deferred.reject(response);
@@ -204,20 +189,287 @@ module.exports = function DB(config) {
 
             deferred.reject(response);
             return deferred.promise;
+        },
+        errorFilter: function(label) {
+            var response = {};
+            var deferred = Q.defer();
+            response.success = false;
+            response.errors = [errors.FILTER_EXPECTED(label)];
+            deferred.resolve(response);
+            return deferred.promise;
+        },
+        // ---------------------------------------------------------------------
+        // User Boilerplate
+        // ---------------------------------------------------------------------
+        user_return: function(alias, attributes) {
+            // Always return the user ID
+            var returnString = " id(" + alias + ") AS id";
+            if (!Array.isArray(attributes)) {
+                return returnString;
+            }
+
+            // Never return password attribute (would be empty due to query)
+            var pwIndex = attributes.indexOf("password");
+            attributes.splice(pwIndex, 1);
+
+            // Construct remaining return statement from requested properties
+            attributes.forEach(function(attr, index) {
+                returnString += ", " + alias + "." + attr + " AS " + attr;
+            });
+            returnString += ", " + alias + ".created_on AS created_on";
+            returnString += ", " + alias + ".updated_on AS updated_on";
+            returnString += ", " + alias + ".login_on AS login_on";
+            return returnString;
+        },
+        user_login_return: function(alias, attributes) {
+            // Always return the user ID
+            var returnString = " id(" + alias + ") AS id";
+            if (!Array.isArray(attributes)) {
+                return returnString;
+            }
+
+            // Never return password attribute (would be empty due to query)
+            var pwIndex = attributes.indexOf("password");
+            attributes.splice(pwIndex, 1);
+
+            // Construct remaining return statement from requested properties
+            attributes.forEach(function(attr, index) {
+                returnString += ", " + alias + "." + attr + " AS " + attr;
+            });
+            returnString += ", " + alias + ".created_on AS created_on";
+            returnString += ", " + alias + ".updated_on AS updated_on";
+            returnString += ", " + alias + ".login_on AS login_on";
+            returnString += ", " + alias + ".hash AS hash";
+            return returnString;
+        },
+        user_create: function(user, label, alias, returnAttributes) {
+            var query = "CREATE (" + alias + ":" + label + " {user})";
+            query += " RETURN " + this.user_return(alias, returnAttributes);
+            var params = {
+                user: user
+            };
+            return this.cypher({
+                    query: query,
+                    params: params
+                })
+                .then(this.successOneOrNone, this.error);
+        },
+        user_by_username_for_login: function(username, label, alias, returnAttributes) {
+            var query = "MATCH (" + alias + ":" + label + ")";
+            query += " WHERE " + alias + ".username = \"" + username + "\"";
+            query += " RETURN " + this.user_login_return(alias, returnAttributes);
+            return this.cypher(query)
+                .then(this.successOneOrNone, this.error);
+        },
+        user_by_email_for_login: function(email, label, alias, returnAttributes) {
+            var query = "MATCH (" + alias + ":" + label + ")";
+            query += " WHERE " + alias + ".email = \"" + email + "\"";
+            query += " RETURN " + this.user_login_return(alias, returnAttributes);
+            return this.cypher(query)
+                .then(this.successOneOrNone, this.error);
+        },
+        user_by_id: function(id, label, alias, returnAttributes) {
+            var query = "MATCH (" + alias + ":" + label + ")";
+            query += " WHERE id(" + alias + ") = " + id;
+            query += " RETURN " + this.user_return(alias, returnAttributes);
+            return this.cypher(query)
+                .then(this.successOneOrNone, this.error);
+        },
+        user_by_filter: function(filter, label, alias, returnAttributes) {
+            var query = "MATCH (" + alias + ":" + label + ")";
+            var queryFilter = this.object_query_filter(filter);
+            // Expect valid filter
+            if (queryFilter == null) {
+                return this.errorFilter(label);
+            }
+            query += queryFilter;
+            query += " RETURN " + this.user_return(alias, returnAttributes);
+            return this.cypher(query)
+                .then(this.successAll, this.error);
+        },
+        user_all: function(label, alias, returnAttributes) {
+            var query = "MATCH (" + alias + ":" + label + ")";
+            query += " RETURN " + this.user_return(alias, returnAttributes);
+            return this.cypher(query)
+                .then(this.successAll, this.error);
+        },
+        user_update: function(id, user, label, alias, returnAttributes) {
+            var query = "MATCH (" + alias + ":" + label + ")";
+            query += " WHERE id(" + alias + ") = " + id;
+            query += " SET " + alias + " += { user }";
+            query += " RETURN " + this.user_return(alias, returnAttributes);
+            var params = {
+                user: user
+            };
+            return this.cypher({
+                    query: query,
+                    params: params
+                })
+                .then(this.successOneOrNone, this.error);
+        },
+        user_delete_by_id: function(id, label, alias) {
+            var aliasRelationships = "relationship";
+            var query = "MATCH (" + alias + ":" + label + ")";
+            query += " WHERE id(" + alias + ") = " + id;
+            query += " OPTIONAL MATCH (" + alias + ")-[" + aliasRelationships + "]-()";
+            query += " DELETE " + alias + ", " + aliasRelationships;
+            query += " RETURN " + this.object_delete_return(alias);
+            console.log("QUERY = ", query);
+            return this.cypher(query)
+                .then(this.successDelete, this.error);
+        },
+        user_username_taken: function(username, label, alias) {
+            var query = "MATCH (" + alias + ":" + label +")";
+            query += " WHERE " + alias + ".username = \"" + username + "\"";
+            query += " RETURN " + this.user_return(alias,[]);
+            return this.cypher(query)
+                .then(this.successTaken, this.error);
+        },
+        user_email_taken: function(email, label, alias) {
+            var query = "MATCH (" + alias + ":" + label +")";
+            query += " WHERE " + alias + ".email = \"" + email + "\"";
+            query += " RETURN " + this.user_return(alias,[]);
+            return this.cypher(query)
+                .then(this.successTaken, this.error);
+        },
+        // ---------------------------------------------------------------------
+        // RESTful Boilerplate
+        // ---------------------------------------------------------------------
+        object_query_filter: function(filter, alias) {
+            // Expect valid filter
+            if (filter == null || typeof filter !== 'object') {
+                return null;
+            }
+            // Construct remaining query from filter conditions
+            var queryFilter = " WHERE ";
+            Object.keys(filter).forEach(function(attr, index) {
+                // Format query condition based on type
+                var condition = filter[attr];
+                if (typeof condition === 'string') {
+                    condition = "\"" + condition + "\"";
+                }
+                else if (Number.isFinite(condition)) {
+                    condition = condition.toString() 
+                }
+                else {
+                    return this.errorFilter(label);
+                }
+                // First condition doesn't require "AND" prefix
+                if (index == 0) {
+                    queryFilter += alias + "." + attr + " = " + condition
+                }
+                else {
+                    queryFilter += " AND " + alias + "." + attr + " = " + condition
+                }
+            });
+            return 
+        },
+        object_return: function(alias, attributes) {
+            // Always return the object ID
+            var returnString = " id(" + alias + ") AS id";
+            if (!Array.isArray(attributes)) {
+                return returnString;
+            }
+            // Construct remaining return statement from requested properties
+            attributes.forEach(function(attr, index) {
+                returnString += ", " + alias + "." + attr + " AS " + attr;
+            });
+            returnString += ", " + alias + ".created_on AS created_on";
+            returnString += ", " + alias + ".updated_on AS updated_on";
+            return returnString;
+        },
+        object_delete_return: function(alias) {
+            // Delete returns total number of affected nodes and their ids
+            var returnString = " COUNT(" + alias + ") AS affected";
+            returnString += ", collect( id(" + alias + ") ) AS ids";
+            return returnString;
+        },
+        object_create: function(object, label, alias, returnAttributes) {
+            var query = "CREATE (" + alias + ":" + label + " {object})";
+            query += " RETURN " + this.object_return(alias, returnAttributes);
+            var params = {
+                object: object
+            };
+            return this.cypher({
+                    query: query,
+                    params: params
+                })
+                .then(this.successOneOrNone, this.error);
+        },
+        object_by_id: function(id, label, alias, returnAttributes) {
+            var query = "MATCH (" + alias + ":" + label + ")";
+            query += " WHERE id(" + alias + ") = " + id;
+            query += " RETURN " + this.object_return(alias, returnAttributes);
+            return this.cypher(query)
+                .then(this.successOneOrNone, this.error);
+        },
+        object_by_filter: function(filter, label, alias, returnAttributes) {
+            var query = "MATCH (" + alias + ":" + label + ")";
+            var queryFilter = this.object_query_filter(filter);
+            // Expect valid filter
+            if (queryFilter == null) {
+                return this.errorFilter(label);
+            }
+            query += queryFilter;
+            query += " RETURN " + this.object_return(alias, returnAttributes);
+            return this.cypher(query)
+                .then(this.successAll, this.error);
+        },
+        object_all: function(label, alias, returnAttributes) {
+            var query = "MATCH (" + alias + ":" + label + ")";
+            query += " RETURN " + this.object_return(alias, returnAttributes);
+            return this.cypher(query)
+                .then(this.successAll, this.error);
+        },
+        object_update: function(id, object, label, alias, returnAttributes) {
+            var query = "MATCH (" + alias + ":" + label + ")";
+            query += " WHERE id(" + alias + ") = " + id;
+            query += " SET " + alias + " += { object }";
+            query += " RETURN " + this.object_return(alias, returnAttributes);
+            var params = {
+                object: object
+            };
+            return this.cypher({
+                    query: query,
+                    params: params
+                })
+                .then(this.successOneOrNone, this.error);
+        },
+        object_delete_by_id: function(id, label, alias) {
+            var aliasRelationships = "relationship";
+            var query = "MATCH (" + alias + ":" + label + ")";
+            query += " WHERE id(" + alias + ") = " + id;
+            query += " OPTIONAL MATCH (" + alias + ")-[" + aliasRelationships + "]-()";
+            query += " DELETE " + alias + ", " + aliasRelationships;
+            query += " RETURN " + this.object_delete_return(alias);
+            return this.cypher(query)
+                .then(this.successDelete, this.error);
+        },
+        object_delete_by_filter: function(filter, label, alias) {
+            var aliasRelationships = "relationship";
+            var query = "MATCH (" + alias + ":" + label + ")";
+            var queryFilter = this.object_query_filter(filter);
+            // Expect valid filter
+            if (queryFilter == null) {
+                return this.errorFilter(label);
+            }
+            query += queryFilter;
+            query += " OPTIONAL MATCH (" + alias + ")-[" + aliasRelationships + "]-()";
+            query += " DELETE " + alias + ", " + aliasRelationships;
+            query += " RETURN " + this.object_delete_return(alias);
+            return this.cypher(query)
+                .then(this.successDelete, this.error);
+        },
+        object_delete_all: function(label, alias) {
+            var aliasRelationships = "relationship";
+            var query = "MATCH (" + alias + ":" + label + ")";
+            query += " OPTIONAL MATCH (" + alias + ")-[" + aliasRelationships + "]-()";
+            query += " DELETE " + alias + ", " + aliasRelationships;
+            query += " RETURN " + this.object_delete_return(alias);
+            return this.cypher(query)
+                .then(this.successDelete, this.error);
         }
     };
-
-    // Merge Database Utility Functions for Models
-    _.merge(db, adminDB);
-    _.merge(db, userDB);
-
-    _.merge(db, geocacheDB);
-
-    _.merge(db, familyDB);
-    _.merge(db, parentDB);
-    _.merge(db, babyDB);
-    _.merge(db, activityDB);
-    _.merge(db, timerDB);
 
     return db;
 }

@@ -16,6 +16,12 @@ struct Parent {
     var createdOn: NSDate = NSDate()
     var updatedOn: NSDate = NSDate()
     
+    public var paramValue: Dictionary<String,AnyObject> {
+        get {
+            return ["facebookID":String(self.facebookID),"name":self.name,"email":self.email]
+        }
+    }
+    
     init() {
         self.id = 0
         self.facebookID = 0

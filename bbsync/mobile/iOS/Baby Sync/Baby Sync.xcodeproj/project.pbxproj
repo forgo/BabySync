@@ -21,6 +21,9 @@
 		4F446AB21BCDBEE000D0AD64 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AAF1BCDBEE000D0AD64 /* FBSDKCoreKit.framework */; settings = {ASSET_TAGS = (); }; };
 		4F446AB31BCDBEE000D0AD64 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AB01BCDBEE000D0AD64 /* FBSDKLoginKit.framework */; settings = {ASSET_TAGS = (); }; };
 		4F446AB41BCDBEE000D0AD64 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AB11BCDBEE000D0AD64 /* FBSDKShareKit.framework */; settings = {ASSET_TAGS = (); }; };
+		4F446ABB1BCE05E900D0AD64 /* BabySync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABA1BCE05E900D0AD64 /* BabySync.swift */; settings = {ASSET_TAGS = (); }; };
+		4F446ABD1BCE071100D0AD64 /* JSONExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */; settings = {ASSET_TAGS = (); }; };
+		4F446ABF1BCE159B00D0AD64 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABE1BCE159B00D0AD64 /* Error.swift */; settings = {ASSET_TAGS = (); }; };
 		4F53D9371BBBC15100EB598F /* SourceCodePro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F53D9351BBBBEB800EB598F /* SourceCodePro-Regular.ttf */; };
 		4FD82E961BBB086900A06E0A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82E951BBB086900A06E0A /* AppDelegate.swift */; };
 		4FD82E9B1BBB086900A06E0A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FD82E991BBB086900A06E0A /* Main.storyboard */; };
@@ -95,6 +98,9 @@
 		4F446AAF1BCDBEE000D0AD64 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		4F446AB01BCDBEE000D0AD64 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		4F446AB11BCDBEE000D0AD64 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		4F446ABA1BCE05E900D0AD64 /* BabySync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BabySync.swift; sourceTree = "<group>"; };
+		4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONExtension.swift; sourceTree = "<group>"; };
+		4F446ABE1BCE159B00D0AD64 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		4F53D9351BBBBEB800EB598F /* SourceCodePro-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceCodePro-Regular.ttf"; sourceTree = "<group>"; };
 		4FD82E921BBB086900A06E0A /* Baby Sync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Baby Sync.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FD82E951BBB086900A06E0A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -169,6 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				4F23A8BE1BBBD7C7001FBCFF /* UIApplicationExtensions.swift */,
+				4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -194,6 +201,14 @@
 				4FFAE1E01BC1898A00FB2B73 /* GETFamily_New.json */,
 			);
 			name = TestData;
+			sourceTree = "<group>";
+		};
+		4F446AB71BCE05C400D0AD64 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				4F446ABA1BCE05E900D0AD64 /* BabySync.swift */,
+			);
+			name = Service;
 			sourceTree = "<group>";
 		};
 		4F53D9361BBBBEC000EB598F /* Fonts */ = {
@@ -229,6 +244,7 @@
 		4FD82E941BBB086900A06E0A /* Baby Sync */ = {
 			isa = PBXGroup;
 			children = (
+				4F446AB71BCE05C400D0AD64 /* Service */,
 				4FD82E951BBB086900A06E0A /* AppDelegate.swift */,
 				4FD82E991BBB086900A06E0A /* Main.storyboard */,
 				4FD82E9C1BBB086900A06E0A /* Assets.xcassets */,
@@ -285,6 +301,7 @@
 				4FD82EF21BBB6EE800A06E0A /* Timer.swift */,
 				4FD82EF81BBB789600A06E0A /* ISO8601DateFormatter.swift */,
 				4F23A8D01BBC5729001FBCFF /* ElapsedTimeFormatter.swift */,
+				4F446ABE1BCE159B00D0AD64 /* Error.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -601,6 +618,7 @@
 			files = (
 				4FFAE1EB1BC2161400FB2B73 /* BabyViewController.swift in Sources */,
 				4FD82EC41BBB09DE00A06E0A /* LoginViewController.swift in Sources */,
+				4F446ABD1BCE071100D0AD64 /* JSONExtension.swift in Sources */,
 				4F23A8CB1BBC55DB001FBCFF /* NewTimerViewController.swift in Sources */,
 				4F23A8D51BBC7960001FBCFF /* MenuTableViewCell.swift in Sources */,
 				4FFAE1E91BC1E57100FB2B73 /* IconCollectionViewCell.swift in Sources */,
@@ -615,6 +633,7 @@
 				4FD82EEB1BBB6EC700A06E0A /* Baby.swift in Sources */,
 				4FFAE2401BC269E600FB2B73 /* BabyModel.swift in Sources */,
 				4FFAE1E71BC1C5F600FB2B73 /* SelectIconViewController.swift in Sources */,
+				4F446ABB1BCE05E900D0AD64 /* BabySync.swift in Sources */,
 				4FD82EED1BBB6ECE00A06E0A /* Activity.swift in Sources */,
 				4F23A8D31BBC5FEB001FBCFF /* MenuViewController.swift in Sources */,
 				4FFAE1EE1BC246D100FB2B73 /* BabySyncModel.xcdatamodeld in Sources */,
@@ -625,6 +644,7 @@
 				4FD82ECF1BBB34C600A06E0A /* UserData.swift in Sources */,
 				4FD82EE81BBB68F800A06E0A /* SwiftyJSON.swift in Sources */,
 				4FD82EC61BBB0A2A00A06E0A /* HomeViewController.swift in Sources */,
+				4F446ABF1BCE159B00D0AD64 /* Error.swift in Sources */,
 				4F23A8C91BBC55C7001FBCFF /* NewBabyViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -25,18 +25,8 @@ module.exports = function Validate(errors) {
     var _ = require('lodash');
     var moment = require('moment');
 
-    var adminValidate = require('./admin/AdminValidate.js')(errors);
-    var userValidate = require('./user/UserValidate.js')(errors);
-    var geocacheValidate = require('./geocache/GeocacheValidate.js')(errors);
-
-    var familyValidate = require('./family/FamilyValidate.js')(errors);
-    var parentValidate = require('./parent/ParentValidate.js')(errors);
-    var babyValidate = require('./baby/BabyValidate.js')(errors);
-    var activityValidate = require('./activity/ActivityValidate.js')(errors);
-    var timerValidate = require('./timer/TimerValidate.js')(errors);
-
     var validate = {
-        isEmpty: function isEmpty(data) {
+        isEmpty: function(data) {
             if (typeof(data) == "number" || typeof(data) == "boolean") {
                 return false;
             }
@@ -54,7 +44,7 @@ module.exports = function Validate(errors) {
             }
             return count === 0;
         },
-        schema: function schema(sch, pre) {
+        schema: function(sch, pre) {
             var valid = true;
             var errorArray = [];
 
@@ -144,7 +134,7 @@ module.exports = function Validate(errors) {
         //         }
         //     }
         // },
-        schemaForUpdate: function schemaForUpdate(sch, pre) {
+        schemaForUpdate: function(sch, pre) {
             // Make sure we are providing something to update at all
             if ("false" in pre) {
                 return {
@@ -182,7 +172,7 @@ module.exports = function Validate(errors) {
             });
             return validate.schema(modifiedSchema, pre);
         },
-        attribute: function attribute(sch, pre, att) {
+        attribute: function(sch, pre, att) {
             // Extract Scheme from Schema Which Defines Attribute
             var attributeSchemes = sch.filter(function(s) {
                 return s.attribute == att;
@@ -196,7 +186,7 @@ module.exports = function Validate(errors) {
                 errors: [errors.ATTRIBUTE_TEST_REQUIRED(att)]
             };
         },
-        id: function id(pre) {
+        id: function(pre) {
             if (Number.isInteger(Number(pre)) && (pre !== null) && (pre !== undefined)) {
                 return {
                     valid: true,
@@ -218,18 +208,16 @@ module.exports = function Validate(errors) {
             }
             return null;
         },
-        userID: function(userID, userSchema, db) {
+        ////////////////////////////////////////////////////////////////////////
+        userID: function(userID, userSchema, label, alias, returnAttributes, db) {
             return function * (next) {
                 var response = {};
                 var id_test = validate.id(userID);
                 var username_test = validate.attribute(userSchema, userID, "username");
                 var email_test = validate.attribute(userSchema, userID, "email");
 
-                console.log("username_test = ", username_test);
-                console.log("email_test = ", email_test);
-
                 if (id_test.valid) {
-                    var userByID = yield db.user_by_id(id_test.data.toString());
+                    var userByID = yield db.user_by_id(id_test.data.toString(), label, alias, returnAttributes);
                     if (userByID.success) {
                         response.valid = true;
                         response.data = userByID.data;
@@ -238,17 +226,16 @@ module.exports = function Validate(errors) {
                         response.errors = userByID.errors;
                     }
                 } else if (username_test.valid) {
-                    var userByUsername = yield db.user_by_username(username_test.data);
+                    var userByUsername = yield db.user_by_filter({username:username_test.data}, label, alias, returnAttributes);
                     if (userByUsername.success) {
                         response.valid = true;
                         response.data = userByUsername.data;
-                        console.log("RESPNOSE data = ", response.data);
                     } else {
                         response.valid = false;
                         response.errors = userByUsername.errors;
                     }
                 } else if (email_test.valid) {
-                    var userByEmail = yield db.user_by_email(email_test.data);
+                    var userByEmail = yield db.user_by_filter({email:email_test.data}, label, alias, returnAttributes);
                     if (userByEmail.success) {
                         response.valid = true;
                         response.data = userByEmail.data;
@@ -296,6 +283,7 @@ module.exports = function Validate(errors) {
                 return response;
             };
         },
+        ////////////////////////////////////////////////////////////////////////
         regex: function(regex) {
             return function(attribute, value) {
                 var valid = regex.test(value);
@@ -412,6 +400,22 @@ module.exports = function Validate(errors) {
                 }
             };
         },
+        minuteWindow: function(range) {
+            var minMoment = moment().subtract(range.past, 'minutes');
+            var maxMoment = moment().add(range.future, 'minutes');
+            return validate.dateInRange({
+                min: minMoment,
+                max: maxMoment
+            });
+        },
+        ageInRange: function(range) {
+            var minMoment = moment().subtract(range.max, 'years');
+            var maxMoment = moment().subtract(range.min, 'years');
+            return validate.dateInRange({
+                min: minMoment,
+                max: maxMoment
+            });
+        },
         dateInRange: function(range) {
             return function(attribute, value) {
                 var date = moment(value, "YYYY-MM-DDTHH:mm:ss.SSSZ", true);
@@ -479,21 +483,5 @@ module.exports = function Validate(errors) {
             };
         }
     };
-
-    // Merge Database Utility Functions for Models
-    _.merge(validate, adminValidate);
-    _.merge(validate, userValidate);
-
-    _.merge(validate, geocacheValidate);
-
-    _.merge(validate, familyValidate);
-    _.merge(validate, parentValidate);
-    _.merge(validate, babyValidate);
-    _.merge(validate, activityValidate);
-    _.merge(validate, timerValidate);
-
-
-
-
     return validate;
 };

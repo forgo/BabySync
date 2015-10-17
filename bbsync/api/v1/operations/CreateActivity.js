@@ -20,20 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function ParentValidate(errors) {
+module.exports = function CreateActivity(db, validate, errors, response) {
+    var dbCreateActivity = function(parent) {
 
-    var moment = require('moment');
-
-    var parentValidate = {
-        parent_name: function() {
-            return this.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
-        },
-        parent_email: function() {
-            return this.regex(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)\b/);
-        },
-        parent_facebook_id: function() {
-        	return this.regex(/^([\d]{1,20})$/);
-        }
     };
-    return parentValidate;
-}
+    
+    var createActivity = function * (next) {
+
+    }
+    return createActivity;
+};

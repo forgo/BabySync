@@ -52,53 +52,53 @@ module.exports = function Errors() {
         /*
             Database Errors
         */
-        NEO4J_ERROR: function(ctx) {
+        NEO4J_ERROR: function(context) {
             return {
                 code: 2001,
-                message: "Neo4j error" + ((ctx) ? ": "+ctx : "")
-            }
+                message: "Neo4j error" + ((context) ? ": "+context : "")
+            };
         },
         NEO4J_CONNECTION_ISSUE: function() {
             return {
                 code: 2002,
                 message: "Neo4j connection issue"
-            }
+            };
         },
         NEO4J_MALFORMED_QUERY: function() {
             return {
                 code: 2003,
                 message: "Neo4j malformed query"
-            }
+            };
         },
         NEO4J_CONSTRAINT_VIOLATION: function() {
             return {
                 code:2004,
                 message: "Neo4j constraint violation"
-            }
+            };
         },
         NEO4J_EMPTY_RESULT: function() {
             return {
                 code: 2005,
                 message: "Neo4j query result was empty"
-            }
+            };
         },
         NEO4J_EXPECTED_RESULT: function() {
             return {
                 code: 2006,
                 message: "Neo4j query response expected one or more results"
-            }
+            };
         },
         NEO4J_EXPECTED_ONE_RESULT: function() {
             return {
                 code: 2007,
                 message: "Neo4j query response expected only one result and found many"
-            }
+            };
         },
         NEO4J_UNDEFINED_RESULT: function() {
             return {
                 code: 2008,
                 message: "Neo4j query result was undefined"
-            }
+            };
         },
         /*
             Validation Errors
@@ -119,46 +119,58 @@ module.exports = function Errors() {
             return {
                 code: 3003,
                 message: "unidentifiable from: " + id
-            }
+            };
+        },
+        ATTRIBUTE_AUTO_GEN_REQUIRED: function(attribute) {
+            return {
+                code: 3004,
+                message: "non-date auto attribute " + attribute + " manadates a gen fxn"
+            };
         },
         ATTRIBUTE_TEST_REQUIRED: function(attribute) {
             return {
-                code: 3004,
+                code: 3005,
                 message: attribute + " mandates a test"
             };
         },
         ATTRIBUTE_REQUIRED: function(attribute) {
             return {
-                code: 3005,
+                code: 3006,
                 attribute: attribute,
                 message: attribute + " required"
             };
         },
         ATTRIBUTE_INVALID: function(attribute) {
             return {
-                code: 3006,
+                code: 3007,
                 attribute: attribute,
                 message: attribute + " invalid"
             };
         },
         USERNAME_TAKEN: function(attribute) {
             return {
-                code: 3007,
+                code: 3008,
                 attribute: attribute,
                 message: "username taken"
             };
         },
         EMAIL_TAKEN: function(attribute) {
             return {
-                code: 3008,
+                code: 3009,
                 attribute: attribute,
                 message: "email taken"
             };
         },
         UPDATE_EMPTY: function() {
             return {
-                code: 3009,
+                code: 3010,
                 message: "update request empty"
+            };
+        },
+        FILTER_EXPECTED: function(label) {
+            return {
+                code: 3011,
+                message: "valid filter expected for label: " + label
             };
         },
         /* Geocache Validation Errors */
