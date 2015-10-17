@@ -22,11 +22,8 @@
 
 module.exports = function V1() {
 
-    var bcrypt = require('co-bcrypt');
-    var parse = require('co-body');
     var fs = require('fs');
     var path = require('path');
-    var _ = require('lodash');
     var Q = require('q');
 
     var koa = require('koa');

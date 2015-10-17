@@ -259,9 +259,6 @@ if (user_test.valid) {
             try {
                 // TODO: Be sure this is being requested by authenticated user w/proper privileges
 
-                console.log("INSIDE PUT");
-                console.log(this.params);
-
                 // Request payload
                 var object_pre = yield parse(this);
 
@@ -378,8 +375,6 @@ if (user_test.valid) {
 // -----------------------------------------------------------------------------
 
                     // If we got this far, we must have found a match to delete.
-                    console.log("yeahh");
-                    console.log(existingObject);
                     var objectDelete = yield db.user_delete_by_id(existingObject.id, label, alias);
                     console.log(objectDelete);
 

@@ -1,4 +1,5 @@
 node_modules
 v1/auth/ssl/*
+scripts/backup/*
 *.log
 *.txt

@@ -21,11 +21,14 @@
 // SOFTWARE.
 
 module.exports = function CreateFamily(db, validate, errors, response, parentSchema) {
+    
+    var parse = require('co-body');
+    var _ = require('lodash');
+
     var dbCreateFamily = function(parent) {
+
         var createDate = parent.created_on;
         var updateDate = parent.updated_on;
-
-        console.log("1");
 
         var family = {
             name: "My Family"
@@ -158,9 +161,12 @@ module.exports = function CreateFamily(db, validate, errors, response, parentSch
     var createFamily = function * (next) {
         try {
             // TODO: Be sure this is being requested by authenticated user w/proper privileges
-
+            console.log("CREATE FAMILY");
+            console.log(parentSchema);
             var parent_pre = yield parse(this);
+            console.log("validate = ", validate);
             var parent_test = validate.schema(parentSchema, parent_pre);
+            console.log(parent_test);
             if (parent_test.valid) {
                 // Add automatic date fields
                 var now = new Date();

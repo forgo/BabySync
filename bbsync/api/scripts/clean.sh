@@ -70,27 +70,15 @@ else
 fi
 
 # Clean up backup directory by removing all but 10 most recent backups
-# echo ${DIR_BKP}
-# while read -rd ${DIR_BKP}; do 
-#     xyz=("${REPLY#* }")
-#     echo $xyz;     
-# done
-#'' < <(find ${DIR_BKP} -maxdepth 1 -type d -name 'graph.db.bkp*' | sort -r )
-
 #BKP_CLEAN="find ${DIR_BKP} -maxdepth 1 -type d -name 'graph.db.bkp*' | ls -C1t | awk 'NR>10' | while read d ; do rm -rvf \$d ; done"
-BKP_CLEAN="find ${DIR_BKP} -type d -maxdepth 1 -name 'graph.db.bkp*' | sort -r | awk 'NR<=10' | while read d ; do echo \$d ; done"
-echo "BKP_CLEAN = $(${BKP_CLEAN})"
-if $(${BKP_CLEAN}); then
-	echo "Neo4j DB backup directory successfully cleaned.";
-else
-	echo "Error: Failed to clean Neo4j DB backup directory."
-	exit $?;
-fi
-
-# echo "blah----"
-
-
-# exit 1;
+# BKP_CLEAN="find ${DIR_BKP} -type d -maxdepth 1 -name 'graph.db.bkp*' | sort -r | awk 'NR<=10' | while read d ; do echo \$d ; done"
+# echo "BKP_CLEAN = $(${BKP_CLEAN})"
+# if $(${BKP_CLEAN}); then
+# 	echo "Neo4j DB backup directory successfully cleaned.";
+# else
+# 	echo "Error: Failed to clean Neo4j DB backup directory."
+# 	exit $?;
+# fi
 
 # ==============================================================================
 # 2: Annhiliate Neo4J Database
