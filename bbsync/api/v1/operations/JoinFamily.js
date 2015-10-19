@@ -31,6 +31,7 @@ module.exports = function JoinFamily(db, validate, errors, response, parentSchem
     var joinFamily = function * (next) {
         try {
             // TODO: Be sure this is being requested by authenticated user w/proper privileges
+            
             var parent_pre = yield parse(this);
 
             // No parameter provided in URL

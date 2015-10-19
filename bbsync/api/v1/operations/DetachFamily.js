@@ -21,12 +21,39 @@
 // SOFTWARE.
 
 module.exports = function DetachFamily(db, validate, errors, response, parentSchema, familySchema) {
-    var dbDetachFamily = function(parent) {
 
-    };
+    // Database Extensions for Complex App Queries
+    var dbBabySync = require('../DatabaseBabySync.js')(db);
+
+    var parse = require('co-body');
+    var _ = require('lodash');
     
     var detachFamily = function * (next) {
+    	try {
+    	    // TODO: Be sure this is being requested by authenticated user w/proper privileges
 
+            var parent_pre = yield parse(this);
+            var parent_test = validate.schema(parentSchema, parent_pre);
+            if (parent_test.valid) {
+            	// Add automatic date fields
+                var now = new Date();
+                parent_test.data.created_on = now;
+                parent_test.data.updated_on = now;
+            	// Request DB Family Join
+            	var detach = yield dbBabySync.family_detach(parent_test.data);
+                if (detach.success) {
+                    return yield response.success(detach.data);
+                } else {
+                    return yield response.invalidPost(parent_pre, detach.errors);
+                }
+            }
+            else {
+            	// Request was not valid,
+                return yield response.invalidPost(parent_pre, parent_test.errors);
+            }
+        } catch (e) {
+            return yield response.catchErrors(e, parent_pre);
+        }
     }
     return detachFamily;
 };

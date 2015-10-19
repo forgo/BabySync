@@ -55,20 +55,19 @@ module.exports = function DatabaseBabySync(db) {
          * "WITH f AS fnew" would be the last cypher statement before appending
          * this query.
          */
-        family_return: function(aliasLookup, attributeLookup, valueLookup) {
-            var lookupCondition = ""
-            if (attributeLookup == "id") {
-                lookupCondition = "id(" + aliasLookup + ") = " + valueLookup;
-            }
-            else {
-                lookupCondition = aliasLookup + "." + attributeLookup + " = " + valueLookup;
-            }
-            var query = " MATCH (p:Parent)-[:RESPONSIBLE_FOR]->" + 
+        family_return_by_email: function(email) {
+            return this.family_return("p.email = '" + email + "'");
+        },
+        family_return_by_id: function(id) {
+            return this.family_return("id(f) = " + id);
+        },
+        family_return: function(uniqueCondition) {
+            var familyReturnQuery = " MATCH (p:Parent)-[:RESPONSIBLE_FOR]->" + 
             "(f:Family)<-[:MANAGED_BY]-" +
             "(a:Activity)<-[:ADHERES_TO]-" + 
             "(t:Timer)<-[:TRACKED_BY]-" +
             "(b:Baby)-[:RESPONSIBILITY_OF]->(f) " +
-            " WHERE " + lookupCondition +
+            " WHERE " + uniqueCondition + 
             " WITH { id: id(f), name: f.name, created_on: f.created_on, updated_on: f.updated_on } AS family," +
             " COLLECT( DISTINCT {" +
             " id: id(p)," +
@@ -98,12 +97,24 @@ module.exports = function DatabaseBabySync(db) {
             " updated_on: a.updated_on" +
             " } ) AS timers" +
             " RETURN family, parents, activities, COLLECT( DISTINCT { id: id(b), name: b.name, created_on: b.created_on, updated_on: b.updated_on, timers: timers }) AS babies";          
-            return query;
+            return familyReturnQuery;
         },
-        family_create_query_object: function(parent, isNewParent) {
-            
-            var createDate = parent.created_on;
-            var updateDate = parent.updated_on;
+        family_create_query_object: function(parent, parentAlias, isUnique) {
+
+            // Add date fields
+            var now = new Date();
+            var createDate = now;
+            var updateDate = now;
+
+            var parentBind = parentAlias;
+
+            var unique = isUnique ? " UNIQUE " : "";
+            if (parent != null) {
+                params["parm_parent"] = parent;
+                parentBind = parentAlias + ":Parent {parm_parent}";
+                createDate = parent.created_on;
+                updateDate = parent.updated_on;
+            }
 
             var family = {
                 name: "My Family"
@@ -180,13 +191,7 @@ module.exports = function DatabaseBabySync(db) {
                 parm_timer3: timer3
             };
 
-            var parentNodeDescription = "p";
-            if (isNewParent) {
-                params["parm_parent"] = parent;
-                parentNodeDescription = "p:Parent {parm_parent}";
-            }
-
-            var query = " CREATE UNIQUE (" + parentNodeDescription + ")-[:RESPONSIBLE_FOR]->(f:Family {parm_family}),"+
+            var create = " CREATE " + unique + " (" + parentBind + ")-[:RESPONSIBLE_FOR]->(f:Family {parm_family}),"+
                 " (a1:Activity {parm_activity1})-[:MANAGED_BY]->(f),"+
                 " (a2:Activity {parm_activity2})-[:MANAGED_BY]->(f),"+
                 " (a3:Activity {parm_activity3})-[:MANAGED_BY]->(f),"+
@@ -194,10 +199,13 @@ module.exports = function DatabaseBabySync(db) {
                 " (b)-[:TRACKED_BY]->(t1:Timer {parm_timer1})-[:ADHERES_TO]->(a1),"+
                 " (b)-[:TRACKED_BY]->(t2:Timer {parm_timer2})-[:ADHERES_TO]->(a2),"+
                 " (b)-[:TRACKED_BY]->(t3:Timer {parm_timer3})-[:ADHERES_TO]->(a3)"+
-                " WITH p.email AS lookup ";
+                " WITH " + parentAlias + " AS pcreate, f AS fcreate";
 
-            return {query:query,params:params};
-        }
+            return {query:create,params:params};
+        },
+
+        // (b)-[:TRACKED_BY]->(t1:Timer {parm_timer1})-[:ADHERES_TO]->(a1:Activity {parm_activity1})-[:MANAGED_BY]->(f)
+
         /*
          * Cypher query to create a new stubbed-out family with a requested
          * parent object, as an asynchronous Q promise. The nodes which make up 
@@ -211,9 +219,9 @@ module.exports = function DatabaseBabySync(db) {
          * auxiliary promise defined by {@link module:Database.successOneOrNone}
          */
         family_create: function(parent) {
-            var create = this.family_create_query_object(parent, true);
+            var create = this.family_create_query_object(parent,"p",false);
             var query = create.query;
-            query += this.family_return("p", "email", "lookup");
+            query += this.family_return_by_email(parent.email);
             return db.cypher({
                 query: query,
                 params: create.params
@@ -253,17 +261,12 @@ module.exports = function DatabaseBabySync(db) {
             " ELSE [ pRF ]" +
             " END AS toDeletes" +
             " WITH fnew, p, toDeletes" +
-
+            " CREATE UNIQUE (p)-[:RESPONSIBLE_FOR]->(fnew)" +
+            " WITH fnew, p, toDeletes" +
             " UNWIND toDeletes AS tD" +
             " DELETE tD" + 
-            " WITH fnew, p" +
-
-            " CREATE UNIQUE (p)-[:RESPONSIBLE_FOR]->(fnew)" +
-            " WITH fnew";
-
-
-
-            query += this.family_return("f", "id", "id(fnew)");
+            " WITH p AS pjoin, fnew AS fjoin";
+            query += this.family_return_by_id(familyID);
             return db.cypher(query)
             .then(db.successOneOrNone, db.error);
         },
@@ -281,23 +284,23 @@ module.exports = function DatabaseBabySync(db) {
          * family_create -- with the prior deletion of the :RESPONSIBLE_FOR 
          * relationship between the Parent node and old Family node.
          * 
-         * @param {string} parentEmail - unique email property of detaching
-         * Parent node
+         * @param {Object} parent - requested parent object to detach from
+         * family
          * @return {external:Q.Promise} on success, the promise resolves to an 
          * auxiliary promise defined by {@link module:Database.successOneOrNone}
          */
-        family_detach: function(parentEmail) {
+        family_detach: function(parent) {
             var query = "MATCH (p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family)" +
-            " WHERE p.email = '" + parentEmail + "'" +
+            " WHERE p.email = '" + parent.email + "'" +
             " OPTIONAL MATCH (pO:Parent)-[pORF:RESPONSIBLE_FOR]->(f)" +
-            " WHERE pO.email <> '" + parentEmail + "'" +
+            " WHERE pO.email <> '" + parent.email + "'" +
             " WITH p, pRF, f, pO, pORF" +
             " MATCH" +
             " (a:Activity)-[aMB:MANAGED_BY]->(f)," +
             " (t:Timer)-[tAT:ADHERES_TO]->(a)," +
             " (b:Baby)-[bTB:TRACKED_BY]->(t)," +
             " (b)-[bRO:RESPONSIBILITY_OF]->(f)" +
-            " WITH a, aMB, t, tAT, b, bTB, bRO, pO, pORF, p, pRF, f" +
+            " WITH a, aMB, t, tAT, b, bTB, bRO, pO, pORF, p, pRF, f," +
             " CASE COUNT(pO)" +
             " WHEN 0" +
             " THEN [ a, aMB, t, tAT, b, bTB, bRO, pRF, f ]" +
@@ -306,10 +309,15 @@ module.exports = function DatabaseBabySync(db) {
             " WITH p, toDeletes" +
             " UNWIND toDeletes AS tD" +
             " DELETE tD" + 
-            " WITH p";
-            var create = this.family_create_query_object(parent, false);
-            var query = create.query;
-            query += this.family_return("p", "email", "lookup");
+            " WITH DISTINCT(p) AS pdetach";
+
+            console.log("q1 = ", query);
+
+            var create = this.family_create_query_object(null, "pdetach", false);
+            query += create.query;
+            console.log("q2 = ", query);
+            query += this.family_return_by_email(parent.email);
+            console.log("q3 = ", query);
             return db.cypher({
                 query: query,
                 params: create.params

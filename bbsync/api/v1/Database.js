@@ -37,10 +37,10 @@ module.exports = function Database(config, errors) {
         // Cypher Async Promises
         // ---------------------------------------------------------------------
         cypher: function(input) {
-            // console.log("----------------------");
-            // console.log("EXECUTING CYPHER QUERY");
-            // console.log(input);
-            // console.log("----------------------");
+            console.log("----------------------");
+            console.log("EXECUTING CYPHER QUERY");
+            console.log(input);
+            console.log("----------------------");
             var deferred = Q.defer();
             ndb.cypher(input, function(error, results) {
                 if (error) deferred.reject(error);
