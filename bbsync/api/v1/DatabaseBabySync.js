@@ -107,13 +107,11 @@ module.exports = function DatabaseBabySync(db) {
             var updateDate = now;
 
             var parentBind = parentAlias;
-
             var unique = isUnique ? " UNIQUE " : "";
             if (parent != null) {
-                params["parm_parent"] = parent;
+                createDate = parent.createDate;
+                updateDate = parent.updateDate;
                 parentBind = parentAlias + ":Parent {parm_parent}";
-                createDate = parent.created_on;
-                updateDate = parent.updated_on;
             }
 
             var family = {
@@ -180,7 +178,6 @@ module.exports = function DatabaseBabySync(db) {
             timer3.updated_on = updateDate;
 
             var params = {
-                parm_parent: parent,
                 parm_family: family,
                 parm_activity1: activity1,
                 parm_activity2: activity2,
@@ -190,6 +187,11 @@ module.exports = function DatabaseBabySync(db) {
                 parm_timer2: timer2,
                 parm_timer3: timer3
             };
+
+            if (params != null) {
+                params["parm_parent"] = parent;
+
+            }
 
             var create = " CREATE " + unique + " (" + parentBind + ")-[:RESPONSIBLE_FOR]->(f:Family {parm_family}),"+
                 " (a1:Activity {parm_activity1})-[:MANAGED_BY]->(f),"+
@@ -290,17 +292,23 @@ module.exports = function DatabaseBabySync(db) {
          * auxiliary promise defined by {@link module:Database.successOneOrNone}
          */
         family_detach: function(parent) {
-            var query = "MATCH (p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family)" +
-            " WHERE p.email = '" + parent.email + "'" +
-            " OPTIONAL MATCH (pO:Parent)-[pORF:RESPONSIBLE_FOR]->(f)" +
-            " WHERE pO.email <> '" + parent.email + "'" +
-            " WITH p, pRF, f, pO, pORF" +
-            " MATCH" +
+            var query = "MATCH (p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family)," +
+
             " (a:Activity)-[aMB:MANAGED_BY]->(f)," +
             " (t:Timer)-[tAT:ADHERES_TO]->(a)," +
             " (b:Baby)-[bTB:TRACKED_BY]->(t)," +
             " (b)-[bRO:RESPONSIBILITY_OF]->(f)" +
-            " WITH a, aMB, t, tAT, b, bTB, bRO, pO, pORF, p, pRF, f," +
+            " WHERE p.email = '" + parent.email + "'" +
+            " WITH p, pRF, f, a, aMB, t, tAT, b, bTB, bRO" +
+            " OPTIONAL MATCH (pO:Parent)-[pORF:RESPONSIBLE_FOR]->(f)" +
+            " WHERE pO.email <> '" + parent.email + "'" +
+            " WITH p, pRF, f, a, aMB, t, tAT, b, bTB, bRO, pO, pORF," +
+            // " MATCH " +
+            // " (a:Activity)-[aMB:MANAGED_BY]->(f)," +
+            // " (t:Timer)-[tAT:ADHERES_TO]->(a)," +
+            // " (b:Baby)-[bTB:TRACKED_BY]->(t)," +
+            // " (b)-[bRO:RESPONSIBILITY_OF]->(f)" +
+            // " WITH a, aMB, t, tAT, b, bTB, bRO, pO, pORF, p, pRF, f," +
             " CASE COUNT(pO)" +
             " WHEN 0" +
             " THEN [ a, aMB, t, tAT, b, bTB, bRO, pRF, f ]" +
@@ -311,11 +319,8 @@ module.exports = function DatabaseBabySync(db) {
             " DELETE tD" + 
             " WITH DISTINCT(p) AS pdetach";
 
-            console.log("q1 = ", query);
-
-            var create = this.family_create_query_object(null, "pdetach", false);
+            var create = this.family_create_query_object(null, "pdetach", true);
             query += create.query;
-            console.log("q2 = ", query);
             query += this.family_return_by_email(parent.email);
             console.log("q3 = ", query);
             return db.cypher({
