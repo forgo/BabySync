@@ -29,13 +29,6 @@ module.exports = function RESTUser(label, alias, schema, db, validate, errors, r
     var jwt = require('koa-jwt');
 
     var restUser = {
-        schemaAttributes: function(schema) {
-            var attributes = Array();
-            schema.forEach(function(scheme, index) {
-                attributes.push(scheme.attribute);
-            });
-            return attributes;
-        },
 // -----------------------------------------------------------------------------
 // START USER SPECIFIC LOGIC
 // -----------------------------------------------------------------------------
@@ -67,7 +60,7 @@ login: function * (next) {
             // See if this username or email exists in the user database
             var userToCompare = null;
             if (isEmailAsUsername) {
-                var userByEmail = yield db.user_by_email_for_login(login_test.data.username, label, alias, restUser.schemaAttributes(schema));
+                var userByEmail = yield db.user_by_email_for_login(login_test.data.username, label, alias, schema);
                 if (userByEmail.success) {
                     if (userByEmail.data.length == 0) {
                         // Email not found (only return generic login failure error for security purposes)
@@ -79,7 +72,7 @@ login: function * (next) {
                     return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE()]);
                 }
             } else {
-                var userByUsername = yield db.user_by_username_for_login(login_test.data.username, label, alias, restUser.schemaAttributes(schema));
+                var userByUsername = yield db.user_by_username_for_login(login_test.data.username, label, alias, schema);
                 if (userByUsername.success) {
                     if (userByUsername.data.length == 0) {
                         // Username not found (only return generic login failure error for security purposes)
@@ -101,7 +94,7 @@ login: function * (next) {
                     login_on: now
                 };
 
-                var userUpdate = yield db.user_update(userToCompare.id, userLoginTimeUpdate, label, alias, restUser.schemaAttributes(schema));
+                var userUpdate = yield db.user_update(userToCompare.id, userLoginTimeUpdate, label, alias, schema);
                 if (userUpdate.success) {
                     // You've logged in successfuly
                     // Set and return JWT
@@ -202,7 +195,7 @@ object_test.data.login_on = "";
 // -----------------------------------------------------------------------------
 
                     // Request DB Create Node and Respond Accordingly
-                    var create = yield db.user_create(object_test.data, label, alias, restUser.schemaAttributes(schema));
+                    var create = yield db.user_create(object_test.data, label, alias, schema);
 
                     if (create.success) {
                         return yield response.success(create.data);
@@ -224,7 +217,7 @@ object_test.data.login_on = "";
                 // No parameter provided in URL
                 if ((this.params.id == undefined || this.params.id == null) && _.isEmpty(this.query)) {
                     // Return all families
-                    var allObjects = yield db.user_all(label, alias, restUser.schemaAttributes(schema));
+                    var allObjects = yield db.user_all(label, alias, schema);
                     if (allObjects.success) {
                         return yield response.success(allObjects.data);
                     } else {
@@ -238,7 +231,7 @@ object_test.data.login_on = "";
 // START USER SPECIFIC LOGIC
 // -----------------------------------------------------------------------------
 // Try to identify existing user
-var user_test = yield validate.userID(this.params.id, schema, label, alias, restUser.schemaAttributes(schema), db);
+var user_test = yield validate.userID(this.params.id, schema, label, alias, schema, db);
 if (user_test.valid) {
     return yield response.success(user_test.data);
 } else {
@@ -285,7 +278,7 @@ if (user_test.valid) {
 // START USER SPECIFIC LOGIC
 // -----------------------------------------------------------------------------
 // Try to identify existing user
-var user_test = yield validate.userID(this.params.id, schema, label, alias, restUser.schemaAttributes(schema), db);
+var user_test = yield validate.userID(this.params.id, schema, label, alias, schema, db);
 if (user_test.valid) {
     existingObject = user_test.data
 } else {
@@ -321,7 +314,7 @@ if (object_test.data.password) {
                         var now = new Date();
                         object_test.data.updated_on = now;
                         // Request DB update
-                        var objectUpdate = yield db.user_update(existingObject.id, object_test.data, label, alias, restUser.schemaAttributes(schema));
+                        var objectUpdate = yield db.user_update(existingObject.id, object_test.data, label, alias, schema);
                         if (objectUpdate.success) {
                             return yield response.success(objectUpdate.data);
                         } else {
@@ -364,7 +357,7 @@ if (object_test.data.password) {
 // START USER SPECIFIC LOGIC
 // -----------------------------------------------------------------------------
 // Try to identify existing user
-var user_test = yield validate.userID(this.params.id, schema, label, alias, restUser.schemaAttributes(schema), db);
+var user_test = yield validate.userID(this.params.id, schema, label, alias, schema, db);
 if (user_test.valid) {
     existingObject = user_test.data
 } else {

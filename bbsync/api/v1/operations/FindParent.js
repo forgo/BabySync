@@ -21,12 +21,38 @@
 // SOFTWARE.
 
 module.exports = function FindParent(db, validate, errors, response, parentSchema) {
-    var dbFindParent = function(parent) {
-
-    };
-    
     var findParent = function * (next) {
-    	this.body = "GO GO GO!";
+	    try {
+            // TODO: Be sure this is being requested by authenticated user w/proper privileges
+
+            // No parameter provided in URL
+            if ((this.params.id == undefined || this.params.id == null) && _.isEmpty(this.query)) {
+                return yield response.invalid([errors.PARENT_EMAIL_REQUIRED()]);
+            }
+            // Parameter exists in URL
+            else {
+                // Validate the email provided
+                var email_test = validate.attribute(parentSchema, this.params.id, "email");
+				if (email_test.valid) {
+                    var parentByEmail = yield db.object_by_filter({email:email_test.data}, "Parent", "p", parentSchema);
+                    if (parentByEmail.success) {
+                    	if (parentByEmail.data.length == 1) {
+                    		return yield response.success(parentByEmail.data[0]);
+                    	}
+                    	else {
+                    		return yield response.invalid([errors.PARENT_NOT_FOUND(email_test.data)]);
+                    	}
+                    } else {
+                    	return yield response.invalid([errors.PARENT_NOT_FOUND(email_test.data)]);
+                    }
+                } else {
+                	return yield response.invalid([errors.PARENT_EMAIL_INVALID()]);
+                }
+            }
+        } catch (e) {
+            // Unknown Error
+            return yield response.catchErrors(e, null);
+        }
     }
     return findParent;
 };

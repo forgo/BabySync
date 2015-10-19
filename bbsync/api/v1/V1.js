@@ -20,6 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+/**
+ * Baby Sync API Version 1
+ * @module babysync/api/V1 
+ */
+
+/** Bootstrap for Baby Sync API and Web UI Applications */
 module.exports = function V1() {
 
     var fs = require('fs');

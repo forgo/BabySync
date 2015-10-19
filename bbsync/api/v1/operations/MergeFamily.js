@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function MergeFamily(db, validate, errors, response, parentSchema) {
+module.exports = function MergeFamily(db, validate, errors, response, parentSchema, familySchema) {
     var dbMergeFamily = function(parent) {
 
     };

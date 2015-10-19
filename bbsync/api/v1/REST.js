@@ -26,13 +26,6 @@ module.exports = function REST(label, alias, schema, db, validate, errors, respo
     var _ = require('lodash');
 
     var rest = {
-        schemaAttributes: function(schema) {
-            var attributes = Array();
-            schema.forEach(function(scheme, index) {
-                attributes.push(scheme.attribute);
-            });
-            return attributes;
-        },
         post: function * (next) {
             try {
                 // TODO: Be sure this is being requested by authenticated user w/proper privileges
@@ -46,7 +39,7 @@ module.exports = function REST(label, alias, schema, db, validate, errors, respo
                     object_test.data.created_on = now;
                     object_test.data.updated_on = now;
                     // Request DB Create Node and Respond Accordingly
-                    var create = yield db.object_create(object_test.data, label, alias, rest.schemaAttributes(schema));
+                    var create = yield db.object_create(object_test.data, label, alias, schema);
                     if (create.success) {
                         return yield response.success(create.data);
                     } else {
@@ -67,7 +60,7 @@ module.exports = function REST(label, alias, schema, db, validate, errors, respo
                 // No parameter provided in URL
                 if ((this.params.id == undefined || this.params.id == null) && _.isEmpty(this.query)) {
                     // Return all families
-                    var allObjects = yield db.object_all(label, alias, rest.schemaAttributes(schema));
+                    var allObjects = yield db.object_all(label, alias, schema);
                     if (allObjects.success) {
                         return yield response.success(allObjects.data);
                     } else {
@@ -79,7 +72,7 @@ module.exports = function REST(label, alias, schema, db, validate, errors, respo
                     // Validate the ID provided
                     var id_test = validate.id(this.params.id);
                     if (id_test.valid) {
-                        var oneObject = yield db.object_by_id(id_test.data.toString(), label, alias, rest.schemaAttributes(schema));
+                        var oneObject = yield db.object_by_id(id_test.data.toString(), label, alias, schema);
                         if (oneObject.success) {
                             // Need to be sure this gives back an object and not empty array!
                             if (oneObject.data.length == 0) {
@@ -127,7 +120,7 @@ module.exports = function REST(label, alias, schema, db, validate, errors, respo
                     // Validate the ID provided
                     var id_test = validate.id(this.params.id);
                     if (id_test.valid) {
-                        existingObject = yield db.object_by_id(id_test.data.toString(), label, alias, rest.schemaAttributes(schema));
+                        existingObject = yield db.object_by_id(id_test.data.toString(), label, alias, schema);
                         if (!existingObject.success) {
                             return yield response.invalidPost(object_pre, existingObject.errors);
                         }
@@ -148,7 +141,7 @@ module.exports = function REST(label, alias, schema, db, validate, errors, respo
                         var now = new Date();
                         object_test.data.updated_on = now;
                         // Request DB update
-                        var objectUpdate = yield db.object_update(existingObject.data.id, object_test.data, label, alias, rest.schemaAttributes(schema));
+                        var objectUpdate = yield db.object_update(existingObject.data.id, object_test.data, label, alias, schema);
                         if (objectUpdate.success) {
                             return yield response.success(objectUpdate.data);
                         } else {
@@ -190,7 +183,7 @@ module.exports = function REST(label, alias, schema, db, validate, errors, respo
                     // Validate the ID provided
                     var id_test = validate.id(this.params.id);
                     if (id_test.valid) {
-                        existingObject = yield db.object_by_id(id_test.data.toString(), label, alias, rest.schemaAttributes(schema));
+                        existingObject = yield db.object_by_id(id_test.data.toString(), label, alias, schema);
                         if (!existingObject.success) {
                             return yield response.invalid(existingObject.errors);
                         }

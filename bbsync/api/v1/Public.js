@@ -42,20 +42,20 @@ module.exports = function Public(babySync) {
 
     // After this point should expect token
     // TODO: move these operations to the private section
-    Public.get('/parent/find/:email', babySync.findParent);
+    Public.get('/parent/find/:id', babySync.findParent);
 
-    Public.put('/parent/join/:familyID', babySync.joinFamily);
-    Public.put('/parent/merge/:familyID', babySync.mergeFamily);
-    Public.put('/parent/detach/:familyID', babySync.detachFamily);
+    Public.put('/parent/join/:id', babySync.joinFamily);
+    Public.put('/parent/merge/:id', babySync.mergeFamily);
+    Public.put('/parent/detach/:id', babySync.detachFamily);
 
-    Public.post('/activity/:familyID', babySync.createActivity);
-    Public.del('/activity/:activityID', babySync.deleteActivity);
+    Public.post('/activity/:id', babySync.createActivity);
+    Public.del('/activity/:id', babySync.deleteActivity);
 
-    Public.post('/baby/:familyID', babySync.createBaby);
-    Public.del('/baby/:babyID', babySync.deleteBaby);
+    Public.post('/baby/:id', babySync.createBaby);
+    Public.del('/baby/:id', babySync.deleteBaby);
 
-    Public.post('/timer/:familyID', babySync.createTimer);
-    Public.del('/timer/:timerID', babySync.deleteTimer);
+    Public.post('/timer/:id', babySync.createTimer);
+    Public.del('/timer/:id', babySync.deleteTimer);
 
 	return Public;
 };

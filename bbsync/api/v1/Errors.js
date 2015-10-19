@@ -191,6 +191,33 @@ module.exports = function Errors() {
                 code: 4003,
                 message: "query param invalid: "+param
             };
+        },
+        /*
+            BabySync Specific Errors
+        */
+        PARENT_EMAIL_REQUIRED: function() {
+            return {
+                code: 5001,
+                message: "email needed to find parent"
+            };
+        },
+        PARENT_EMAIL_INVALID: function() {
+            return {
+                code: 5002,
+                message: "email invalid to find parent"
+            };
+        },
+        PARENT_NOT_FOUND: function(email) {
+            return {
+                code: 5003,
+                message: "no parent found for email: " + email
+            };
+        },
+        FAMILY_ID_REQUIRED: function() {
+            return {
+                code: 5004,
+                message: " family ID needed to join family"
+            };
         }
     });
     return errors;

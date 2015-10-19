@@ -209,7 +209,7 @@ module.exports = function Validate(errors) {
             return null;
         },
         ////////////////////////////////////////////////////////////////////////
-        userID: function(userID, userSchema, label, alias, returnAttributes, db) {
+        userID: function(userID, userSchema, label, alias, returnSchema, db) {
             return function * (next) {
                 var response = {};
                 var id_test = validate.id(userID);
@@ -217,7 +217,7 @@ module.exports = function Validate(errors) {
                 var email_test = validate.attribute(userSchema, userID, "email");
 
                 if (id_test.valid) {
-                    var userByID = yield db.user_by_id(id_test.data.toString(), label, alias, returnAttributes);
+                    var userByID = yield db.user_by_id(id_test.data.toString(), label, alias, returnSchema);
                     if (userByID.success) {
                         response.valid = true;
                         response.data = userByID.data;
@@ -226,7 +226,7 @@ module.exports = function Validate(errors) {
                         response.errors = userByID.errors;
                     }
                 } else if (username_test.valid) {
-                    var userByUsername = yield db.user_by_filter({username:username_test.data}, label, alias, returnAttributes);
+                    var userByUsername = yield db.user_by_filter({username:username_test.data}, label, alias, returnSchema);
                     if (userByUsername.success) {
                         response.valid = true;
                         response.data = userByUsername.data;
@@ -235,7 +235,7 @@ module.exports = function Validate(errors) {
                         response.errors = userByUsername.errors;
                     }
                 } else if (email_test.valid) {
-                    var userByEmail = yield db.user_by_filter({email:email_test.data}, label, alias, returnAttributes);
+                    var userByEmail = yield db.user_by_filter({email:email_test.data}, label, alias, returnSchema);
                     if (userByEmail.success) {
                         response.valid = true;
                         response.data = userByEmail.data;

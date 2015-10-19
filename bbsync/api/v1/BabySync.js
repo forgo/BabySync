@@ -58,9 +58,9 @@ module.exports = function BabySync(db, validate, errors, response) {
 
     var createFamily = new CreateFamily(db, validate, errors, response, parent.schema);
     var findParent = new FindParent(db, validate, errors, response, parent.schema);
-    var joinFamily = new JoinFamily(db, validate, errors, response, parent.schema);
-    var mergeFamily = new MergeFamily(db, validate, errors, response, parent.schema);
-    var detachFamily = new DetachFamily(db, validate, errors, response, parent.schema);
+    var joinFamily = new JoinFamily(db, validate, errors, response, parent.schema, family.schema);
+    var mergeFamily = new MergeFamily(db, validate, errors, response, parent.schema, family.schema);
+    var detachFamily = new DetachFamily(db, validate, errors, response, parent.schema, family.schema);
     var createActivity = new CreateActivity(db, validate, errors, response);
     var deleteActivity = new DeleteActivity(db, validate, errors, response);
     var createBaby = new CreateBaby(db, validate, errors, response);

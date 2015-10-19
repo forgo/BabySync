@@ -20,6 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+/**
+ * Baby Sync API Version 1
+ * @module babysync/api/Database
+ */
+
+/** Bootstrap for Baby Sync API and Web UI Applications */
 module.exports = function Database(config, errors) {
     var neo4j = require('neo4j');
     var ndb = new neo4j.GraphDatabase(config);
@@ -46,6 +52,9 @@ module.exports = function Database(config, errors) {
         successOneOrNone: function(results) {
             var response = {};
             var deferred = Q.defer();
+
+            console.log("SUCCESS ONE OR NONE reuslts: ");
+            console.log(results);
 
             if (!results) {
                 response.success = false;
@@ -199,11 +208,23 @@ module.exports = function Database(config, errors) {
             return deferred.promise;
         },
         // ---------------------------------------------------------------------
+        // Helper Functions
+        // ---------------------------------------------------------------------
+        schemaAttributes: function(schema) {
+            var attributes = Array();
+            schema.forEach(function(scheme, index) {
+                attributes.push(scheme.attribute);
+            });
+            return attributes;
+        },
+        // ---------------------------------------------------------------------
         // User Boilerplate
         // ---------------------------------------------------------------------
-        user_return: function(alias, attributes) {
+        user_return: function(alias, returnSchema) {
             // Always return the user ID
             var returnString = " id(" + alias + ") AS id";
+
+            var attributes = db.schemaAttributes(returnSchema);
             if (!Array.isArray(attributes)) {
                 return returnString;
             }
@@ -221,9 +242,11 @@ module.exports = function Database(config, errors) {
             returnString += ", " + alias + ".login_on AS login_on";
             return returnString;
         },
-        user_login_return: function(alias, attributes) {
+        user_login_return: function(alias, returnSchema) {
             // Always return the user ID
             var returnString = " id(" + alias + ") AS id";
+
+            var attributes = db.schemaAttributes(returnSchema);
             if (!Array.isArray(attributes)) {
                 return returnString;
             }
@@ -242,9 +265,9 @@ module.exports = function Database(config, errors) {
             returnString += ", " + alias + ".hash AS hash";
             return returnString;
         },
-        user_create: function(user, label, alias, returnAttributes) {
+        user_create: function(user, label, alias, returnSchema) {
             var query = "CREATE (" + alias + ":" + label + " {user})";
-            query += " RETURN " + this.user_return(alias, returnAttributes);
+            query += " RETURN " + this.user_return(alias, returnSchema);
             var params = {
                 user: user
             };
@@ -254,50 +277,50 @@ module.exports = function Database(config, errors) {
                 })
                 .then(this.successOneOrNone, this.error);
         },
-        user_by_username_for_login: function(username, label, alias, returnAttributes) {
+        user_by_username_for_login: function(username, label, alias, returnSchema) {
             var query = "MATCH (" + alias + ":" + label + ")";
             query += " WHERE " + alias + ".username = \"" + username + "\"";
-            query += " RETURN " + this.user_login_return(alias, returnAttributes);
+            query += " RETURN " + this.user_login_return(alias, returnSchema);
             return this.cypher(query)
                 .then(this.successOneOrNone, this.error);
         },
-        user_by_email_for_login: function(email, label, alias, returnAttributes) {
+        user_by_email_for_login: function(email, label, alias, returnSchema) {
             var query = "MATCH (" + alias + ":" + label + ")";
             query += " WHERE " + alias + ".email = \"" + email + "\"";
-            query += " RETURN " + this.user_login_return(alias, returnAttributes);
+            query += " RETURN " + this.user_login_return(alias, returnSchema);
             return this.cypher(query)
                 .then(this.successOneOrNone, this.error);
         },
-        user_by_id: function(id, label, alias, returnAttributes) {
+        user_by_id: function(id, label, alias, returnSchema) {
             var query = "MATCH (" + alias + ":" + label + ")";
             query += " WHERE id(" + alias + ") = " + id;
-            query += " RETURN " + this.user_return(alias, returnAttributes);
+            query += " RETURN " + this.user_return(alias, returnSchema);
             return this.cypher(query)
                 .then(this.successOneOrNone, this.error);
         },
-        user_by_filter: function(filter, label, alias, returnAttributes) {
+        user_by_filter: function(filter, label, alias, returnSchema) {
             var query = "MATCH (" + alias + ":" + label + ")";
-            var queryFilter = this.object_query_filter(filter);
+            var queryFilter = this.object_query_filter(filter, alias);
             // Expect valid filter
             if (queryFilter == null) {
                 return this.errorFilter(label);
             }
             query += queryFilter;
-            query += " RETURN " + this.user_return(alias, returnAttributes);
+            query += " RETURN " + this.user_return(alias, returnSchema);
             return this.cypher(query)
                 .then(this.successAll, this.error);
         },
-        user_all: function(label, alias, returnAttributes) {
+        user_all: function(label, alias, returnSchema) {
             var query = "MATCH (" + alias + ":" + label + ")";
-            query += " RETURN " + this.user_return(alias, returnAttributes);
+            query += " RETURN " + this.user_return(alias, returnSchema);
             return this.cypher(query)
                 .then(this.successAll, this.error);
         },
-        user_update: function(id, user, label, alias, returnAttributes) {
+        user_update: function(id, user, label, alias, returnSchema) {
             var query = "MATCH (" + alias + ":" + label + ")";
             query += " WHERE id(" + alias + ") = " + id;
             query += " SET " + alias + " += { user }";
-            query += " RETURN " + this.user_return(alias, returnAttributes);
+            query += " RETURN " + this.user_return(alias, returnSchema);
             var params = {
                 user: user
             };
@@ -345,6 +368,8 @@ module.exports = function Database(config, errors) {
             Object.keys(filter).forEach(function(attr, index) {
                 // Format query condition based on type
                 var condition = filter[attr];
+                console.log("condition = ", condition);
+                console.log(typeof condition);
                 if (typeof condition === 'string') {
                     condition = "\"" + condition + "\"";
                 }
@@ -362,11 +387,13 @@ module.exports = function Database(config, errors) {
                     queryFilter += " AND " + alias + "." + attr + " = " + condition
                 }
             });
-            return 
+            return queryFilter;
         },
-        object_return: function(alias, attributes) {
+        object_return: function(alias, returnSchema) {
             // Always return the object ID
             var returnString = " id(" + alias + ") AS id";
+
+            var attributes = db.schemaAttributes(returnSchema);
             if (!Array.isArray(attributes)) {
                 return returnString;
             }
@@ -384,9 +411,9 @@ module.exports = function Database(config, errors) {
             returnString += ", collect( id(" + alias + ") ) AS ids";
             return returnString;
         },
-        object_create: function(object, label, alias, returnAttributes) {
+        object_create: function(object, label, alias, returnSchema) {
             var query = "CREATE (" + alias + ":" + label + " {object})";
-            query += " RETURN " + this.object_return(alias, returnAttributes);
+            query += " RETURN " + this.object_return(alias, returnSchema);
             var params = {
                 object: object
             };
@@ -396,36 +423,36 @@ module.exports = function Database(config, errors) {
                 })
                 .then(this.successOneOrNone, this.error);
         },
-        object_by_id: function(id, label, alias, returnAttributes) {
+        object_by_id: function(id, label, alias, returnSchema) {
             var query = "MATCH (" + alias + ":" + label + ")";
             query += " WHERE id(" + alias + ") = " + id;
-            query += " RETURN " + this.object_return(alias, returnAttributes);
+            query += " RETURN " + this.object_return(alias, returnSchema);
             return this.cypher(query)
                 .then(this.successOneOrNone, this.error);
         },
-        object_by_filter: function(filter, label, alias, returnAttributes) {
+        object_by_filter: function(filter, label, alias, returnSchema) {
             var query = "MATCH (" + alias + ":" + label + ")";
-            var queryFilter = this.object_query_filter(filter);
+            var queryFilter = this.object_query_filter(filter, alias);
             // Expect valid filter
             if (queryFilter == null) {
                 return this.errorFilter(label);
             }
             query += queryFilter;
-            query += " RETURN " + this.object_return(alias, returnAttributes);
+            query += " RETURN " + this.object_return(alias, returnSchema);
             return this.cypher(query)
                 .then(this.successAll, this.error);
         },
-        object_all: function(label, alias, returnAttributes) {
+        object_all: function(label, alias, returnSchema) {
             var query = "MATCH (" + alias + ":" + label + ")";
-            query += " RETURN " + this.object_return(alias, returnAttributes);
+            query += " RETURN " + this.object_return(alias, returnSchema);
             return this.cypher(query)
                 .then(this.successAll, this.error);
         },
-        object_update: function(id, object, label, alias, returnAttributes) {
+        object_update: function(id, object, label, alias, returnSchema) {
             var query = "MATCH (" + alias + ":" + label + ")";
             query += " WHERE id(" + alias + ") = " + id;
             query += " SET " + alias + " += { object }";
-            query += " RETURN " + this.object_return(alias, returnAttributes);
+            query += " RETURN " + this.object_return(alias, returnSchema);
             var params = {
                 object: object
             };
@@ -448,7 +475,7 @@ module.exports = function Database(config, errors) {
         object_delete_by_filter: function(filter, label, alias) {
             var aliasRelationships = "relationship";
             var query = "MATCH (" + alias + ":" + label + ")";
-            var queryFilter = this.object_query_filter(filter);
+            var queryFilter = this.object_query_filter(filter, alias);
             // Expect valid filter
             if (queryFilter == null) {
                 return this.errorFilter(label);
