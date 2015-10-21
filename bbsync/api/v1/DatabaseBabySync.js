@@ -109,8 +109,8 @@ module.exports = function DatabaseBabySync(db) {
             var parentBind = parentAlias;
             var unique = isUnique ? " UNIQUE " : "";
             if (parent != null) {
-                createDate = parent.createDate;
-                updateDate = parent.updateDate;
+                createDate = now;
+                updateDate = now;
                 parentBind = parentAlias + ":Parent {parm_parent}";
             }
 
@@ -282,9 +282,44 @@ module.exports = function DatabaseBabySync(db) {
             return db.cypher(query)
             .then(db.successOneOrNone, db.error);
         },
-
+        // Merges existing activities/timers/babies with another family
+        // if multiple parents, preserves for old family -- otherwise delete old family stuff
         family_merge: function(familyID, parentEmail) {
-
+            var query = "MATCH"+
+            " (p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family),"+
+            " (fnew:Family)"+
+            " WHERE p.email = '" + parentEmail + "' AND id(fnew) = " + familyID + " AND id(f) <> " + familyID +
+            " WITH p, pRF, f, fnew"+
+            " OPTIONAL MATCH"+
+            " (pO:Parent)-[pORF:RESPONSIBLE_FOR]->(f)"+
+            " WHERE pO.email <> '" + parentEmail + "'"+
+            " WITH p, pRF, f, fnew, COUNT(pO) AS nOtherParents"+
+            " OPTIONAL MATCH"+
+            " (t:Timer)-[tAT:ADHERES_TO]->(a:Activity)-[aMB:MANAGED_BY]->(f)<-[bRO:RESPONSIBILITY_OF]-(b:Baby)-[bTB:TRACKED_BY]->(t)"+
+            " WITH p, pRF, f, fnew, nOtherParents,"+
+            " COLLECT(DISTINCT(pRF)) AS multiParentRelsDel,"+
+            " COLLECT(DISTINCT(tAT))+"+
+            " COLLECT(DISTINCT(aMB))+"+
+            " COLLECT(DISTINCT(bRO))+"+
+            " COLLECT(DISTINCT(bTB))+"+
+            " COLLECT(DISTINCT(pRF)) AS onlyParentRelsDel,"+
+            " COLLECT(DISTINCT(t))+"+
+            " COLLECT(DISTINCT(a))+"+
+            " COLLECT(DISTINCT(b))+"+
+            " COLLECT(DISTINCT(f)) AS onlyParentNodsDel"+
+            " WITH p, fnew, nOtherParents, onlyParentRelsDel, onlyParentNodsDel, multiParentRelsDel,"+
+            " CASE nOtherParents"+
+            " WHEN 0"+
+            " THEN {rels:onlyParentRelsDel, nods:onlyParentNodsDel}"+
+            " ELSE {rels:multiParentRelsDel, nods:[]}"+
+            " END AS deletable"+
+            " FOREACH(r in deletable.rels | DELETE r)"+
+            " FOREACH(n in deletable.nods | DELETE n)"+
+            " CREATE UNIQUE (p)-[:RESPONSIBLE_FOR]->(fnew)"+
+            " WITH DISTINCT(p) AS pjoin, fnew AS fjoin";
+            query += this.family_return_by_id(familyID);
+            return db.cypher(query)
+            .then(db.successOneOrNone, db.error);
         },
         /*
          * Cypher query to detach parent from family, as an asynchronous Q 
