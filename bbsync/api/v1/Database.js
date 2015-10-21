@@ -175,8 +175,6 @@ module.exports = function Database(config, errors) {
             var deferred = Q.defer();
             response.success = false;
 
-            console.log("DB ERRRRRR = ", err);
-
             // Database Connectivity Issue
             if (err.code == "ECONNREFUSED") {
                 response.errors = [errors.NEO4J_CONNECTION_ISSUE()];

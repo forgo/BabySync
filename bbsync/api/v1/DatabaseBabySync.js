@@ -246,28 +246,38 @@ module.exports = function DatabaseBabySync(db) {
          * auxiliary promise defined by {@link module:Database.successOneOrNone}
          */
         family_join: function(familyID, parentEmail) {
-            var query = "MATCH (p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family),(fnew:Family)" +
-            " WHERE p.email = '" + parentEmail + "' AND id(fnew) = " + familyID +
-            " OPTIONAL MATCH (pO:Parent)-[pORF:RESPONSIBLE_FOR]->(f)" +
-            " WHERE pO.email <> '" + parentEmail + "'" +
-            " WITH p, pRF, f, pO, pORF, fnew" +
-            " MATCH" +
-            " (a:Activity)-[aMB:MANAGED_BY]->(f)," +
-            " (t:Timer)-[tAT:ADHERES_TO]->(a)," +
-            " (b:Baby)-[bTB:TRACKED_BY]->(t)," +
-            " (b)-[bRO:RESPONSIBILITY_OF]->(f)" +
-            " WITH a, aMB, t, tAT, b, bTB, bRO, pO, pORF, p, pRF, f, fnew," +
-            " CASE COUNT(pO)" +
-            " WHEN 0" +
-            " THEN [ a, aMB, t, tAT, b, bTB, bRO, pRF, f ]" +
-            " ELSE [ pRF ]" +
-            " END AS toDeletes" +
-            " WITH fnew, p, toDeletes" +
-            " CREATE UNIQUE (p)-[:RESPONSIBLE_FOR]->(fnew)" +
-            " WITH fnew, p, toDeletes" +
-            " UNWIND toDeletes AS tD" +
-            " DELETE tD" + 
-            " WITH p AS pjoin, fnew AS fjoin";
+            var query = "MATCH"+
+            " (p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family),"+
+            " (fnew:Family)"+
+            " WHERE p.email = '" + parentEmail + "' AND id(fnew) = " + familyID + " AND id(f) <> " + familyID +
+            " WITH p, pRF, f, fnew"+
+            " OPTIONAL MATCH"+
+            " (pO:Parent)-[pORF:RESPONSIBLE_FOR]->(f)"+
+            " WHERE pO.email <> '" + parentEmail + "'"+
+            " WITH p, pRF, f, fnew, COUNT(pO) AS nOtherParents"+
+            " OPTIONAL MATCH"+
+            " (t:Timer)-[tAT:ADHERES_TO]->(a:Activity)-[aMB:MANAGED_BY]->(f)<-[bRO:RESPONSIBILITY_OF]-(b:Baby)-[bTB:TRACKED_BY]->(t)"+
+            " WITH p, pRF, f, fnew, nOtherParents,"+
+            " COLLECT(DISTINCT(pRF)) AS multiParentRelsDel,"+
+            " COLLECT(DISTINCT(tAT))+"+
+            " COLLECT(DISTINCT(aMB))+"+
+            " COLLECT(DISTINCT(bRO))+"+
+            " COLLECT(DISTINCT(bTB))+"+
+            " COLLECT(DISTINCT(pRF)) AS onlyParentRelsDel,"+
+            " COLLECT(DISTINCT(t))+"+
+            " COLLECT(DISTINCT(a))+"+
+            " COLLECT(DISTINCT(b))+"+
+            " COLLECT(DISTINCT(f)) AS onlyParentNodsDel"+
+            " WITH p, fnew, nOtherParents, onlyParentRelsDel, onlyParentNodsDel, multiParentRelsDel,"+
+            " CASE nOtherParents"+
+            " WHEN 0"+
+            " THEN {rels:onlyParentRelsDel, nods:onlyParentNodsDel}"+
+            " ELSE {rels:multiParentRelsDel, nods:[]}"+
+            " END AS deletable"+
+            " FOREACH(r in deletable.rels | DELETE r)"+
+            " FOREACH(n in deletable.nods | DELETE n)"+
+            " CREATE UNIQUE (p)-[:RESPONSIBLE_FOR]->(fnew)"+
+            " WITH DISTINCT(p) AS pjoin, fnew AS fjoin";
             query += this.family_return_by_id(familyID);
             return db.cypher(query)
             .then(db.successOneOrNone, db.error);
@@ -292,44 +302,45 @@ module.exports = function DatabaseBabySync(db) {
          * auxiliary promise defined by {@link module:Database.successOneOrNone}
          */
         family_detach: function(parent) {
-            var query = "MATCH (p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family)," +
-
-            " (a:Activity)-[aMB:MANAGED_BY]->(f)," +
-            " (t:Timer)-[tAT:ADHERES_TO]->(a)," +
-            " (b:Baby)-[bTB:TRACKED_BY]->(t)," +
-            " (b)-[bRO:RESPONSIBILITY_OF]->(f)" +
-            " WHERE p.email = '" + parent.email + "'" +
-            " WITH p, pRF, f, a, aMB, t, tAT, b, bTB, bRO" +
-            " OPTIONAL MATCH (pO:Parent)-[pORF:RESPONSIBLE_FOR]->(f)" +
-            " WHERE pO.email <> '" + parent.email + "'" +
-            " WITH p, pRF, f, a, aMB, t, tAT, b, bTB, bRO, pO, pORF," +
-            // " MATCH " +
-            // " (a:Activity)-[aMB:MANAGED_BY]->(f)," +
-            // " (t:Timer)-[tAT:ADHERES_TO]->(a)," +
-            // " (b:Baby)-[bTB:TRACKED_BY]->(t)," +
-            // " (b)-[bRO:RESPONSIBILITY_OF]->(f)" +
-            // " WITH a, aMB, t, tAT, b, bTB, bRO, pO, pORF, p, pRF, f," +
-            " CASE COUNT(pO)" +
-            " WHEN 0" +
-            " THEN [ a, aMB, t, tAT, b, bTB, bRO, pRF, f ]" +
-            " ELSE [ pRF ]" +
-            " END AS toDeletes" +
-            " WITH p, toDeletes" +
-            " UNWIND toDeletes AS tD" +
-            " DELETE tD" + 
-            " WITH DISTINCT(p) AS pdetach";
-
+            var query = "MATCH"+
+            " (p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family)"+
+            " WHERE p.email = '" + parent.email + "'"+
+            " WITH p, pRF, f"+
+            " OPTIONAL MATCH"+
+            " (pO:Parent)-[pORF:RESPONSIBLE_FOR]->(f)"+
+            " WHERE pO.email <> '" + parent.email + "'"+
+            " WITH p, pRF, f, COUNT(pO) AS nOtherParents"+
+            " OPTIONAL MATCH"+
+            " (t:Timer)-[tAT:ADHERES_TO]->(a:Activity)-[aMB:MANAGED_BY]->(f)<-[bRO:RESPONSIBILITY_OF]-(b:Baby)-[bTB:TRACKED_BY]->(t)"+
+            " WITH p, pRF, f, nOtherParents,"+
+            " COLLECT(DISTINCT(pRF)) AS multiParentRelsDel,"+
+            " COLLECT(DISTINCT(tAT))+"+
+            " COLLECT(DISTINCT(aMB))+"+
+            " COLLECT(DISTINCT(bRO))+"+
+            " COLLECT(DISTINCT(bTB))+"+
+            " COLLECT(DISTINCT(pRF)) AS onlyParentRelsDel,"+
+            " COLLECT(DISTINCT(t))+"+
+            " COLLECT(DISTINCT(a))+"+
+            " COLLECT(DISTINCT(b))+"+
+            " COLLECT(DISTINCT(f)) AS onlyParentNodsDel"+
+            " WITH p, nOtherParents, onlyParentRelsDel, onlyParentNodsDel, multiParentRelsDel,"+
+            " CASE nOtherParents"+
+            " WHEN 0"+
+            " THEN {rels:onlyParentRelsDel, nods:onlyParentNodsDel}"+
+            " ELSE {rels:multiParentRelsDel, nods:[]}"+
+            " END AS deletable"+
+            " FOREACH(r in deletable.rels | DELETE r)"+
+            " FOREACH(n in deletable.nods | DELETE n)"+
+            " WITH p AS pdetach";
             var create = this.family_create_query_object(null, "pdetach", true);
             query += create.query;
             query += this.family_return_by_email(parent.email);
-            console.log("q3 = ", query);
             return db.cypher({
                 query: query,
                 params: create.params
             })
             .then(db.successOneOrNone, db.error);
         }
-
     };
 
     return dbBabySync;
