@@ -59,43 +59,36 @@ module.exports = function User(RESTUser, db, validate, errors, response) {
         attribute: "username",
         type: "text",
         required: true,
-        auto: false,
         test: userValidate.username()
     }, {
         attribute: "password",
         type: "password",
         required: true,
-        auto: false,
         test: userValidate.password()
     }, {
         attribute: "email",
         type: "text",
         required: true,
-        auto: false,
         test: userValidate.email()
     }, {
         attribute: "birthday",
         type: "date",
         required: false,
-        auto: false,
         test: userValidate.birthday()
     }, {
         attribute: "phone",
         type: "text",
         required: false,
-        auto: false,
         test: userValidate.phone()
     }, {
         attribute: "firstname",
         type: "text",
         required: false,
-        auto: false,
         test: userValidate.firstname()
     }, {
         attribute: "lastname",
         type: "text",
         required: false,
-        auto: false,
         test: userValidate.lastname()
     }];
 

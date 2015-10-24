@@ -31,16 +31,11 @@ module.exports = function DetachFamily(db, validate, errors, response, parentSch
     var detachFamily = function * (next) {
     	try {
     	    // TODO: Be sure this is being requested by authenticated user w/proper privileges
-
             var parent_pre = yield parse(this);
-            var parent_test = validate.schema(parentSchema, parent_pre);
+            var parent_test = validate.schemaForAttributes(parentSchema, ["email"], parent_pre);
             if (parent_test.valid) {
-            	// Add automatic date fields
-                var now = new Date();
-                parent_test.data.created_on = now;
-                parent_test.data.updated_on = now;
             	// Request DB Family Join
-            	var detach = yield dbBabySync.family_detach(parent_test.data);
+            	var detach = yield dbBabySync.family_detach(parent_test.data.email);
                 if (detach.success) {
                     return yield response.success(detach.data);
                 } else {

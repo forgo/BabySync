@@ -63,50 +63,42 @@ module.exports = function Geocache(REST, db, validate, errors, response) {
         attribute: "title",
         type: String,
         required: true,
-        auto: false,
         test: geocacheValidate.title()
     }, {
         attribute: "message",
         type: String,
         required: true,
-        auto: false,
         test: geocacheValidate.message()
     }, {
         attribute: "lat",
         type: Number,
         required: true,
-        auto: false,
         test: geocacheValidate.lat()
     }, {
         attribute: "lng",
         type: Number,
         auto: false,
         required: true,
-        auto: false,
         test: geocacheValidate.lng()
     }, {
         attribute: "currency",
         type: String,
         required: true,
-        auto: false,
         test: geocacheValidate.currency()
     }, {
         attribute: "amount",
         type: Number,
         required: true,
-        auto: false,
         test: geocacheValidate.amount()
     }, {
         attribute: "is_physical",
         type: Boolean,
         required: true,
-        auto: false,
         test: geocacheValidate.is_physical()
     }, {
         attribute: "delay",
         type: Number,
         required: true,
-        auto: false,
         test: geocacheValidate.delay()
     }];
 

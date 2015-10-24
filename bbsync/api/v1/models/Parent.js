@@ -47,25 +47,21 @@ module.exports = function Parent(REST, db, validate, errors, response) {
         attribute: "name",
         type: "String",
         required: true,
-        auto: false,
         test: parentValidate.name()
     }, {
         attribute: "email",
         type: "String",
         required: true,
-        auto: false,
         test: parentValidate.email()
     }, {
         attribute: "facebookID",
         type: "String",
         required: false,
-        auto: false,
         test: parentValidate.facebookID()
     }, {
         attribute: "googleID",
         type: "String",
         required: false,
-        auto: false,
         test: parentValidate.googleID()
     }];
 

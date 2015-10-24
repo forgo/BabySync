@@ -53,25 +53,21 @@ module.exports = function Activity(REST, db, validate, errors, response) {
         attribute: "name",
         type: "String",
         required: true,
-        auto: false,
         test: activityValidate.name()
     }, {
         attribute: "icon",
         type: "String",
         required: true,
-        auto: false,
         test: activityValidate.icon()
     }, {
         attribute: "warn",
         type: "Double",
         required: true,
-        auto: false,
         test: activityValidate.warn()
     }, {
         attribute: "critical",
         type: "Double",
         required: true,
-        auto: false,
         test: activityValidate.critical()
     }];
 

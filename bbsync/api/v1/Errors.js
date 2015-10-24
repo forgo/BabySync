@@ -121,10 +121,16 @@ module.exports = function Errors() {
                 message: "unidentifiable from: " + id
             };
         },
-        ATTRIBUTE_AUTO_GEN_REQUIRED: function(attribute) {
+        SCHEMA_UNDEFINED: function() {
             return {
                 code: 3004,
-                message: "non-date auto attribute " + attribute + " manadates a gen fxn"
+                message: "schema undefined for operation"
+            };
+        },
+        SCHEMA_ATTRIBUTE_FILTER_INVALID: function() {
+            return {
+                code: 3005,
+                message: "schema attribute filter invalid"
             };
         },
         ATTRIBUTE_TEST_REQUIRED: function(attribute) {
@@ -133,43 +139,67 @@ module.exports = function Errors() {
                 message: attribute + " mandates a test"
             };
         },
-        ATTRIBUTE_REQUIRED: function(attribute) {
+        ATTRIBUTE_TEST_AMBIGUOUS: function(attribute) {
             return {
                 code: 3006,
+                message: attribute + " test is ambiguous"
+            };
+        },
+        ATTRIBUTE_UNEXPECTED: function(attribute) {
+            return {
+                code: 3007,
+                message: attribute + " unexpected"  
+            };
+        },
+        ATTRIBUTE_NOT_UNIQUE: function(attribute) {
+            return {
+                code: 3008,
+                message: attribute + " not unique"
+            };
+        },
+        ATTRIBUTE_REQUIRED: function(attribute) {
+            return {
+                code: 3009,
                 attribute: attribute,
                 message: attribute + " required"
             };
         },
         ATTRIBUTE_INVALID: function(attribute) {
             return {
-                code: 3007,
+                code: 3010,
                 attribute: attribute,
                 message: attribute + " invalid"
             };
         },
         USERNAME_TAKEN: function(attribute) {
             return {
-                code: 3008,
+                code: 3011,
                 attribute: attribute,
                 message: "username taken"
             };
         },
         EMAIL_TAKEN: function(attribute) {
             return {
-                code: 3009,
+                code: 3012,
                 attribute: attribute,
                 message: "email taken"
             };
         },
         UPDATE_EMPTY: function() {
             return {
-                code: 3010,
+                code: 3013,
                 message: "update request empty"
+            };
+        },
+        UPDATE_MISMATCH: function() {
+            return {
+                code: 3014,
+                message: "update request mismatch"
             };
         },
         FILTER_EXPECTED: function(label) {
             return {
-                code: 3011,
+                code: 3015,
                 message: "valid filter expected for label: " + label
             };
         },

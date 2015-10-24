@@ -38,7 +38,6 @@ module.exports = function Family(REST, db, validate, errors, response) {
         attribute: "name",
         type: "String",
         required: true,
-        auto: false,
         test: familyValidate.name()
     }];
 

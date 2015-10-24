@@ -46,7 +46,7 @@ module.exports = function Public(babySync) {
 
     Public.put('/parent/join/:id', babySync.joinFamily);
     Public.put('/parent/merge/:id', babySync.mergeFamily);
-    Public.put('/parent/detach/', babySync.detachFamily);
+    Public.put('/parent/detach', babySync.detachFamily);
 
     Public.post('/activity/:id', babySync.createActivity);
     Public.del('/activity/:id', babySync.deleteActivity);

@@ -62,7 +62,7 @@ module.exports = function JoinFamily(db, validate, errors, response, parentSchem
 
                 // If we got this far, we must have found a match.
                 // Now validate parent who wants to join the new family
-	            var parent_test = validate.schema(parentSchema, parent_pre);
+	            var parent_test = validate.schemaForAttributes(parentSchema, ["email"], parent_pre);
 	            if (parent_test.valid) {
 	            	// Request DB Family Join
 	            	var join = yield dbBabySync.family_join(existingFamily.data.id, parent_test.data.email);

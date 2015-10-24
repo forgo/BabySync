@@ -38,7 +38,6 @@ module.exports = function Baby(REST, db, validate, errors, response) {
         attribute: "name",
         type: "String",
         required: true,
-        auto: false,
         test: babyValidate.name()
     }];
 

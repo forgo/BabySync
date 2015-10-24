@@ -50,19 +50,16 @@ module.exports = function Timer(REST, db, validate, errors, response) {
         attribute: "resetDate",
         type: "Date",
         required: true,
-        auto: false,
         test: timerValidate.resetDate()
     }, {
         attribute: "enabled",
         type: "Boolean",
         required: true,
-        auto: false,
         test: timerValidate.enabled()
     }, {
         attribute: "push",
         type: "Boolean",
         required: true,
-        auto: false,
         test: timerValidate.push()
     }];
 
