@@ -27,6 +27,7 @@ module.exports = function RESTUser(label, alias, schema, db, validate, errors, r
     var bcrypt = require('co-bcrypt');
     var fs = require('fs');
     var jwt = require('koa-jwt');
+    var req = require('koa-request');
 
     var restUser = {
 // -----------------------------------------------------------------------------
@@ -34,52 +35,13 @@ module.exports = function RESTUser(label, alias, schema, db, validate, errors, r
 // -----------------------------------------------------------------------------
 login: function * (next) {
     try {
-        var isEmailAsUsername = false;
         var login_pre = yield parse(this);
-
-        console.log("LOGIN_PRE = ", login_pre);
-
-        // Extract/delete loginType and token key/value from post object
-        var loginType = login_pre.loginType;
-        var token = login_pre.token;
-        delete login_pre.loginType;
-        delete login_pre.token;
-
-        console.log("LOGIN TYPE = ", loginType);
-        console.log("LOGIN TOKEN = ", token);
-
-        console.log("LOGIN_PRE after deletes: ", login_pre);
-
-        // We only care about username and password for login schema
-        var modifiedSchema = schema.filter(function(s) {
-            return (s.attribute == "username") || (s.attribute == "password");
-        });
-
-        // If the username field appears to contain an email address (has an @ symbol)
-        // then create a modified schema object with proper email regex test
-        var schemaIndexUsername = modifiedSchema.map(function(s) {
-            return s.attribute;
-        }).indexOf('username');
-
-        var schemaIndexEmail = modifiedSchema.map(function(s) {
-            return s.attribute;
-        }).indexOf('email');
-
-        if (login_pre.username.indexOf('@') !== -1) {
-            isEmailAsUsername = true;
-            modifiedSchema[schemaIndexUsername].test = modifiedSchema[schemaIndexEmail].test 
-        }
-
-        console.log("MODIFIED SCHEMA", modifiedSchema);
-
-        var login_test = validate.schema(modifiedSchema, login_pre);
-
-        console.log("LOGIN_TEST = ", login_test);
-
+        var login_test = yield validate.login(schema, login_pre, req);
+        console.log("login_test = ", login_test);
         if (login_test.valid) {
             // See if this username or email exists in the user database
             var userToCompare = null;
-            if (isEmailAsUsername) {
+            if (login_test.isEmailAsUsername) {
                 var userByEmail = yield db.user_by_email_for_login(login_test.data.username, label, alias, schema);
                 if (userByEmail.success) {
                     if (userByEmail.data.length == 0) {

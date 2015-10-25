@@ -115,6 +115,24 @@ module.exports = function Errors() {
                 message: "logout failure"
             };
         },
+        LOGIN_TYPE_INVALID: function(type) {
+            return {
+                code: 3003,
+                message: type + " is an invalid login type"
+            };
+        },
+        LOGIN_TOKEN_EXPECTED: function(type) {
+            return {
+                code: 3004,
+                message: "login token expected for " + type + " login"
+            };
+        },
+        LOGIN_TOKEN_INVALID: function(type) {
+            return {
+                code: 3005,
+                message: type + " login token invalid"
+            };
+        },
         UNIDENTIFIABLE: function(id) {
             return {
                 code: 3003,

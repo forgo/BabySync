@@ -105,16 +105,15 @@ class LoginViewController: UIViewController {
             UserData.sharedInstance.pic = UIImage(named: "han")!
             UserData.sharedInstance.loginType = .BabySync
             self.performSegueWithIdentifier("SegueLoginToHome", sender: self)
+         
             return
         }
         
-        if FBSDKAccessToken.currentAccessToken() != nil {
-            //For debugging, when we want to ensure that facebook login always happens
-            //UserData.sharedInstance.clear()
-            //FBSDKLoginManager().logOut()
-            //Otherwise do:
-//            return
-        }
+        // For Debugging Always Log Off
+//        if (self.isLoggedIn()) {
+//            UserData.sharedInstance.clear()
+//            FBSDKLoginManager().logOut()
+//        }
         
         self.loginManager.logInWithReadPermissions(["public_profile", "email"], fromViewController: self, handler: self.loginHandler)
     }

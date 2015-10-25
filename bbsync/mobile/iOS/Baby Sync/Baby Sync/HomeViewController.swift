@@ -27,8 +27,8 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     var selectedBabyIndexPath: NSIndexPath = NSIndexPath(forItem: 0, inSection: 0)
     
-    var alert: UIAlertController = UIAlertController()
-    var alertAction: UIAlertAction = UIAlertAction()
+//    var alert: UIAlertController = UIAlertController()
+//    var alertAction: UIAlertAction = UIAlertAction()
     
     func tick() {
         self.reloadCollections()
@@ -38,6 +38,8 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        BabySync.service.delegate = self;
+        
 //        self.ticker = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "tick", userInfo: nil, repeats: true)
         
         self.imageUser.layer.masksToBounds = true
@@ -45,9 +47,10 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         self.labelName.text = UserData.sharedInstance.name
         self.labelEmail.text = UserData.sharedInstance.email
         
-        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
         BabySync.service.loginParent(UserData.sharedInstance.email, loginType: UserData.sharedInstance.loginType);
-        
     }
     
     override func didReceiveMemoryWarning() {
@@ -268,11 +271,19 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     func didEncounter(error: Error) {
-        self.alert = UIAlertController(title: "Error code: "+String(error.code), message: error.message, preferredStyle: .Alert);
-        self.alertAction = UIAlertAction(title: "Cancel", style: .Default, handler: { (action: UIAlertAction!) -> Void in
-            //
-        })
-        self.alert.addAction(self.alertAction);
+        
+//        print("DID ENCOUNTER")
+//        let alertController: UIAlertController = UIAlertController(title: "Error code: "+String(error.code), message: error.message, preferredStyle: .Alert);
+//        
+//        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action: UIAlertAction!) -> Void in
+//            print("Cancel action")
+//        }
+//        
+//        let okAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default) { (action: UIAlertAction!) -> Void in
+//            print("OK action")
+//        }
+//        alertController.addAction(cancelAction);
+//        alertController.addAction(okAction);
     }
     
 }

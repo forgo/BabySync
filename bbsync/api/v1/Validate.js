@@ -294,6 +294,121 @@ module.exports = function Validate(errors) {
             }
             return null;
         },
+        facebookResponseBody: function(body) {
+            var response = {}
+            console.log("facebookResponseBody = ", body);
+            if(body.error) {
+                response.valid = false;
+            }
+            else {
+                response.valid = true;
+            }
+            return response;
+        },
+        googleResponseBody: function(body) {
+            var respponse = {}
+            console.log("googleResponseBody = ", body);
+
+
+            response.valid = true;
+            return response;
+        },
+        ////////////////////////////////////////////////////////////////////////
+        login: function(sch, pre, req) {
+            return function * (next) {
+                var response = {};
+                var isEmailAsUsername = false;
+
+                // Valid Login Method Definitions
+                var loginMethods = [{
+                    type: "babysync",
+                    validTokenURL: null,
+                    validateResponse: null
+                }, {
+                    type: "facebook",
+                    validTokenURL: "https://graph.facebook.com/me?access_token={accessToken}",
+                    validateResponse: validate.facebookResponseBody
+                }, {
+                    type: "google",
+                    validTokenURL: "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={accessToken}",
+                    validateResponse: validate.googleResponseBody
+                }];
+
+                // Extract/delete loginType and token key/value from login object
+                var loginType = "babysync";
+                var token = "";
+                if(pre.loginType) {
+                    var loginMethodMatches = loginMethods.filter(function(method) {
+                        return method.type == pre.loginType
+                    });
+                    if (loginMethodMatches.length == 1) {
+                        loginType = pre.loginType;
+                        delete pre.loginType;
+                        var method = loginMethodMatches[0];
+                        // No token was provided and login method needs it
+                        if(!pre.token && method.validTokenURL != null) {
+                            reponse.valid = false;
+                            response.errors = [errors.LOGIN_TOKEN_EXPECTED(loginType)];
+                            return response;
+                        }
+                        // Token provided and we have an auth service to check against
+                        else if(pre.token && method.validTokenURL != null) {
+                            var tokenURL = method.validTokenURL.replace(/\{accessToken\}/, pre.token);
+                            console.log("TOKEN URL = ", tokenURL);
+                            var options = { url: tokenURL };
+                            var tokenCheckResponse = yield req(options);
+                            var tokenCheckBody = JSON.parse(tokenCheckResponse.body);
+                            var token_test = method.validateResponse(tokenCheckBody);
+                            if(!token_test.valid) {
+                                response.valid = false;
+                                response.errors = [errors.LOGIN_TOKEN_INVALID(loginType)];
+                                return response;
+                            }
+                        }
+                    }
+                    else {
+                        response.valid = false;
+                        response.errors = [errors.LOGIN_TYPE_INVALID(pre.loginType)];
+                        return response;
+                    }
+                }
+                if(pre.token) {
+                    token = pre.token
+                    delete pre.token;
+                }
+
+                // We only care about username and password for login schema
+                var modifiedSchema = sch.filter(function(s) {
+                    return (s.attribute == "username") || (s.attribute == "password");
+                });
+
+                // If the username field appears to contain an email address (has an @ symbol)
+                // then create a modified schema object with proper email regex test
+                var schemaIndexUsername = modifiedSchema.map(function(s) {
+                    return s.attribute;
+                }).indexOf('username');
+
+                var schemaIndexEmail = modifiedSchema.map(function(s) {
+                    return s.attribute;
+                }).indexOf('email');
+
+                if (pre.username.indexOf('@') !== -1) {
+                    isEmailAsUsername = true;
+                    modifiedSchema[schemaIndexUsername].test = modifiedSchema[schemaIndexEmail].test 
+                }
+                var login_schema_test = validate.schema(modifiedSchema, login_pre);
+                if (login_schema_test.valid) {
+                    response.valid = true
+                    response.data = login_schema_test.data
+                    response.isEmailAsUsername = isEmailAsUsername
+                } 
+                else {
+                    response.valid = false;
+                    response.errors = errors.login_schema_test.errors
+                }
+                return response;
+            }
+        },
         ////////////////////////////////////////////////////////////////////////
         userID: function(userID, userSchema, label, alias, returnSchema, db) {
             return function * (next) {
