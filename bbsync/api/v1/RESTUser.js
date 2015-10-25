@@ -37,6 +37,19 @@ login: function * (next) {
         var isEmailAsUsername = false;
         var login_pre = yield parse(this);
 
+        console.log("LOGIN_PRE = ", login_pre);
+
+        // Extract/delete loginType and token key/value from post object
+        var loginType = login_pre.loginType;
+        var token = login_pre.token;
+        delete login_pre.loginType;
+        delete login_pre.token;
+
+        console.log("LOGIN TYPE = ", loginType);
+        console.log("LOGIN TOKEN = ", token);
+
+        console.log("LOGIN_PRE after deletes: ", login_pre);
+
         // We only care about username and password for login schema
         var modifiedSchema = schema.filter(function(s) {
             return (s.attribute == "username") || (s.attribute == "password");
@@ -47,15 +60,22 @@ login: function * (next) {
         var schemaIndexUsername = modifiedSchema.map(function(s) {
             return s.attribute;
         }).indexOf('username');
+
         var schemaIndexEmail = modifiedSchema.map(function(s) {
             return s.attribute;
         }).indexOf('email');
+
         if (login_pre.username.indexOf('@') !== -1) {
             isEmailAsUsername = true;
             modifiedSchema[schemaIndexUsername].test = modifiedSchema[schemaIndexEmail].test 
         }
 
+        console.log("MODIFIED SCHEMA", modifiedSchema);
+
         var login_test = validate.schema(modifiedSchema, login_pre);
+
+        console.log("LOGIN_TEST = ", login_test);
+
         if (login_test.valid) {
             // See if this username or email exists in the user database
             var userToCompare = null;

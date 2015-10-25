@@ -32,7 +32,6 @@ class BabyViewController: UIViewController, UINavigationControllerDelegate, UIIm
     @IBOutlet weak var buttonAction: UIButton!
     
     var babyState: BabyState = .Viewing
-    var family: Family = Family()
     var baby: Baby = Baby()
     
     override func viewDidLoad() {

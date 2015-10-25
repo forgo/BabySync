@@ -25,9 +25,10 @@ struct BabySyncErrors {
 // MARK: - BabySyncDelegate Protocol
 protocol BabySyncDelegate {
     func didFind(parent: Parent)
+    func didLogin(parent: Parent);
     func didCreate(family: Family)
     func didJoin(family: Family)
-    func didMergeInto(family: Family)
+    func didMerge(family: Family)
     func didRetrieve(family: Family)
     func didEncounter(error: Error)
 }
@@ -74,6 +75,34 @@ class BabySync {
         return errors
     }
     
+    private func parseFamily(jsonData: JSON) -> Bool {
+        guard let family: Family = Family(family: jsonData["family"]) else {
+            self.handle([BabySyncErrors.Client.ParseFamily])
+            return false;
+        }
+        guard let parents: [Parent] = self.parentsFrom(jsonData) else {
+            self.handle([BabySyncErrors.Client.ParseParents])
+            return false;
+        }
+        guard let activities: [Activity] = self.activitiesFrom(jsonData) else {
+            self.handle([BabySyncErrors.Client.ParseActivities])
+            return false
+        }
+        guard let babies: [Baby] = self.babiesFrom(jsonData) else {
+            self.handle([BabySyncErrors.Client.ParseBabies])
+            return false
+        }
+        
+        // Passed all checks, reset data and delegate the good news!
+        self.clearData()
+        self.family = family
+        self.parents = parents
+        self.activities = activities
+        self.babies = babies
+        
+        return true;
+    }
+    
     // Parse the high level response from the HTTP request
     private func parse(response: Response<AnyObject, NSError>) -> (JSON, JSON) {
         var jsonData: JSON = nil
@@ -97,8 +126,8 @@ class BabySync {
     }
     
     // MARK: - Primary Service Operations
-    func findParentWith(email: String) {
-        let endpointFindParent = "parent/" + email
+    func findParent(parentEmail: String) {
+        let endpointFindParent = "parent/" + parentEmail
         Alamofire.request(.GET, baseURL+endpointFindParent).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
@@ -115,46 +144,84 @@ class BabySync {
         }
     }
     
-    func createFamilyWith(parent: Parent) {
-        let endpointCreateFamily = "family/"
-        Alamofire.request(.POST, baseURL+endpointCreateFamily, parameters: parent.paramValue).responseJSON { response in
+    func loginParent(parentEmail: String, loginType: UserLoginType) {
+        let endpointLoginParent = "parent/auth"
+        let loginTypeString: String = loginType.rawValue
+        var token: String = ""
+        switch loginType {
+        case .Facebook:
+            token = UserData.sharedInstance.facebookToken
+        case .Google:
+            token = UserData.sharedInstance.googleToken
+        case .BabySync:
+            token = ""
+        }
+        Alamofire.request(.POST, baseURL+endpointLoginParent, parameters: ["username":parentEmail,"password":"","loginType":loginTypeString,"token":token]).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
                 self.handle(self.errors(jsonErrors))
                 return
             }
-            else {
-                guard let family: Family = Family(family: jsonData["family"]) else {
-                    self.handle([BabySyncErrors.Client.ParseFamily])
-                }
-                guard let parents: [Parent] = self.parentsFrom(jsonData) else {
-                    self.handle([BabySyncErrors.Client.ParseParents])
-                }
-                guard let activities: [Activity] = self.activitiesFrom(jsonData) else {
-                    self.handle([BabySyncErrors.Client.ParseActivities])
-                }
-                guard let babies: [Baby] = self.babiesFrom(jsonData) else {
-                    self.handle([BabySyncErrors.Client.ParseBabies])
-                }
-                
-                // Passed all checks, reset data and delegate the good news!
-                self.clearData()
-                self.family = family
-                self.parents = parents
-                self.activities = activities
-                self.babies = babies
-
+            if (self.parseFamily(jsonData)) {
                 self.delegate?.didCreate(self.family)
             }
         }
     }
     
-    func join(family: Family, with parent: Parent) {
-        
+    func createFamily(parentEmail: String) {
+        let endpointCreateFamily = "parent/"
+        Alamofire.request(.POST, baseURL+endpointCreateFamily, parameters: ["email":parentEmail]).responseJSON { response in
+            let (jsonData, jsonErrors) = self.parse(response)
+            if (jsonErrors != nil) {
+                self.handle(self.errors(jsonErrors))
+                return
+            }
+            if (self.parseFamily(jsonData)) {
+                self.delegate?.didCreate(self.family)
+            }
+        }
     }
     
-    func mergeInto(family: Family) {
-        
+    func joinFamily(familyID: Int, parentEmail: String) {
+        let endpointJoinFamily = "parent/join/" + String(familyID)
+        Alamofire.request(.PUT, baseURL+endpointJoinFamily, parameters: ["email":parentEmail]).responseJSON { response in
+            let (jsonData, jsonErrors) = self.parse(response)
+            if (jsonErrors != nil) {
+                self.handle(self.errors(jsonErrors))
+                return
+            }
+            if (self.parseFamily(jsonData)) {
+                self.delegate?.didJoin(self.family)
+            }
+        }
+    }
+    
+    func mergeFamily(familyID: Int, parentEmail: String) {
+        let endpointMergeFamily = "parent/merge/" + String(familyID)
+        Alamofire.request(.PUT, baseURL+endpointMergeFamily, parameters: ["email":parentEmail]).responseJSON { response in
+            let (jsonData, jsonErrors) = self.parse(response)
+            if (jsonErrors != nil) {
+                self.handle(self.errors(jsonErrors))
+                return
+            }
+            if (self.parseFamily(jsonData)) {
+                self.delegate?.didMerge(self.family);
+            }
+        }
+    }
+    
+    func detachFamily(familyID: Int, parentEmail: String) {
+        let endpointDetachFamily = "parent/detach"
+        Alamofire.request(.PUT, baseURL+endpointDetachFamily, parameters: ["email":parentEmail]).responseJSON { response in
+            let (jsonData, jsonErrors) = self.parse(response)
+            if (jsonErrors != nil) {
+                self.handle(self.errors(jsonErrors))
+                return
+            }
+            if (self.parseFamily(jsonData)) {
+                self.delegate?.didCreate(self.family)
+            }
+        }
     }
     
     // MARK: - Populate and sort data arrays

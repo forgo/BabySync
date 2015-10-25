@@ -108,45 +108,6 @@ module.exports = function DatabaseBabySync(db) {
             " } AS babies"+
             " WITH family, parents, activities, COLLECT( DISTINCT( babies ) ) AS babies"+
             " RETURN family, parents, activities, babies";
-
-
-
-            // var familyReturnQuery = " MATCH (p:Parent)-[:RESPONSIBLE_FOR]->" + 
-            // "(f:Family)<-[:MANAGED_BY]-" +
-            // "(a:Activity)<-[:ADHERES_TO]-" + 
-            // "(t:Timer)<-[:TRACKED_BY]-" +
-            // "(b:Baby)-[:RESPONSIBILITY_OF]->(f) " +
-            // " WHERE " + uniqueCondition + 
-            // " WITH " +
-            // " { id: id(f), name: f.name, created_on: f.created_on, updated_on: f.updated_on } AS family," +
-            // " COLLECT( DISTINCT {" +
-            // " id: id(p)," +
-            // " facebookID: p.facebookID," +
-            // " name: p.name," +
-            // " email: p.email," +
-            // " created_on: p.created_on," +
-            // " updated_on: p.updated_on" +
-            // " } ) AS parents," +
-            // " COLLECT( DISTINCT {" +
-            // " id: id(a)," +
-            // " name: a.name," +
-            // " icon: a.icon," +
-            // " warn: a.warn," +
-            // " critical: a.critical," +
-            // " created_on: a.created_on," +
-            // " updated_on: a.updated_on" +
-            // " } ) AS activities," +
-            // " b," +
-            // " COLLECT( DISTINCT {" +
-            // " id: id(t)," +
-            // " activityID: id(a)," +
-            // " resetDate: t.resetDate," +
-            // " enabled: t.enabled," +
-            // " push: t.push," +
-            // " created_on: a.created_on," +
-            // " updated_on: a.updated_on" +
-            // " } ) AS timers" +
-            // " RETURN family, parents, activities, COLLECT( DISTINCT { id: id(b), name: b.name, created_on: b.created_on, updated_on: b.updated_on, timers: timers }) AS babies";          
             return familyReturnQuery;
         },
         family_create_query_object: function(parent, parentAlias, isUnique) {

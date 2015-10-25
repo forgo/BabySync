@@ -48,10 +48,10 @@ module.exports = function Public(babySync) {
     Public.put('/parent/merge/:id', babySync.mergeFamily);
     Public.put('/parent/detach', babySync.detachFamily);
 
-    Public.post('/activity/:id', babySync.createActivity);
+    Public.post('/activity', babySync.createActivity);
     Public.del('/activity/:id', babySync.deleteActivity);
 
-    Public.post('/baby/:id', babySync.createBaby);
+    Public.post('/baby', babySync.createBaby);
     Public.del('/baby/:id', babySync.deleteBaby);
 
     Public.post('/timer/:id', babySync.createTimer);

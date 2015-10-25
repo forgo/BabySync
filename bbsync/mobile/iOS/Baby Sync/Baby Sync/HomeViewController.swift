@@ -9,7 +9,7 @@
 import Alamofire
 import UIKit
 
-class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIPopoverPresentationControllerDelegate, MenuViewDelegate {
+class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIPopoverPresentationControllerDelegate, MenuViewDelegate, BabySyncDelegate {
     
     // FOR LATER REFERENCE
     //collectionView.reloadItemsAtIndexPaths([NSIndexPath(forItem: 14, inSection: 0)])
@@ -17,10 +17,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     var isTest: Bool = false
     
     var ticker: NSTimer = NSTimer()
-    
-    var userData: UserData = UserData()
-    
-
     
     @IBOutlet weak var imageUser: UIImageView!
     @IBOutlet weak var labelName: UILabel!
@@ -45,10 +41,13 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
 //        self.ticker = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "tick", userInfo: nil, repeats: true)
         
         self.imageUser.layer.masksToBounds = true
-        self.imageUser.image = userData.pic
-        self.labelName.text = userData.name
-        self.labelEmail.text = userData.email
-    
+        self.imageUser.image = UserData.sharedInstance.pic
+        self.labelName.text = UserData.sharedInstance.name
+        self.labelEmail.text = UserData.sharedInstance.email
+        
+        
+        BabySync.service.loginParent(UserData.sharedInstance.email, loginType: UserData.sharedInstance.loginType);
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -77,15 +76,13 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         else if (segue.identifier == "SegueHomeToBaby") {
             let babyVC: BabyViewController = segue.destinationViewController as! BabyViewController
             babyVC.babyState = .Viewing
-            babyVC.family = Family(family: self.family)
             let babySelectedIndexPaths: [NSIndexPath] = self.collectionBabies.indexPathsForSelectedItems()!
             let babySelectedIndexPath: NSIndexPath = babySelectedIndexPaths.first!
-            babyVC.baby = Baby(baby: self.babies[babySelectedIndexPath.row])
+            babyVC.baby = Baby(baby: BabySync.service.babies[babySelectedIndexPath.row])
         }
         else if (segue.identifier == "SegueHomeToNewBaby") {
             let babyVC: BabyViewController = segue.destinationViewController as! BabyViewController
             babyVC.babyState = .Creating
-            babyVC.family = Family(family: self.family)
             babyVC.baby = Baby()
         }
     }
@@ -120,11 +117,11 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     // UICollectionViewDataSource
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if (collectionView == self.collectionBabies) {
-            return self.babies.count
+            return BabySync.service.babies.count
         }
-        else if (collectionView == self.collectionTimers && self.babies.count > 0) {
+        else if (collectionView == self.collectionTimers && BabySync.service.babies.count > 0) {
             // Find the number of timers associated with this baby
-            let selectedBaby: Baby = self.babies[self.selectedBabyIndexPath.row]
+            let selectedBaby: Baby = BabySync.service.babies[self.selectedBabyIndexPath.row]
             return selectedBaby.timers.count
         }
         else {
@@ -136,7 +133,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         if(collectionView == self.collectionBabies) {
             let cell: BabyCollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("BabyCell", forIndexPath: indexPath) as! BabyCollectionViewCell
-            let baby: Baby = self.babies[indexPath.row]
+            let baby: Baby = BabySync.service.babies[indexPath.row]
             cell.imageBaby.layer.masksToBounds = true
             cell.imageBaby.image = UIImage(named: "Boy")
             cell.labelBaby.text = baby.name
@@ -151,7 +148,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             let cell: TimerCollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("TimerCell", forIndexPath: indexPath) as! TimerCollectionViewCell
             
             // Get activity associated with this timer
-            let selectedBaby: Baby = self.babies[self.selectedBabyIndexPath.row]
+            let selectedBaby: Baby = BabySync.service.babies[self.selectedBabyIndexPath.row]
             
             // Always get timers in the id sorted order
             var timers: [Timer] = selectedBaby.timers
@@ -160,7 +157,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             }
             
             let timer: Timer = timers[indexPath.row]
-            let acts: [Activity] = self.activities.filter{$0.id == timer.activityID}
+            let acts: [Activity] = BabySync.service.activities.filter{$0.id == timer.activityID}
             
             if (acts.count > 0) {
                 cell.imageTimer.layer.masksToBounds = true
@@ -211,7 +208,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
         // Center the babies in their horizontal collection view
         if (collectionView == self.collectionBabies) {
-            let edgeInsets = (collectionView.frame.size.width - (CGFloat(self.babies.count) * 50) - (CGFloat(self.babies.count) * 10)) / 2
+            let edgeInsets = (collectionView.frame.size.width - (CGFloat(BabySync.service.babies.count) * 50) - (CGFloat(BabySync.service.babies.count) * 10)) / 2
             return UIEdgeInsetsMake(0, edgeInsets, 0, 0)
         }
         else if (collectionView == self.collectionTimers) {
@@ -243,6 +240,39 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         menuController.dismissViewControllerAnimated(false) { () -> Void in
             self.performSegueWithIdentifier(segueID, sender: self)
         }
+    }
+    
+    // BabySyncDelegate
+    func didFind(parent: Parent) {
+        
+    }
+    
+    func didLogin(parent: Parent) {
+        
+    }
+
+    func didCreate(family: Family) {
+        
+    }
+    
+    func didJoin(family: Family) {
+        
+    }
+    
+    func didMerge(family: Family){
+        
+    }
+    
+    func didRetrieve(family: Family) {
+        
+    }
+    
+    func didEncounter(error: Error) {
+        self.alert = UIAlertController(title: "Error code: "+String(error.code), message: error.message, preferredStyle: .Alert);
+        self.alertAction = UIAlertAction(title: "Cancel", style: .Default, handler: { (action: UIAlertAction!) -> Void in
+            //
+        })
+        self.alert.addAction(self.alertAction);
     }
     
 }
