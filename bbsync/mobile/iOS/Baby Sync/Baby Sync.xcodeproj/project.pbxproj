@@ -7,67 +7,60 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4F23A8BF1BBBD7C7001FBCFF /* UIApplicationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8BE1BBBD7C7001FBCFF /* UIApplicationExtensions.swift */; settings = {ASSET_TAGS = (); }; };
-		4F23A8C91BBC55C7001FBCFF /* NewBabyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8C81BBC55C7001FBCFF /* NewBabyViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		4F23A8CB1BBC55DB001FBCFF /* NewTimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8CA1BBC55DB001FBCFF /* NewTimerViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		4F23A8CD1BBC55F0001FBCFF /* NewActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8CC1BBC55F0001FBCFF /* NewActivityViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		4F23A8CF1BBC562E001FBCFF /* SyncFamilyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8CE1BBC562E001FBCFF /* SyncFamilyViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		4F23A8D11BBC5729001FBCFF /* ElapsedTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8D01BBC5729001FBCFF /* ElapsedTimeFormatter.swift */; settings = {ASSET_TAGS = (); }; };
-		4F23A8D31BBC5FEB001FBCFF /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8D21BBC5FEB001FBCFF /* MenuViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		4F23A8D51BBC7960001FBCFF /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8D41BBC7960001FBCFF /* MenuTableViewCell.swift */; settings = {ASSET_TAGS = (); }; };
-		4F446AAA1BCDBEB700D0AD64 /* Pods_Baby_Sync.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AA91BCDBEB700D0AD64 /* Pods_Baby_Sync.framework */; };
-		4F446AAC1BCDBEBC00D0AD64 /* Pods_Baby_SyncTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AAB1BCDBEBC00D0AD64 /* Pods_Baby_SyncTests.framework */; };
-		4F446AAE1BCDBEC100D0AD64 /* Pods_Baby_SyncUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AAD1BCDBEC100D0AD64 /* Pods_Baby_SyncUITests.framework */; };
-		4F446AB21BCDBEE000D0AD64 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AAF1BCDBEE000D0AD64 /* FBSDKCoreKit.framework */; settings = {ASSET_TAGS = (); }; };
-		4F446AB31BCDBEE000D0AD64 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AB01BCDBEE000D0AD64 /* FBSDKLoginKit.framework */; settings = {ASSET_TAGS = (); }; };
-		4F446AB41BCDBEE000D0AD64 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AB11BCDBEE000D0AD64 /* FBSDKShareKit.framework */; settings = {ASSET_TAGS = (); }; };
-		4F446ABB1BCE05E900D0AD64 /* BabySync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABA1BCE05E900D0AD64 /* BabySync.swift */; settings = {ASSET_TAGS = (); }; };
-		4F446ABD1BCE071100D0AD64 /* JSONExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */; settings = {ASSET_TAGS = (); }; };
-		4F446ABF1BCE159B00D0AD64 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABE1BCE159B00D0AD64 /* Error.swift */; settings = {ASSET_TAGS = (); }; };
+		4F08A38E1BDFF45E000DE4EF /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A3821BDFF45E000DE4EF /* Auth.swift */; };
+		4F08A38F1BDFF45E000DE4EF /* AuthAppMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A3831BDFF45E000DE4EF /* AuthAppMethod.swift */; };
+		4F08A3901BDFF45E000DE4EF /* AuthConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A3841BDFF45E000DE4EF /* AuthConstant.swift */; };
+		4F08A3911BDFF45E000DE4EF /* AuthCustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A3851BDFF45E000DE4EF /* AuthCustom.swift */; };
+		4F08A3921BDFF45E000DE4EF /* AuthDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A3861BDFF45E000DE4EF /* AuthDefaults.swift */; };
+		4F08A3931BDFF45E000DE4EF /* AuthDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A3871BDFF45E000DE4EF /* AuthDelegate.swift */; };
+		4F08A3941BDFF45E000DE4EF /* AuthFacebook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A3881BDFF45E000DE4EF /* AuthFacebook.swift */; };
+		4F08A3951BDFF45E000DE4EF /* AuthGoogle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A3891BDFF45E000DE4EF /* AuthGoogle.swift */; };
+		4F08A3961BDFF45E000DE4EF /* AuthMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A38A1BDFF45E000DE4EF /* AuthMethod.swift */; };
+		4F08A3971BDFF45E000DE4EF /* AuthMethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A38B1BDFF45E000DE4EF /* AuthMethodType.swift */; };
+		4F08A3981BDFF45E000DE4EF /* AuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A38C1BDFF45E000DE4EF /* AuthState.swift */; };
+		4F08A3991BDFF45E000DE4EF /* AuthUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A38D1BDFF45E000DE4EF /* AuthUser.swift */; };
+		4F08A39B1BDFF480000DE4EF /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A39A1BDFF480000DE4EF /* AuthViewController.swift */; };
+		4F08A3A11BE03C3C000DE4EF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4F08A3A01BE03C3C000DE4EF /* GoogleService-Info.plist */; };
+		4F23A8BF1BBBD7C7001FBCFF /* UIApplicationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8BE1BBBD7C7001FBCFF /* UIApplicationExtensions.swift */; };
+		4F23A8C91BBC55C7001FBCFF /* NewBabyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8C81BBC55C7001FBCFF /* NewBabyViewController.swift */; };
+		4F23A8CB1BBC55DB001FBCFF /* NewTimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8CA1BBC55DB001FBCFF /* NewTimerViewController.swift */; };
+		4F23A8CD1BBC55F0001FBCFF /* NewActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8CC1BBC55F0001FBCFF /* NewActivityViewController.swift */; };
+		4F23A8CF1BBC562E001FBCFF /* SyncFamilyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8CE1BBC562E001FBCFF /* SyncFamilyViewController.swift */; };
+		4F23A8D11BBC5729001FBCFF /* ElapsedTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8D01BBC5729001FBCFF /* ElapsedTimeFormatter.swift */; };
+		4F23A8D31BBC5FEB001FBCFF /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8D21BBC5FEB001FBCFF /* MenuViewController.swift */; };
+		4F23A8D51BBC7960001FBCFF /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8D41BBC7960001FBCFF /* MenuTableViewCell.swift */; };
+		4F446AB21BCDBEE000D0AD64 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AAF1BCDBEE000D0AD64 /* FBSDKCoreKit.framework */; };
+		4F446AB31BCDBEE000D0AD64 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AB01BCDBEE000D0AD64 /* FBSDKLoginKit.framework */; };
+		4F446AB41BCDBEE000D0AD64 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AB11BCDBEE000D0AD64 /* FBSDKShareKit.framework */; };
+		4F446ABB1BCE05E900D0AD64 /* BabySync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABA1BCE05E900D0AD64 /* BabySync.swift */; };
+		4F446ABD1BCE071100D0AD64 /* JSONExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */; };
+		4F446ABF1BCE159B00D0AD64 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABE1BCE159B00D0AD64 /* Error.swift */; };
 		4F53D9371BBBC15100EB598F /* SourceCodePro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F53D9351BBBBEB800EB598F /* SourceCodePro-Regular.ttf */; };
 		4FD82E961BBB086900A06E0A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82E951BBB086900A06E0A /* AppDelegate.swift */; };
 		4FD82E9B1BBB086900A06E0A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FD82E991BBB086900A06E0A /* Main.storyboard */; };
 		4FD82E9D1BBB086900A06E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FD82E9C1BBB086900A06E0A /* Assets.xcassets */; };
 		4FD82EA01BBB086900A06E0A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FD82E9E1BBB086900A06E0A /* LaunchScreen.storyboard */; };
-		4FD82EAB1BBB086900A06E0A /* Baby_SyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EAA1BBB086900A06E0A /* Baby_SyncTests.swift */; };
-		4FD82EB61BBB086900A06E0A /* Baby_SyncUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EB51BBB086900A06E0A /* Baby_SyncUITests.swift */; };
-		4FD82EC41BBB09DE00A06E0A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EC31BBB09DE00A06E0A /* LoginViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		4FD82EC61BBB0A2A00A06E0A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EC51BBB0A2A00A06E0A /* HomeViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		4FD82ECF1BBB34C600A06E0A /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82ECE1BBB34C600A06E0A /* UserData.swift */; settings = {ASSET_TAGS = (); }; };
-		4FD82EE81BBB68F800A06E0A /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EE71BBB68F800A06E0A /* SwiftyJSON.swift */; settings = {ASSET_TAGS = (); }; };
-		4FD82EEB1BBB6EC700A06E0A /* Baby.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EEA1BBB6EC700A06E0A /* Baby.swift */; settings = {ASSET_TAGS = (); }; };
-		4FD82EED1BBB6ECE00A06E0A /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EEC1BBB6ECE00A06E0A /* Activity.swift */; settings = {ASSET_TAGS = (); }; };
-		4FD82EEF1BBB6ED700A06E0A /* Parent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EEE1BBB6ED700A06E0A /* Parent.swift */; settings = {ASSET_TAGS = (); }; };
-		4FD82EF11BBB6EDF00A06E0A /* Family.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EF01BBB6EDF00A06E0A /* Family.swift */; settings = {ASSET_TAGS = (); }; };
-		4FD82EF31BBB6EE800A06E0A /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EF21BBB6EE800A06E0A /* Timer.swift */; settings = {ASSET_TAGS = (); }; };
-		4FD82EF91BBB789600A06E0A /* ISO8601DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EF81BBB789600A06E0A /* ISO8601DateFormatter.swift */; settings = {ASSET_TAGS = (); }; };
-		4FD82EFC1BBB897E00A06E0A /* BabyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EFB1BBB897E00A06E0A /* BabyCollectionViewCell.swift */; settings = {ASSET_TAGS = (); }; };
-		4FD82EFE1BBB97A300A06E0A /* TimerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EFD1BBB97A300A06E0A /* TimerCollectionViewCell.swift */; settings = {ASSET_TAGS = (); }; };
-		4FFAE1E11BC1898A00FB2B73 /* GETFamily_New.json in Resources */ = {isa = PBXBuildFile; fileRef = 4FFAE1E01BC1898A00FB2B73 /* GETFamily_New.json */; settings = {ASSET_TAGS = (); }; };
-		4FFAE1E71BC1C5F600FB2B73 /* SelectIconViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE1E61BC1C5F600FB2B73 /* SelectIconViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		4FFAE1E91BC1E57100FB2B73 /* IconCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE1E81BC1E57100FB2B73 /* IconCollectionViewCell.swift */; settings = {ASSET_TAGS = (); }; };
-		4FFAE1EB1BC2161400FB2B73 /* BabyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE1EA1BC2161400FB2B73 /* BabyViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		4FFAE1EE1BC246D100FB2B73 /* BabySyncModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE1EC1BC246D100FB2B73 /* BabySyncModel.xcdatamodeld */; settings = {ASSET_TAGS = (); }; };
-		4FFAE23F1BC269E600FB2B73 /* BabyModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE23D1BC269E600FB2B73 /* BabyModel+CoreDataProperties.swift */; settings = {ASSET_TAGS = (); }; };
-		4FFAE2401BC269E600FB2B73 /* BabyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE23E1BC269E600FB2B73 /* BabyModel.swift */; settings = {ASSET_TAGS = (); }; };
+		4FD82EC41BBB09DE00A06E0A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EC31BBB09DE00A06E0A /* LoginViewController.swift */; };
+		4FD82EC61BBB0A2A00A06E0A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EC51BBB0A2A00A06E0A /* HomeViewController.swift */; };
+		4FD82ECF1BBB34C600A06E0A /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82ECE1BBB34C600A06E0A /* UserData.swift */; };
+		4FD82EE81BBB68F800A06E0A /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EE71BBB68F800A06E0A /* SwiftyJSON.swift */; };
+		4FD82EEB1BBB6EC700A06E0A /* Baby.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EEA1BBB6EC700A06E0A /* Baby.swift */; };
+		4FD82EED1BBB6ECE00A06E0A /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EEC1BBB6ECE00A06E0A /* Activity.swift */; };
+		4FD82EEF1BBB6ED700A06E0A /* Parent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EEE1BBB6ED700A06E0A /* Parent.swift */; };
+		4FD82EF11BBB6EDF00A06E0A /* Family.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EF01BBB6EDF00A06E0A /* Family.swift */; };
+		4FD82EF31BBB6EE800A06E0A /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EF21BBB6EE800A06E0A /* Timer.swift */; };
+		4FD82EF91BBB789600A06E0A /* ISO8601DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EF81BBB789600A06E0A /* ISO8601DateFormatter.swift */; };
+		4FD82EFC1BBB897E00A06E0A /* BabyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EFB1BBB897E00A06E0A /* BabyCollectionViewCell.swift */; };
+		4FD82EFE1BBB97A300A06E0A /* TimerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EFD1BBB97A300A06E0A /* TimerCollectionViewCell.swift */; };
+		4FFAE1E11BC1898A00FB2B73 /* GETFamily_New.json in Resources */ = {isa = PBXBuildFile; fileRef = 4FFAE1E01BC1898A00FB2B73 /* GETFamily_New.json */; };
+		4FFAE1E71BC1C5F600FB2B73 /* SelectIconViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE1E61BC1C5F600FB2B73 /* SelectIconViewController.swift */; };
+		4FFAE1E91BC1E57100FB2B73 /* IconCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE1E81BC1E57100FB2B73 /* IconCollectionViewCell.swift */; };
+		4FFAE1EB1BC2161400FB2B73 /* BabyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE1EA1BC2161400FB2B73 /* BabyViewController.swift */; };
+		4FFAE1EE1BC246D100FB2B73 /* BabySyncModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE1EC1BC246D100FB2B73 /* BabySyncModel.xcdatamodeld */; };
+		4FFAE23F1BC269E600FB2B73 /* BabyModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE23D1BC269E600FB2B73 /* BabyModel+CoreDataProperties.swift */; };
+		4FFAE2401BC269E600FB2B73 /* BabyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE23E1BC269E600FB2B73 /* BabyModel.swift */; };
+		9F1EE6A9144C98A05D3E91BB /* Pods_Baby_Sync.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6954D39A27CD490B5C692EA7 /* Pods_Baby_Sync.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		4FD82EA71BBB086900A06E0A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4FD82E8A1BBB086900A06E0A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4FD82E911BBB086900A06E0A;
-			remoteInfo = "Baby Sync";
-		};
-		4FD82EB21BBB086900A06E0A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4FD82E8A1BBB086900A06E0A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4FD82E911BBB086900A06E0A;
-			remoteInfo = "Baby Sync";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		4FD82EE61BBB46AF00A06E0A /* Embed Frameworks */ = {
@@ -80,10 +73,33 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4FE9D2761BE0499400E1214A /* Embed PlugIns */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed PlugIns";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		24B46BE37510D8D62BBAD857 /* Pods-Baby SyncTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Baby SyncTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Baby SyncTests/Pods-Baby SyncTests.debug.xcconfig"; sourceTree = "<group>"; };
+		4F08A3821BDFF45E000DE4EF /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
+		4F08A3831BDFF45E000DE4EF /* AuthAppMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthAppMethod.swift; sourceTree = "<group>"; };
+		4F08A3841BDFF45E000DE4EF /* AuthConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthConstant.swift; sourceTree = "<group>"; };
+		4F08A3851BDFF45E000DE4EF /* AuthCustom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthCustom.swift; sourceTree = "<group>"; };
+		4F08A3861BDFF45E000DE4EF /* AuthDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthDefaults.swift; sourceTree = "<group>"; };
+		4F08A3871BDFF45E000DE4EF /* AuthDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthDelegate.swift; sourceTree = "<group>"; };
+		4F08A3881BDFF45E000DE4EF /* AuthFacebook.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthFacebook.swift; sourceTree = "<group>"; };
+		4F08A3891BDFF45E000DE4EF /* AuthGoogle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthGoogle.swift; sourceTree = "<group>"; };
+		4F08A38A1BDFF45E000DE4EF /* AuthMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthMethod.swift; sourceTree = "<group>"; };
+		4F08A38B1BDFF45E000DE4EF /* AuthMethodType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthMethodType.swift; sourceTree = "<group>"; };
+		4F08A38C1BDFF45E000DE4EF /* AuthState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthState.swift; sourceTree = "<group>"; };
+		4F08A38D1BDFF45E000DE4EF /* AuthUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthUser.swift; sourceTree = "<group>"; };
+		4F08A39A1BDFF480000DE4EF /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		4F08A3A01BE03C3C000DE4EF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4F23A8BE1BBBD7C7001FBCFF /* UIApplicationExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIApplicationExtensions.swift; sourceTree = "<group>"; };
 		4F23A8C81BBC55C7001FBCFF /* NewBabyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewBabyViewController.swift; sourceTree = "<group>"; };
 		4F23A8CA1BBC55DB001FBCFF /* NewTimerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewTimerViewController.swift; sourceTree = "<group>"; };
@@ -92,9 +108,6 @@
 		4F23A8D01BBC5729001FBCFF /* ElapsedTimeFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElapsedTimeFormatter.swift; sourceTree = "<group>"; };
 		4F23A8D21BBC5FEB001FBCFF /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		4F23A8D41BBC7960001FBCFF /* MenuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewCell.swift; sourceTree = "<group>"; };
-		4F446AA91BCDBEB700D0AD64 /* Pods_Baby_Sync.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_Baby_Sync.framework; path = "Pods/../build/Debug-iphoneos/Pods_Baby_Sync.framework"; sourceTree = "<group>"; };
-		4F446AAB1BCDBEBC00D0AD64 /* Pods_Baby_SyncTests.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_Baby_SyncTests.framework; path = "Pods/../build/Debug-iphoneos/Pods_Baby_SyncTests.framework"; sourceTree = "<group>"; };
-		4F446AAD1BCDBEC100D0AD64 /* Pods_Baby_SyncUITests.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_Baby_SyncUITests.framework; path = "Pods/../build/Debug-iphoneos/Pods_Baby_SyncUITests.framework"; sourceTree = "<group>"; };
 		4F446AAF1BCDBEE000D0AD64 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		4F446AB01BCDBEE000D0AD64 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		4F446AB11BCDBEE000D0AD64 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
@@ -108,12 +121,6 @@
 		4FD82E9C1BBB086900A06E0A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4FD82E9F1BBB086900A06E0A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4FD82EA11BBB086900A06E0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4FD82EA61BBB086900A06E0A /* Baby SyncTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Baby SyncTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4FD82EAA1BBB086900A06E0A /* Baby_SyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Baby_SyncTests.swift; sourceTree = "<group>"; };
-		4FD82EAC1BBB086900A06E0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4FD82EB11BBB086900A06E0A /* Baby SyncUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Baby SyncUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4FD82EB51BBB086900A06E0A /* Baby_SyncUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Baby_SyncUITests.swift; sourceTree = "<group>"; };
-		4FD82EB71BBB086900A06E0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4FD82EC31BBB09DE00A06E0A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		4FD82EC51BBB0A2A00A06E0A /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		4FD82ECE1BBB34C600A06E0A /* UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
@@ -133,11 +140,9 @@
 		4FFAE1ED1BC246D100FB2B73 /* BabySyncModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BabySyncModel.xcdatamodel; sourceTree = "<group>"; };
 		4FFAE23D1BC269E600FB2B73 /* BabyModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "BabyModel+CoreDataProperties.swift"; path = "../BabyModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4FFAE23E1BC269E600FB2B73 /* BabyModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BabyModel.swift; path = ../BabyModel.swift; sourceTree = "<group>"; };
-		5BDE85C20B81DC095BCA36AD /* Pods-Baby SyncUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Baby SyncUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Baby SyncUITests/Pods-Baby SyncUITests.release.xcconfig"; sourceTree = "<group>"; };
+		6954D39A27CD490B5C692EA7 /* Pods_Baby_Sync.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Baby_Sync.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		73A00B3E26825B875D04ABB0 /* Pods-Baby Sync.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Baby Sync.release.xcconfig"; path = "Pods/Target Support Files/Pods-Baby Sync/Pods-Baby Sync.release.xcconfig"; sourceTree = "<group>"; };
-		84D7ED453A0194B86EE2A003 /* Pods-Baby SyncUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Baby SyncUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Baby SyncUITests/Pods-Baby SyncUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		DB48E194E4D45DC98F24B365 /* Pods-Baby Sync.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Baby Sync.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Baby Sync/Pods-Baby Sync.debug.xcconfig"; sourceTree = "<group>"; };
-		E089F3713494DF8979CDDC8E /* Pods-Baby SyncTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Baby SyncTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Baby SyncTests/Pods-Baby SyncTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,32 +150,36 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F446AAE1BCDBEC100D0AD64 /* Pods_Baby_SyncUITests.framework in Frameworks */,
 				4F446AB21BCDBEE000D0AD64 /* FBSDKCoreKit.framework in Frameworks */,
 				4F446AB41BCDBEE000D0AD64 /* FBSDKShareKit.framework in Frameworks */,
 				4F446AB31BCDBEE000D0AD64 /* FBSDKLoginKit.framework in Frameworks */,
-				4F446AAC1BCDBEBC00D0AD64 /* Pods_Baby_SyncTests.framework in Frameworks */,
-				4F446AAA1BCDBEB700D0AD64 /* Pods_Baby_Sync.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4FD82EA31BBB086900A06E0A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4FD82EAE1BBB086900A06E0A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				9F1EE6A9144C98A05D3E91BB /* Pods_Baby_Sync.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4F08A3811BDFF452000DE4EF /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				4F08A3821BDFF45E000DE4EF /* Auth.swift */,
+				4F08A3831BDFF45E000DE4EF /* AuthAppMethod.swift */,
+				4F08A3841BDFF45E000DE4EF /* AuthConstant.swift */,
+				4F08A3851BDFF45E000DE4EF /* AuthCustom.swift */,
+				4F08A3861BDFF45E000DE4EF /* AuthDefaults.swift */,
+				4F08A3871BDFF45E000DE4EF /* AuthDelegate.swift */,
+				4F08A3881BDFF45E000DE4EF /* AuthFacebook.swift */,
+				4F08A3891BDFF45E000DE4EF /* AuthGoogle.swift */,
+				4F08A38A1BDFF45E000DE4EF /* AuthMethod.swift */,
+				4F08A38B1BDFF45E000DE4EF /* AuthMethodType.swift */,
+				4F08A38C1BDFF45E000DE4EF /* AuthState.swift */,
+				4F08A38D1BDFF45E000DE4EF /* AuthUser.swift */,
+				4F08A39A1BDFF480000DE4EF /* AuthViewController.swift */,
+			);
+			name = Auth;
+			sourceTree = "<group>";
+		};
 		4F23A8C41BBBD7E7001FBCFF /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -223,8 +232,6 @@
 			isa = PBXGroup;
 			children = (
 				4FD82E941BBB086900A06E0A /* Baby Sync */,
-				4FD82EA91BBB086900A06E0A /* Baby SyncTests */,
-				4FD82EB41BBB086900A06E0A /* Baby SyncUITests */,
 				4FD82E931BBB086900A06E0A /* Products */,
 				E91009FE5E312EDEBCE6A6F7 /* Pods */,
 				A40D782C687D34895D2B14AB /* Frameworks */,
@@ -235,8 +242,6 @@
 			isa = PBXGroup;
 			children = (
 				4FD82E921BBB086900A06E0A /* Baby Sync.app */,
-				4FD82EA61BBB086900A06E0A /* Baby SyncTests.xctest */,
-				4FD82EB11BBB086900A06E0A /* Baby SyncUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -244,6 +249,7 @@
 		4FD82E941BBB086900A06E0A /* Baby Sync */ = {
 			isa = PBXGroup;
 			children = (
+				4F08A3811BDFF452000DE4EF /* Auth */,
 				4F446AB71BCE05C400D0AD64 /* Service */,
 				4FD82E951BBB086900A06E0A /* AppDelegate.swift */,
 				4FD82E991BBB086900A06E0A /* Main.storyboard */,
@@ -251,6 +257,7 @@
 				4FFAE1EC1BC246D100FB2B73 /* BabySyncModel.xcdatamodeld */,
 				4FD82E9E1BBB086900A06E0A /* LaunchScreen.storyboard */,
 				4FD82EA11BBB086900A06E0A /* Info.plist */,
+				4F08A3A01BE03C3C000DE4EF /* GoogleService-Info.plist */,
 				4FD82ECD1BBB34B500A06E0A /* Login */,
 				4F23A8C71BBC558D001FBCFF /* ViewControllers */,
 				4FD82EFA1BBB895A00A06E0A /* Views */,
@@ -261,24 +268,6 @@
 				4F53D9361BBBBEC000EB598F /* Fonts */,
 			);
 			path = "Baby Sync";
-			sourceTree = "<group>";
-		};
-		4FD82EA91BBB086900A06E0A /* Baby SyncTests */ = {
-			isa = PBXGroup;
-			children = (
-				4FD82EAA1BBB086900A06E0A /* Baby_SyncTests.swift */,
-				4FD82EAC1BBB086900A06E0A /* Info.plist */,
-			);
-			path = "Baby SyncTests";
-			sourceTree = "<group>";
-		};
-		4FD82EB41BBB086900A06E0A /* Baby SyncUITests */ = {
-			isa = PBXGroup;
-			children = (
-				4FD82EB51BBB086900A06E0A /* Baby_SyncUITests.swift */,
-				4FD82EB71BBB086900A06E0A /* Info.plist */,
-			);
-			path = "Baby SyncUITests";
 			sourceTree = "<group>";
 		};
 		4FD82ECD1BBB34B500A06E0A /* Login */ = {
@@ -332,9 +321,7 @@
 				4F446AAF1BCDBEE000D0AD64 /* FBSDKCoreKit.framework */,
 				4F446AB01BCDBEE000D0AD64 /* FBSDKLoginKit.framework */,
 				4F446AB11BCDBEE000D0AD64 /* FBSDKShareKit.framework */,
-				4F446AAD1BCDBEC100D0AD64 /* Pods_Baby_SyncUITests.framework */,
-				4F446AAB1BCDBEBC00D0AD64 /* Pods_Baby_SyncTests.framework */,
-				4F446AA91BCDBEB700D0AD64 /* Pods_Baby_Sync.framework */,
+				6954D39A27CD490B5C692EA7 /* Pods_Baby_Sync.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -344,10 +331,6 @@
 			children = (
 				DB48E194E4D45DC98F24B365 /* Pods-Baby Sync.debug.xcconfig */,
 				73A00B3E26825B875D04ABB0 /* Pods-Baby Sync.release.xcconfig */,
-				24B46BE37510D8D62BBAD857 /* Pods-Baby SyncTests.debug.xcconfig */,
-				E089F3713494DF8979CDDC8E /* Pods-Baby SyncTests.release.xcconfig */,
-				84D7ED453A0194B86EE2A003 /* Pods-Baby SyncUITests.debug.xcconfig */,
-				5BDE85C20B81DC095BCA36AD /* Pods-Baby SyncUITests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -366,6 +349,7 @@
 				4FD82EE61BBB46AF00A06E0A /* Embed Frameworks */,
 				441F789F44A06D8B0CEF5B1E /* Embed Pods Frameworks */,
 				20FCF0591B9DB2F724594880 /* Copy Pods Resources */,
+				4FE9D2761BE0499400E1214A /* Embed PlugIns */,
 			);
 			buildRules = (
 			);
@@ -375,47 +359,6 @@
 			productName = "Baby Sync";
 			productReference = 4FD82E921BBB086900A06E0A /* Baby Sync.app */;
 			productType = "com.apple.product-type.application";
-		};
-		4FD82EA51BBB086900A06E0A /* Baby SyncTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4FD82EBD1BBB086900A06E0A /* Build configuration list for PBXNativeTarget "Baby SyncTests" */;
-			buildPhases = (
-				BC28463D4F8C163B1063D1EE /* Check Pods Manifest.lock */,
-				4FD82EA21BBB086900A06E0A /* Sources */,
-				4FD82EA31BBB086900A06E0A /* Frameworks */,
-				4FD82EA41BBB086900A06E0A /* Resources */,
-				8ABC5F391A20DC91AAA2D282 /* Embed Pods Frameworks */,
-				4F43259E320AA5DF8EFADD61 /* Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4FD82EA81BBB086900A06E0A /* PBXTargetDependency */,
-			);
-			name = "Baby SyncTests";
-			productName = "Baby SyncTests";
-			productReference = 4FD82EA61BBB086900A06E0A /* Baby SyncTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		4FD82EB01BBB086900A06E0A /* Baby SyncUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4FD82EC01BBB086900A06E0A /* Build configuration list for PBXNativeTarget "Baby SyncUITests" */;
-			buildPhases = (
-				284B15479F0863368A847D72 /* Check Pods Manifest.lock */,
-				4FD82EAD1BBB086900A06E0A /* Sources */,
-				4FD82EAE1BBB086900A06E0A /* Frameworks */,
-				4FD82EAF1BBB086900A06E0A /* Resources */,
-				0E17451D1B26F5101F0FC9C6 /* Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4FD82EB31BBB086900A06E0A /* PBXTargetDependency */,
-			);
-			name = "Baby SyncUITests";
-			productName = "Baby SyncUITests";
-			productReference = 4FD82EB11BBB086900A06E0A /* Baby SyncUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -428,14 +371,6 @@
 				TargetAttributes = {
 					4FD82E911BBB086900A06E0A = {
 						CreatedOnToolsVersion = 7.0;
-					};
-					4FD82EA51BBB086900A06E0A = {
-						CreatedOnToolsVersion = 7.0;
-						TestTargetID = 4FD82E911BBB086900A06E0A;
-					};
-					4FD82EB01BBB086900A06E0A = {
-						CreatedOnToolsVersion = 7.0;
-						TestTargetID = 4FD82E911BBB086900A06E0A;
 					};
 				};
 			};
@@ -453,8 +388,6 @@
 			projectRoot = "";
 			targets = (
 				4FD82E911BBB086900A06E0A /* Baby Sync */,
-				4FD82EA51BBB086900A06E0A /* Baby SyncTests */,
-				4FD82EB01BBB086900A06E0A /* Baby SyncUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -469,41 +402,13 @@
 				4FD82EA01BBB086900A06E0A /* LaunchScreen.storyboard in Resources */,
 				4FD82E9D1BBB086900A06E0A /* Assets.xcassets in Resources */,
 				4FD82E9B1BBB086900A06E0A /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4FD82EA41BBB086900A06E0A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4FD82EAF1BBB086900A06E0A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				4F08A3A11BE03C3C000DE4EF /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0E17451D1B26F5101F0FC9C6 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Baby SyncUITests/Pods-Baby SyncUITests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		20FCF0591B9DB2F724594880 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -517,21 +422,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Baby Sync/Pods-Baby Sync-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		284B15479F0863368A847D72 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		441F789F44A06D8B0CEF5B1E /* Embed Pods Frameworks */ = {
@@ -564,51 +454,6 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		4F43259E320AA5DF8EFADD61 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Baby SyncTests/Pods-Baby SyncTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8ABC5F391A20DC91AAA2D282 /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Baby SyncTests/Pods-Baby SyncTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BC28463D4F8C163B1063D1EE /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -618,67 +463,51 @@
 			files = (
 				4FFAE1EB1BC2161400FB2B73 /* BabyViewController.swift in Sources */,
 				4FD82EC41BBB09DE00A06E0A /* LoginViewController.swift in Sources */,
+				4F08A38F1BDFF45E000DE4EF /* AuthAppMethod.swift in Sources */,
 				4F446ABD1BCE071100D0AD64 /* JSONExtension.swift in Sources */,
 				4F23A8CB1BBC55DB001FBCFF /* NewTimerViewController.swift in Sources */,
 				4F23A8D51BBC7960001FBCFF /* MenuTableViewCell.swift in Sources */,
+				4F08A3951BDFF45E000DE4EF /* AuthGoogle.swift in Sources */,
 				4FFAE1E91BC1E57100FB2B73 /* IconCollectionViewCell.swift in Sources */,
 				4FD82EEF1BBB6ED700A06E0A /* Parent.swift in Sources */,
 				4F23A8BF1BBBD7C7001FBCFF /* UIApplicationExtensions.swift in Sources */,
+				4F08A3991BDFF45E000DE4EF /* AuthUser.swift in Sources */,
 				4FD82EFE1BBB97A300A06E0A /* TimerCollectionViewCell.swift in Sources */,
 				4FD82EF11BBB6EDF00A06E0A /* Family.swift in Sources */,
+				4F08A3941BDFF45E000DE4EF /* AuthFacebook.swift in Sources */,
 				4FFAE23F1BC269E600FB2B73 /* BabyModel+CoreDataProperties.swift in Sources */,
 				4FD82EF91BBB789600A06E0A /* ISO8601DateFormatter.swift in Sources */,
 				4FD82EFC1BBB897E00A06E0A /* BabyCollectionViewCell.swift in Sources */,
+				4F08A3911BDFF45E000DE4EF /* AuthCustom.swift in Sources */,
 				4FD82EF31BBB6EE800A06E0A /* Timer.swift in Sources */,
+				4F08A3981BDFF45E000DE4EF /* AuthState.swift in Sources */,
 				4FD82EEB1BBB6EC700A06E0A /* Baby.swift in Sources */,
 				4FFAE2401BC269E600FB2B73 /* BabyModel.swift in Sources */,
 				4FFAE1E71BC1C5F600FB2B73 /* SelectIconViewController.swift in Sources */,
+				4F08A3921BDFF45E000DE4EF /* AuthDefaults.swift in Sources */,
 				4F446ABB1BCE05E900D0AD64 /* BabySync.swift in Sources */,
 				4FD82EED1BBB6ECE00A06E0A /* Activity.swift in Sources */,
 				4F23A8D31BBC5FEB001FBCFF /* MenuViewController.swift in Sources */,
 				4FFAE1EE1BC246D100FB2B73 /* BabySyncModel.xcdatamodeld in Sources */,
 				4F23A8D11BBC5729001FBCFF /* ElapsedTimeFormatter.swift in Sources */,
 				4FD82E961BBB086900A06E0A /* AppDelegate.swift in Sources */,
+				4F08A3971BDFF45E000DE4EF /* AuthMethodType.swift in Sources */,
+				4F08A39B1BDFF480000DE4EF /* AuthViewController.swift in Sources */,
+				4F08A3961BDFF45E000DE4EF /* AuthMethod.swift in Sources */,
+				4F08A3931BDFF45E000DE4EF /* AuthDelegate.swift in Sources */,
 				4F23A8CD1BBC55F0001FBCFF /* NewActivityViewController.swift in Sources */,
 				4F23A8CF1BBC562E001FBCFF /* SyncFamilyViewController.swift in Sources */,
 				4FD82ECF1BBB34C600A06E0A /* UserData.swift in Sources */,
 				4FD82EE81BBB68F800A06E0A /* SwiftyJSON.swift in Sources */,
 				4FD82EC61BBB0A2A00A06E0A /* HomeViewController.swift in Sources */,
+				4F08A38E1BDFF45E000DE4EF /* Auth.swift in Sources */,
 				4F446ABF1BCE159B00D0AD64 /* Error.swift in Sources */,
 				4F23A8C91BBC55C7001FBCFF /* NewBabyViewController.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4FD82EA21BBB086900A06E0A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4FD82EAB1BBB086900A06E0A /* Baby_SyncTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4FD82EAD1BBB086900A06E0A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4FD82EB61BBB086900A06E0A /* Baby_SyncUITests.swift in Sources */,
+				4F08A3901BDFF45E000DE4EF /* AuthConstant.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		4FD82EA81BBB086900A06E0A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4FD82E911BBB086900A06E0A /* Baby Sync */;
-			targetProxy = 4FD82EA71BBB086900A06E0A /* PBXContainerItemProxy */;
-		};
-		4FD82EB31BBB086900A06E0A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4FD82E911BBB086900A06E0A /* Baby Sync */;
-			targetProxy = 4FD82EB21BBB086900A06E0A /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		4FD82E991BBB086900A06E0A /* Main.storyboard */ = {
@@ -736,7 +565,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-DDEBUG";
@@ -776,7 +605,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_SWIFT_FLAGS = "-DRELEASE";
 				SDKROOT = iphoneos;
@@ -791,9 +620,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = "Baby Sync/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -808,66 +639,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = "Baby Sync/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.beyondaphelion.Baby-Sync";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		4FD82EBE1BBB086900A06E0A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 24B46BE37510D8D62BBAD857 /* Pods-Baby SyncTests.debug.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = "Baby SyncTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.beyondaphelion.Baby-SyncTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Baby Sync.app/Baby Sync";
-			};
-			name = Debug;
-		};
-		4FD82EBF1BBB086900A06E0A /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E089F3713494DF8979CDDC8E /* Pods-Baby SyncTests.release.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = "Baby SyncTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.beyondaphelion.Baby-SyncTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Baby Sync.app/Baby Sync";
-			};
-			name = Release;
-		};
-		4FD82EC11BBB086900A06E0A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 84D7ED453A0194B86EE2A003 /* Pods-Baby SyncUITests.debug.xcconfig */;
-			buildSettings = {
-				INFOPLIST_FILE = "Baby SyncUITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.beyondaphelion.Baby-SyncUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = "Baby Sync";
-				USES_XCTRUNNER = YES;
-			};
-			name = Debug;
-		};
-		4FD82EC21BBB086900A06E0A /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5BDE85C20B81DC095BCA36AD /* Pods-Baby SyncUITests.release.xcconfig */;
-			buildSettings = {
-				INFOPLIST_FILE = "Baby SyncUITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.beyondaphelion.Baby-SyncUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = "Baby Sync";
-				USES_XCTRUNNER = YES;
 			};
 			name = Release;
 		};
@@ -888,24 +669,6 @@
 			buildConfigurations = (
 				4FD82EBB1BBB086900A06E0A /* Debug */,
 				4FD82EBC1BBB086900A06E0A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4FD82EBD1BBB086900A06E0A /* Build configuration list for PBXNativeTarget "Baby SyncTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4FD82EBE1BBB086900A06E0A /* Debug */,
-				4FD82EBF1BBB086900A06E0A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4FD82EC01BBB086900A06E0A /* Build configuration list for PBXNativeTarget "Baby SyncUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4FD82EC11BBB086900A06E0A /* Debug */,
-				4FD82EC21BBB086900A06E0A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

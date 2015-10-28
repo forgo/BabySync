@@ -96,27 +96,27 @@ CREATE (bcopy:Baby)-[:RESPONSIBILITY_OF]->(fnew)
 SET bcopy = baby, bcopy.name = baby.name + " (" + p.name + ")"
 WITH p, pRF, f, fnew, nOtherParents, baby, bcopy
 
-	// Copy parent's babies' timers into new family,
-	// parent name appended to baby name property to distinguish those merged
-	OPTIONAL MATCH 
-	(baby)-[:TRACKED_BY]->(t:Timer)
-	WITH p, pRF, f, fnew, nOtherParents, bcopy, COLLECT(DISTINCT(t)) AS timers
-	UNWIND timers AS timer
-	CREATE (tcopy:Timer)<-[:TRACKED_BY]-(bcopy)
-	SET tcopy = timer
-	WITH p, pRF, f, fnew, nOtherParents, timer, tcopy
+// Copy parent's babies' timers into new family,
+// parent name appended to baby name property to distinguish those merged
+OPTIONAL MATCH 
+(baby)-[:TRACKED_BY]->(t:Timer)
+WITH p, pRF, f, fnew, nOtherParents, bcopy, COLLECT(DISTINCT(t)) AS timers
+UNWIND timers AS timer
+CREATE (tcopy:Timer)<-[:TRACKED_BY]-(bcopy)
+SET tcopy = timer
+WITH p, pRF, f, fnew, nOtherParents, timer, tcopy
 
-		// Copy parent's babies' timers relationship with activities
-		// relationship preserved w/temp property in previously copied activities
-		OPTIONAL MATCH
-		(timer)-[:ADHERES_TO]->(a:Activity),
-		(acopy:Activity)-[:MANAGED_BY]->(fnew)
-		WHERE acopy.copiedFromID = id(a)
-		WITH p, pRF, f, fnew, nOtherParents, tcopy, acopy, COLLECT(DISTINCT(a)) AS activities
-		UNWIND activities AS activity
-		CREATE (tcopy)-[:ADHERES_TO]->(acopy)
-		REMOVE acopy.copiedFromID
-		WITH p, pRF, f, fnew, nOtherParents
+// Copy parent's babies' timers relationship with activities
+// relationship preserved w/temp property in previously copied activities
+OPTIONAL MATCH
+(timer)-[:ADHERES_TO]->(a:Activity),
+(acopy:Activity)-[:MANAGED_BY]->(fnew)
+WHERE acopy.copiedFromID = id(a)
+WITH p, pRF, f, fnew, nOtherParents, tcopy, acopy, COLLECT(DISTINCT(a)) AS activities
+UNWIND activities AS activity
+CREATE (tcopy)-[:ADHERES_TO]->(acopy)
+REMOVE acopy.copiedFromID
+WITH p, pRF, f, fnew, nOtherParents
 
 // Now Move Parent and Delete Leftovers Depending on if Single Parent Family
 OPTIONAL MATCH

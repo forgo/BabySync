@@ -134,14 +134,4 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @IBAction func prepareForUnwindLogin(segue: UIStoryboardSegue) {
-        // Clear user data and log off if unwinded here
-        UserData.sharedInstance.clear()
-        self.loginManager.logOut()
-        self.hideActivity(true)
-        if (segue.identifier == "UnwindSegueHomeToLogin") {
-
-        }
-    }
-    
 }

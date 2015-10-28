@@ -297,7 +297,7 @@ module.exports = function Validate(errors) {
         facebookResponseBody: function(body) {
             var response = {}
             console.log("facebookResponseBody = ", body);
-            if(body.error) {
+            if(body.error || !body.name || !body.id) {
                 response.valid = false;
             }
             else {
@@ -306,7 +306,7 @@ module.exports = function Validate(errors) {
             return response;
         },
         googleResponseBody: function(body) {
-            var respponse = {}
+            var response = {}
             console.log("googleResponseBody = ", body);
 
 
@@ -339,7 +339,7 @@ module.exports = function Validate(errors) {
                 var token = "";
                 if(pre.loginType) {
                     var loginMethodMatches = loginMethods.filter(function(method) {
-                        return method.type == pre.loginType
+                        return method.type == pre.loginType;
                     });
                     if (loginMethodMatches.length == 1) {
                         loginType = pre.loginType;
@@ -373,7 +373,7 @@ module.exports = function Validate(errors) {
                     }
                 }
                 if(pre.token) {
-                    token = pre.token
+                    token = pre.token;
                     delete pre.token;
                 }
 
@@ -394,17 +394,18 @@ module.exports = function Validate(errors) {
 
                 if (pre.username.indexOf('@') !== -1) {
                     isEmailAsUsername = true;
-                    modifiedSchema[schemaIndexUsername].test = modifiedSchema[schemaIndexEmail].test 
+                    modifiedSchema[schemaIndexUsername].test = modifiedSchema[schemaIndexEmail].test;
                 }
                 var login_schema_test = validate.schema(modifiedSchema, login_pre);
                 if (login_schema_test.valid) {
-                    response.valid = true
-                    response.data = login_schema_test.data
-                    response.isEmailAsUsername = isEmailAsUsername
+                    response.valid = true;
+                    response.data = login_schema_test.data;
+                    response.isEmailAsUsername = isEmailAsUsername;
+                    response.loginType = loginType;
                 } 
                 else {
                     response.valid = false;
-                    response.errors = errors.login_schema_test.errors
+                    response.errors = errors.login_schema_test.errors;
                 }
                 return response;
             }
