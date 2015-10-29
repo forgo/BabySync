@@ -25,242 +25,152 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vri-YU-gex" userLabel="Logo View">
-                                <rect key="frame" x="20" y="28" width="560" height="208"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SNy-XF-BVf" userLabel="ViewBugFix1">
+                                <rect key="frame" x="20" y="0.0" width="560" height="0.0"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="M3u-ER-4ra">
-                                        <rect key="frame" x="0.0" y="0.0" width="560" height="208"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="n6p-D1-s2f">
+                                        <rect key="frame" x="-20" y="0.0" width="0.0" height="0.0"/>
                                         <animations/>
-                                    </imageView>
+                                        <variation key="heightClass=compact" axis="horizontal"/>
+                                    </stackView>
                                 </subviews>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstItem="M3u-ER-4ra" firstAttribute="top" secondItem="vri-YU-gex" secondAttribute="top" id="44i-IM-AJy"/>
-                                    <constraint firstAttribute="bottom" secondItem="M3u-ER-4ra" secondAttribute="bottom" id="YF8-IF-D1W"/>
-                                    <constraint firstAttribute="trailing" secondItem="M3u-ER-4ra" secondAttribute="trailing" id="Z7a-YD-A2I"/>
-                                    <constraint firstItem="M3u-ER-4ra" firstAttribute="leading" secondItem="vri-YU-gex" secondAttribute="leading" id="kRe-oO-XkT"/>
-                                </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7NT-SO-ICt" userLabel="Custom Login View">
-                                <rect key="frame" x="20" y="388" width="560" height="192"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5QK-Kn-1xh">
+                                <rect key="frame" x="20" y="286" width="560" height="332"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="35S-Qs-MVk">
-                                        <rect key="frame" x="0.0" y="0.0" width="560" height="192"/>
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p7K-NV-ld7" userLabel="ViewLoginWith">
+                                        <rect key="frame" x="0.0" y="0.0" width="560" height="130"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="23a-pu-lSu" userLabel="Custom Login Text Fields View">
-                                                <rect key="frame" x="0.0" y="0.0" width="560" height="120"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5Ra-ua-1K9">
+                                                <rect key="frame" x="0.0" y="0.0" width="560" height="130"/>
                                                 <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="UBH-Iy-F4d">
-                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="120"/>
-                                                        <subviews>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n45-4G-gp5" userLabel="Email Text Field View">
-                                                                <rect key="frame" x="0.0" y="0.0" width="560" height="56"/>
-                                                                <subviews>
-                                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" placeholder="email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nDc-9g-Npx">
-                                                                        <rect key="frame" x="8" y="0.0" width="544" height="56"/>
-                                                                        <animations/>
-                                                                        <attributedString key="attributedText"/>
-                                                                        <textInputTraits key="textInputTraits"/>
-                                                                    </textField>
-                                                                </subviews>
-                                                                <animations/>
-                                                                <color key="backgroundColor" red="0.25098040700000002" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <constraints>
-                                                                    <constraint firstItem="nDc-9g-Npx" firstAttribute="leading" secondItem="n45-4G-gp5" secondAttribute="leading" constant="8" id="8uD-6l-ivh"/>
-                                                                    <constraint firstAttribute="height" constant="56" id="X3u-VU-1Yq"/>
-                                                                    <constraint firstAttribute="trailing" secondItem="nDc-9g-Npx" secondAttribute="trailing" constant="8" id="aYc-1c-szT"/>
-                                                                    <constraint firstAttribute="bottom" secondItem="nDc-9g-Npx" secondAttribute="bottom" id="oeS-tI-D1a"/>
-                                                                    <constraint firstItem="nDc-9g-Npx" firstAttribute="top" secondItem="n45-4G-gp5" secondAttribute="top" id="yHX-02-B5G"/>
-                                                                </constraints>
-                                                                <variation key="default">
-                                                                    <mask key="constraints">
-                                                                        <exclude reference="aYc-1c-szT"/>
-                                                                    </mask>
-                                                                </variation>
-                                                                <variation key="heightClass=compact-widthClass=compact">
-                                                                    <mask key="constraints">
-                                                                        <include reference="aYc-1c-szT"/>
-                                                                    </mask>
-                                                                </variation>
-                                                            </view>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lC1-VD-74T" userLabel="Password Text Field View">
-                                                                <rect key="frame" x="0.0" y="64" width="560" height="56"/>
-                                                                <subviews>
-                                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" placeholder="password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6Vq-sa-qhr">
-                                                                        <rect key="frame" x="8" y="0.0" width="544" height="56"/>
-                                                                        <animations/>
-                                                                        <attributedString key="attributedText"/>
-                                                                        <textInputTraits key="textInputTraits"/>
-                                                                    </textField>
-                                                                </subviews>
-                                                                <animations/>
-                                                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <constraints>
-                                                                    <constraint firstItem="6Vq-sa-qhr" firstAttribute="top" secondItem="lC1-VD-74T" secondAttribute="top" id="1PQ-8G-wZf"/>
-                                                                    <constraint firstAttribute="bottom" secondItem="6Vq-sa-qhr" secondAttribute="bottom" id="4PN-kg-FG8"/>
-                                                                    <constraint firstAttribute="trailing" secondItem="6Vq-sa-qhr" secondAttribute="trailing" constant="8" id="MIB-mg-qFe"/>
-                                                                    <constraint firstItem="6Vq-sa-qhr" firstAttribute="leading" secondItem="lC1-VD-74T" secondAttribute="leading" constant="8" id="apx-18-kut"/>
-                                                                    <constraint firstAttribute="height" constant="56" id="wcJ-y3-smd"/>
-                                                                </constraints>
-                                                            </view>
-                                                        </subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZw-4A-96S">
+                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="61"/>
                                                         <animations/>
-                                                        <constraints>
-                                                            <constraint firstItem="n45-4G-gp5" firstAttribute="leading" secondItem="UBH-Iy-F4d" secondAttribute="leading" id="4na-Vt-Bk3"/>
-                                                            <constraint firstAttribute="trailing" secondItem="lC1-VD-74T" secondAttribute="trailing" id="Wxg-ym-p6c"/>
-                                                            <constraint firstItem="lC1-VD-74T" firstAttribute="leading" secondItem="n45-4G-gp5" secondAttribute="trailing" constant="8" id="nDT-k2-tXj"/>
-                                                        </constraints>
-                                                        <variation key="default">
-                                                            <mask key="constraints">
-                                                                <exclude reference="nDT-k2-tXj"/>
-                                                            </mask>
-                                                        </variation>
-                                                        <variation key="heightClass=compact-widthClass=compact" axis="horizontal">
-                                                            <mask key="constraints">
-                                                                <include reference="nDT-k2-tXj"/>
-                                                            </mask>
-                                                        </variation>
-                                                        <variation key="heightClass=compact-widthClass=regular" axis="horizontal"/>
-                                                    </stackView>
-                                                </subviews>
-                                                <animations/>
-                                                <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="120" id="Cz5-51-PED">
-                                                        <variation key="heightClass=compact-widthClass=compact" constant="56"/>
-                                                        <variation key="heightClass=compact-widthClass=regular" constant="56"/>
-                                                    </constraint>
-                                                    <constraint firstItem="UBH-Iy-F4d" firstAttribute="top" secondItem="23a-pu-lSu" secondAttribute="top" id="OH4-fe-3eu"/>
-                                                    <constraint firstAttribute="trailing" secondItem="UBH-Iy-F4d" secondAttribute="trailing" id="Pa4-3X-PXj"/>
-                                                    <constraint firstItem="UBH-Iy-F4d" firstAttribute="leading" secondItem="23a-pu-lSu" secondAttribute="leading" id="Q1O-wX-JpB"/>
-                                                    <constraint firstAttribute="bottom" secondItem="UBH-Iy-F4d" secondAttribute="bottom" id="Uvh-Xl-MAD"/>
-                                                </constraints>
-                                            </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R9y-Ed-LLx" userLabel="Custom Login Button View">
-                                                <rect key="frame" x="0.0" y="136" width="560" height="56"/>
-                                                <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="se8-XG-TFn" userLabel="Custom Login Button">
-                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="56"/>
+                                                        <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <state key="normal" title="Login with Google"/>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dAn-iQ-Z93">
+                                                        <rect key="frame" x="0.0" y="69" width="560" height="61"/>
                                                         <animations/>
+                                                        <color key="backgroundColor" red="1" green="0.66963945069999997" blue="0.964006794" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <state key="normal" title="Login with Facebook"/>
                                                     </button>
                                                 </subviews>
                                                 <animations/>
-                                                <color key="backgroundColor" red="0.60000002379999995" green="0.40000000600000002" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="56" id="ZEu-JZ-USf"/>
-                                                </constraints>
-                                            </view>
+                                                <variation key="heightClass=compact" axis="horizontal"/>
+                                            </stackView>
                                         </subviews>
                                         <animations/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="240" id="Gqf-7Z-jNG"/>
-                                            <constraint firstItem="R9y-Ed-LLx" firstAttribute="leading" secondItem="35S-Qs-MVk" secondAttribute="leading" id="Xt6-iu-D5l"/>
-                                            <constraint firstAttribute="trailing" secondItem="R9y-Ed-LLx" secondAttribute="trailing" id="feV-tg-Whe"/>
+                                            <constraint firstAttribute="height" constant="120" id="5ln-bh-05b">
+                                                <variation key="heightClass=compact-widthClass=compact" constant="56"/>
+                                                <variation key="heightClass=compact-widthClass=regular" constant="56"/>
+                                            </constraint>
+                                            <constraint firstAttribute="bottom" secondItem="5Ra-ua-1K9" secondAttribute="bottom" id="eWU-ez-NIJ"/>
+                                            <constraint firstItem="5Ra-ua-1K9" firstAttribute="leading" secondItem="p7K-NV-ld7" secondAttribute="leading" id="iAN-so-Eqo"/>
+                                            <constraint firstItem="5Ra-ua-1K9" firstAttribute="top" secondItem="p7K-NV-ld7" secondAttribute="top" id="ibx-QS-u2P"/>
+                                            <constraint firstAttribute="trailing" secondItem="5Ra-ua-1K9" secondAttribute="trailing" id="nX3-84-JEY"/>
                                         </constraints>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="Gqf-7Z-jNG"/>
-                                            </mask>
-                                        </variation>
-                                    </stackView>
-                                </subviews>
-                                <animations/>
-                                <color key="backgroundColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstItem="35S-Qs-MVk" firstAttribute="leading" secondItem="7NT-SO-ICt" secondAttribute="leading" id="5Lh-35-OPK"/>
-                                    <constraint firstAttribute="height" constant="192" id="HVE-ga-acE">
-                                        <variation key="heightClass=compact-widthClass=compact" constant="128"/>
-                                        <variation key="heightClass=compact-widthClass=regular" constant="128"/>
-                                    </constraint>
-                                    <constraint firstItem="35S-Qs-MVk" firstAttribute="top" secondItem="7NT-SO-ICt" secondAttribute="top" id="KiT-Qg-DTO"/>
-                                    <constraint firstAttribute="bottom" secondItem="35S-Qs-MVk" secondAttribute="bottom" id="TV8-QQ-N9Y"/>
-                                    <constraint firstAttribute="trailing" secondItem="35S-Qs-MVk" secondAttribute="trailing" id="rcX-qt-0vN"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XFz-yQ-IbY" userLabel="Google / Facebook Login Buttons View">
-                                <rect key="frame" x="20" y="252" width="560" height="120"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="GbL-GN-eAu">
-                                        <rect key="frame" x="0.0" y="0.0" width="560" height="120"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Nec-at-nqN" userLabel="ViewLogin">
+                                        <rect key="frame" x="0.0" y="138" width="560" height="130"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qWB-64-Nre" userLabel="Google Login Button">
-                                                <rect key="frame" x="0.0" y="0.0" width="560" height="56"/>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vyo-Sm-bWw" userLabel="ViewBugFix3">
+                                                <rect key="frame" x="0.0" y="0.0" width="560" height="0.0"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Knb-c1-hVR">
+                                                        <rect key="frame" x="-20" y="-414" width="0.0" height="0.0"/>
+                                                        <animations/>
+                                                        <variation key="heightClass=compact" axis="horizontal"/>
+                                                    </stackView>
+                                                </subviews>
                                                 <animations/>
-                                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="56" id="cAu-NO-RVL"/>
-                                                </constraints>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nPa-fI-7eD" userLabel="Facebook Login Button">
-                                                <rect key="frame" x="0.0" y="64" width="560" height="56"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </view>
+                                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8Dr-VQ-jZs">
+                                                <rect key="frame" x="0.0" y="0.0" width="560" height="130"/>
+                                                <subviews>
+                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" placeholder="email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5Eg-T9-Wr2">
+                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="61"/>
+                                                        <animations/>
+                                                        <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <attributedString key="attributedText"/>
+                                                        <textInputTraits key="textInputTraits"/>
+                                                    </textField>
+                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" placeholder="password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JlQ-Id-ffd">
+                                                        <rect key="frame" x="0.0" y="69" width="560" height="61"/>
+                                                        <animations/>
+                                                        <color key="backgroundColor" red="1" green="0.66963945069999997" blue="0.964006794" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <attributedString key="attributedText"/>
+                                                        <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                                    </textField>
+                                                </subviews>
                                                 <animations/>
-                                                <color key="backgroundColor" red="0.5" green="0.0" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="56" id="CNQ-5P-4ER"/>
+                                                    <constraint firstItem="5Eg-T9-Wr2" firstAttribute="leading" secondItem="8Dr-VQ-jZs" secondAttribute="leading" id="3TA-4U-XrC"/>
+                                                    <constraint firstAttribute="trailing" secondItem="JlQ-Id-ffd" secondAttribute="trailing" id="7pc-RM-l1F"/>
+                                                    <constraint firstItem="5Eg-T9-Wr2" firstAttribute="top" secondItem="8Dr-VQ-jZs" secondAttribute="top" id="U8n-gx-aXy"/>
+                                                    <constraint firstAttribute="bottom" secondItem="JlQ-Id-ffd" secondAttribute="bottom" id="aag-yX-PHl"/>
                                                 </constraints>
+                                                <variation key="heightClass=compact" axis="horizontal"/>
+                                            </stackView>
+                                        </subviews>
+                                        <animations/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="8Dr-VQ-jZs" firstAttribute="top" secondItem="Nec-at-nqN" secondAttribute="top" id="BR2-3S-oko"/>
+                                            <constraint firstAttribute="height" constant="120" id="SCY-Bq-c6v">
+                                                <variation key="heightClass=compact-widthClass=compact" constant="56"/>
+                                                <variation key="heightClass=compact-widthClass=regular" constant="56"/>
+                                            </constraint>
+                                            <constraint firstAttribute="trailing" secondItem="8Dr-VQ-jZs" secondAttribute="trailing" id="dad-Wv-e5q"/>
+                                            <constraint firstItem="8Dr-VQ-jZs" firstAttribute="leading" secondItem="Nec-at-nqN" secondAttribute="leading" id="jnv-Ez-1pM"/>
+                                            <constraint firstAttribute="bottom" secondItem="8Dr-VQ-jZs" secondAttribute="bottom" id="tGj-Bm-xvY"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SpE-9p-xVS" userLabel="ViewLoginButton">
+                                        <rect key="frame" x="0.0" y="276" width="560" height="56"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SYT-cX-rdT">
+                                                <rect key="frame" x="0.0" y="0.0" width="560" height="30"/>
+                                                <animations/>
+                                                <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                <state key="normal" title="Login"/>
                                             </button>
                                         </subviews>
                                         <animations/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstItem="qWB-64-Nre" firstAttribute="leading" secondItem="GbL-GN-eAu" secondAttribute="leading" id="2A1-EG-FZO"/>
-                                            <constraint firstAttribute="trailing" secondItem="nPa-fI-7eD" secondAttribute="trailing" id="W0m-F1-CW8"/>
-                                            <constraint firstItem="nPa-fI-7eD" firstAttribute="leading" secondItem="qWB-64-Nre" secondAttribute="trailing" constant="8" id="oxh-Cu-sFy"/>
+                                            <constraint firstAttribute="bottom" secondItem="SYT-cX-rdT" secondAttribute="bottom" id="FB0-EE-BuZ"/>
+                                            <constraint firstAttribute="height" constant="56" id="M4E-o5-4wq"/>
+                                            <constraint firstItem="SYT-cX-rdT" firstAttribute="leading" secondItem="SpE-9p-xVS" secondAttribute="leading" id="Qyk-fd-bek"/>
+                                            <constraint firstAttribute="trailing" secondItem="SYT-cX-rdT" secondAttribute="trailing" id="WVe-Ui-sO1"/>
+                                            <constraint firstItem="SYT-cX-rdT" firstAttribute="top" secondItem="SpE-9p-xVS" secondAttribute="top" id="ptk-Ge-8u7"/>
                                         </constraints>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="oxh-Cu-sFy"/>
-                                            </mask>
-                                        </variation>
-                                        <variation key="heightClass=compact-widthClass=compact" axis="horizontal">
-                                            <mask key="constraints">
-                                                <include reference="oxh-Cu-sFy"/>
-                                            </mask>
-                                        </variation>
-                                        <variation key="heightClass=compact-widthClass=regular" axis="horizontal"/>
-                                    </stackView>
+                                    </view>
                                 </subviews>
                                 <animations/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="120" id="FTc-24-nan">
-                                        <variation key="heightClass=compact-widthClass=compact" constant="56"/>
-                                        <variation key="heightClass=compact-widthClass=regular" constant="56"/>
-                                    </constraint>
-                                    <constraint firstAttribute="bottom" secondItem="GbL-GN-eAu" secondAttribute="bottom" id="ana-Ih-5Px"/>
-                                    <constraint firstItem="GbL-GN-eAu" firstAttribute="top" secondItem="XFz-yQ-IbY" secondAttribute="top" id="hdr-5t-uRC"/>
-                                    <constraint firstItem="GbL-GN-eAu" firstAttribute="leading" secondItem="XFz-yQ-IbY" secondAttribute="leading" id="k2m-5T-hU2"/>
-                                    <constraint firstAttribute="trailing" secondItem="GbL-GN-eAu" secondAttribute="trailing" id="tFG-wh-uVC"/>
-                                </constraints>
-                            </view>
+                            </stackView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" red="0.49411764705882355" green="0.62352941176470589" blue="0.71764705882352942" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="XFz-yQ-IbY" firstAttribute="top" secondItem="vri-YU-gex" secondAttribute="bottom" constant="16" id="0wW-vn-IXO"/>
-                            <constraint firstItem="7NT-SO-ICt" firstAttribute="leading" secondItem="g1A-H9-0nT" secondAttribute="leadingMargin" id="4NI-G5-Uhx"/>
-                            <constraint firstItem="vri-YU-gex" firstAttribute="leading" secondItem="g1A-H9-0nT" secondAttribute="leadingMargin" id="CWL-Jd-E2f"/>
-                            <constraint firstItem="7NT-SO-ICt" firstAttribute="top" secondItem="XFz-yQ-IbY" secondAttribute="bottom" constant="16" id="OOK-Wp-6zg"/>
-                            <constraint firstItem="vri-YU-gex" firstAttribute="trailing" secondItem="g1A-H9-0nT" secondAttribute="trailingMargin" id="PV1-Is-XyQ"/>
-                            <constraint firstItem="7NT-SO-ICt" firstAttribute="trailing" secondItem="g1A-H9-0nT" secondAttribute="trailingMargin" id="PVq-bZ-ahG"/>
-                            <constraint firstItem="Qq0-md-TA5" firstAttribute="top" secondItem="7NT-SO-ICt" secondAttribute="bottom" constant="20" id="RK2-3a-pqI"/>
-                            <constraint firstItem="XFz-yQ-IbY" firstAttribute="trailing" secondItem="g1A-H9-0nT" secondAttribute="trailingMargin" id="YN6-DL-P5F"/>
-                            <constraint firstItem="XFz-yQ-IbY" firstAttribute="leading" secondItem="g1A-H9-0nT" secondAttribute="leadingMargin" id="kSP-8U-tBl"/>
-                            <constraint firstItem="vri-YU-gex" firstAttribute="top" secondItem="Dlw-97-vcs" secondAttribute="bottom" constant="8" id="sui-x8-DfB"/>
+                            <constraint firstItem="Qq0-md-TA5" firstAttribute="top" secondItem="5QK-Kn-1xh" secondAttribute="bottom" constant="20" id="JNG-rx-Yka"/>
+                            <constraint firstItem="5QK-Kn-1xh" firstAttribute="trailing" secondItem="g1A-H9-0nT" secondAttribute="trailingMargin" id="PGP-Rb-RQK"/>
+                            <constraint firstItem="5QK-Kn-1xh" firstAttribute="leading" secondItem="g1A-H9-0nT" secondAttribute="leadingMargin" id="tK5-xA-hRK"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="buttonLoginCustom" destination="se8-XG-TFn" id="epu-nX-1zk"/>
-                        <outlet property="buttonLoginFacebook" destination="nPa-fI-7eD" id="eEH-mL-1ot"/>
-                        <outlet property="buttonLoginGoogle" destination="qWB-64-Nre" id="4dk-FJ-eHU"/>
-                        <outlet property="textFieldEmail" destination="nDc-9g-Npx" id="b7r-vO-6PQ"/>
-                        <outlet property="textFieldPassword" destination="6Vq-sa-qhr" id="RiF-sO-vJu"/>
                         <segue destination="q67-HL-IdE" kind="show" identifier="SegueLoginToHome" id="y3W-jn-oIK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cjG-Rl-w3P" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="389" y="-337"/>
+            <point key="canvasLocation" x="388" y="-339"/>
         </scene>
         <!--Menu View Controller-->
         <scene sceneID="gAg-LJ-XLw">
@@ -900,6 +810,9 @@
                                         </constraints>
                                         <variation key="heightClass=compact" ambiguous="YES">
                                             <rect key="frame" x="0.0" y="20" width="600" height="0.0"/>
+                                        </variation>
+                                        <variation key="heightClass=compact-widthClass=compact" ambiguous="YES" misplaced="YES">
+                                            <rect key="frame" x="0.0" y="20" width="400" height="45"/>
                                         </variation>
                                         <variation key="heightClass=compact-widthClass=regular" misplaced="YES">
                                             <rect key="frame" x="0.0" y="20" width="800" height="26"/>

@@ -28,10 +28,10 @@ class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate 
         self.view.hidden = true
         
         // Login Text Field Configuration
-        self.textFieldEmail.delegate = self
-        self.textFieldPassword.delegate = self
-        self.resetPlaceholder(self.textFieldEmail, placeholder: "email")
-        self.resetPlaceholder(self.textFieldPassword, placeholder: "password")
+        //self.textFieldEmail.delegate = self
+        //self.textFieldPassword.delegate = self
+        //self.resetPlaceholder(self.textFieldEmail, placeholder: "email")
+        //self.resetPlaceholder(self.textFieldPassword, placeholder: "password")
     }
     
     func resetPlaceholder(textField: UITextField, placeholder: String) {
