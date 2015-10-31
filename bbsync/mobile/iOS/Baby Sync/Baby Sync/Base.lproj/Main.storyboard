@@ -8,6 +8,15 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <mutableArray key="ADAM.CG PRO.otf">
+            <string>ADAM.CGPRO</string>
+            <string>ADAM.CGPRO</string>
+            <string>ADAM.CGPRO</string>
+            <string>ADAM.CGPRO</string>
+        </mutableArray>
+        <mutableArray key="FACEBOLF.OTF">
+            <string>FacebookLetterFaces</string>
+        </mutableArray>
         <mutableArray key="SourceCodePro-Regular.ttf">
             <string>SourceCodePro-Regular</string>
         </mutableArray>
@@ -25,125 +34,221 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SNy-XF-BVf" userLabel="ViewBugFix1">
-                                <rect key="frame" x="20" y="0.0" width="560" height="0.0"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5QK-Kn-1xh">
+                                <rect key="frame" x="20" y="268" width="560" height="312"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="n6p-D1-s2f">
-                                        <rect key="frame" x="-20" y="0.0" width="0.0" height="0.0"/>
-                                        <animations/>
-                                        <variation key="heightClass=compact" axis="horizontal"/>
-                                    </stackView>
-                                </subviews>
-                                <animations/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5QK-Kn-1xh">
-                                <rect key="frame" x="20" y="286" width="560" height="332"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p7K-NV-ld7" userLabel="ViewLoginWith">
-                                        <rect key="frame" x="0.0" y="0.0" width="560" height="130"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p7K-NV-ld7" userLabel="ViewLoginWith">
+                                        <rect key="frame" x="0.0" y="0.0" width="560" height="120"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5Ra-ua-1K9">
-                                                <rect key="frame" x="0.0" y="0.0" width="560" height="130"/>
-                                                <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZw-4A-96S">
-                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="61"/>
-                                                        <animations/>
-                                                        <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <state key="normal" title="Login with Google"/>
-                                                    </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dAn-iQ-Z93">
-                                                        <rect key="frame" x="0.0" y="69" width="560" height="61"/>
-                                                        <animations/>
-                                                        <color key="backgroundColor" red="1" green="0.66963945069999997" blue="0.964006794" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <state key="normal" title="Login with Facebook"/>
-                                                    </button>
-                                                </subviews>
-                                                <animations/>
-                                                <variation key="heightClass=compact" axis="horizontal"/>
-                                            </stackView>
-                                        </subviews>
-                                        <animations/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="120" id="5ln-bh-05b">
-                                                <variation key="heightClass=compact-widthClass=compact" constant="56"/>
-                                                <variation key="heightClass=compact-widthClass=regular" constant="56"/>
-                                            </constraint>
-                                            <constraint firstAttribute="bottom" secondItem="5Ra-ua-1K9" secondAttribute="bottom" id="eWU-ez-NIJ"/>
-                                            <constraint firstItem="5Ra-ua-1K9" firstAttribute="leading" secondItem="p7K-NV-ld7" secondAttribute="leading" id="iAN-so-Eqo"/>
-                                            <constraint firstItem="5Ra-ua-1K9" firstAttribute="top" secondItem="p7K-NV-ld7" secondAttribute="top" id="ibx-QS-u2P"/>
-                                            <constraint firstAttribute="trailing" secondItem="5Ra-ua-1K9" secondAttribute="trailing" id="nX3-84-JEY"/>
-                                        </constraints>
-                                    </view>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Nec-at-nqN" userLabel="ViewLogin">
-                                        <rect key="frame" x="0.0" y="138" width="560" height="130"/>
-                                        <subviews>
-                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vyo-Sm-bWw" userLabel="ViewBugFix3">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SNy-XF-BVf" userLabel="ViewBugFix1">
                                                 <rect key="frame" x="0.0" y="0.0" width="560" height="0.0"/>
                                                 <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Knb-c1-hVR">
-                                                        <rect key="frame" x="-20" y="-414" width="0.0" height="0.0"/>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="n6p-D1-s2f">
+                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="0.0"/>
                                                         <animations/>
                                                         <variation key="heightClass=compact" axis="horizontal"/>
                                                     </stackView>
                                                 </subviews>
                                                 <animations/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="n6p-D1-s2f" secondAttribute="trailing" id="F3C-YA-oBE"/>
+                                                    <constraint firstAttribute="bottom" secondItem="n6p-D1-s2f" secondAttribute="bottom" id="FHf-Ru-45f"/>
+                                                    <constraint firstAttribute="height" id="IG6-Vu-FoT"/>
+                                                    <constraint firstItem="n6p-D1-s2f" firstAttribute="top" secondItem="SNy-XF-BVf" secondAttribute="top" id="Ir6-f9-OyP"/>
+                                                    <constraint firstItem="n6p-D1-s2f" firstAttribute="leading" secondItem="SNy-XF-BVf" secondAttribute="leading" id="YEe-4t-iO6"/>
+                                                </constraints>
                                             </view>
-                                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8Dr-VQ-jZs">
-                                                <rect key="frame" x="0.0" y="0.0" width="560" height="130"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5Ra-ua-1K9">
+                                                <rect key="frame" x="0.0" y="0.0" width="560" height="120"/>
                                                 <subviews>
-                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" placeholder="email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5Eg-T9-Wr2">
-                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="61"/>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZw-4A-96S" customClass="AuthLoginWithButton" customModule="Baby_Sync" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="56"/>
                                                         <animations/>
-                                                        <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <attributedString key="attributedText"/>
+                                                        <color key="backgroundColor" red="0.82745098039215681" green="0.28235294117647058" blue="0.21176470588235294" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="20"/>
+                                                        <state key="normal" title="login with Google"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="image" keyPath="emblem" value="GoogleEmblem"/>
+                                                            <userDefinedRuntimeAttribute type="rect" keyPath="emblemFrame">
+                                                                <rect key="value" x="0.0" y="0.0" width="56" height="56"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="emblemMargin">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="emblemWidth">
+                                                                <real key="value" value="56"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="emblemHeight">
+                                                                <real key="value" value="56"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="pressedLoginButton:" destination="r8s-rl-uLS" eventType="touchUpInside" id="TTl-BX-x34"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dAn-iQ-Z93" customClass="AuthLoginWithButton" customModule="Baby_Sync" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="64" width="560" height="56"/>
+                                                        <animations/>
+                                                        <color key="backgroundColor" red="0.23137254901960785" green="0.34901960784313724" blue="0.59607843137254901" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <fontDescription key="fontDescription" name="FacebookLetterFaces" family="Facebook Letter Faces" pointSize="20"/>
+                                                        <state key="normal" title="login with facebook"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="image" keyPath="emblem" value="FacebookEmblem"/>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="emblemMargin">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="emblemWidth">
+                                                                <real key="value" value="56"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="emblemHeight">
+                                                                <real key="value" value="56"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="rect" keyPath="emblemFrame">
+                                                                <rect key="value" x="0.0" y="0.0" width="56" height="56"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="pressedLoginButton:" destination="r8s-rl-uLS" eventType="touchUpInside" id="Vut-F9-Duh"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <animations/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <variation key="heightClass=compact" axis="horizontal"/>
+                                            </stackView>
+                                        </subviews>
+                                        <animations/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="120" id="5ln-bh-05b">
+                                                <variation key="heightClass=compact-widthClass=compact" constant="56"/>
+                                                <variation key="heightClass=compact-widthClass=regular" constant="56"/>
+                                            </constraint>
+                                            <constraint firstItem="SNy-XF-BVf" firstAttribute="top" secondItem="p7K-NV-ld7" secondAttribute="top" id="a9a-Dt-wKy"/>
+                                            <constraint firstAttribute="bottom" secondItem="5Ra-ua-1K9" secondAttribute="bottom" id="eWU-ez-NIJ"/>
+                                            <constraint firstItem="5Ra-ua-1K9" firstAttribute="leading" secondItem="p7K-NV-ld7" secondAttribute="leading" id="iAN-so-Eqo"/>
+                                            <constraint firstItem="5Ra-ua-1K9" firstAttribute="top" secondItem="p7K-NV-ld7" secondAttribute="top" id="ibx-QS-u2P"/>
+                                            <constraint firstItem="SNy-XF-BVf" firstAttribute="leading" secondItem="p7K-NV-ld7" secondAttribute="leading" id="mhF-W7-x4J"/>
+                                            <constraint firstAttribute="trailing" secondItem="5Ra-ua-1K9" secondAttribute="trailing" id="nX3-84-JEY"/>
+                                            <constraint firstAttribute="trailing" secondItem="SNy-XF-BVf" secondAttribute="trailing" id="xA7-XQ-L1P"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nec-at-nqN" userLabel="ViewLogin">
+                                        <rect key="frame" x="0.0" y="128" width="560" height="120"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vyo-Sm-bWw" userLabel="ViewBugFix3">
+                                                <rect key="frame" x="0.0" y="0.0" width="560" height="0.0"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Knb-c1-hVR">
+                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="0.0"/>
+                                                        <animations/>
+                                                        <variation key="heightClass=compact" axis="horizontal"/>
+                                                    </stackView>
+                                                </subviews>
+                                                <animations/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="Knb-c1-hVR" secondAttribute="trailing" id="2s9-2s-8Ze"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Knb-c1-hVR" secondAttribute="bottom" id="3xh-it-Zi6"/>
+                                                    <constraint firstAttribute="height" id="5cn-1f-NHH"/>
+                                                    <constraint firstItem="Knb-c1-hVR" firstAttribute="top" secondItem="Vyo-Sm-bWw" secondAttribute="top" id="9hz-5E-sVP"/>
+                                                    <constraint firstItem="Knb-c1-hVR" firstAttribute="leading" secondItem="Vyo-Sm-bWw" secondAttribute="leading" id="Frr-8H-iib"/>
+                                                </constraints>
+                                            </view>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8Dr-VQ-jZs">
+                                                <rect key="frame" x="0.0" y="0.0" width="560" height="120"/>
+                                                <subviews>
+                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="bottom" placeholder="email" minimumFontSize="10" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="NXp-UE-Xw7" customClass="AuthLoginTextField" customModule="Baby_Sync" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="0.0" width="560" height="56"/>
+                                                        <animations/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <fontDescription key="fontDescription" name="ADAM.CGPRO" family="ADAM.CG PRO" pointSize="16"/>
                                                         <textInputTraits key="textInputTraits"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="insetBottom">
+                                                                <real key="value" value="2"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="insetLeft">
+                                                                <real key="value" value="4"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="insetTop">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="insetRight">
+                                                                <real key="value" value="4"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
                                                     </textField>
-                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" placeholder="password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JlQ-Id-ffd">
-                                                        <rect key="frame" x="0.0" y="69" width="560" height="61"/>
+                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="bottom" placeholder="password" minimumFontSize="10" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="JlQ-Id-ffd" customClass="AuthLoginTextField" customModule="Baby_Sync" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="64" width="560" height="56"/>
                                                         <animations/>
-                                                        <color key="backgroundColor" red="1" green="0.66963945069999997" blue="0.964006794" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <attributedString key="attributedText"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <fontDescription key="fontDescription" name="ADAM.CGPRO" family="ADAM.CG PRO" pointSize="16"/>
                                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="insetTop">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="insetLeft">
+                                                                <real key="value" value="4"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="insetBottom">
+                                                                <real key="value" value="2"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="insetRight">
+                                                                <real key="value" value="4"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
                                                     </textField>
                                                 </subviews>
                                                 <animations/>
                                                 <constraints>
-                                                    <constraint firstItem="5Eg-T9-Wr2" firstAttribute="leading" secondItem="8Dr-VQ-jZs" secondAttribute="leading" id="3TA-4U-XrC"/>
                                                     <constraint firstAttribute="trailing" secondItem="JlQ-Id-ffd" secondAttribute="trailing" id="7pc-RM-l1F"/>
-                                                    <constraint firstItem="5Eg-T9-Wr2" firstAttribute="top" secondItem="8Dr-VQ-jZs" secondAttribute="top" id="U8n-gx-aXy"/>
+                                                    <constraint firstItem="NXp-UE-Xw7" firstAttribute="leading" secondItem="8Dr-VQ-jZs" secondAttribute="leading" id="VUA-5f-lgl"/>
                                                     <constraint firstAttribute="bottom" secondItem="JlQ-Id-ffd" secondAttribute="bottom" id="aag-yX-PHl"/>
+                                                    <constraint firstItem="NXp-UE-Xw7" firstAttribute="top" secondItem="8Dr-VQ-jZs" secondAttribute="top" id="jGg-Ht-pjb"/>
                                                 </constraints>
                                                 <variation key="heightClass=compact" axis="horizontal"/>
                                             </stackView>
                                         </subviews>
                                         <animations/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
+                                            <constraint firstItem="Vyo-Sm-bWw" firstAttribute="top" secondItem="Nec-at-nqN" secondAttribute="top" id="9Z0-fR-2yQ"/>
                                             <constraint firstItem="8Dr-VQ-jZs" firstAttribute="top" secondItem="Nec-at-nqN" secondAttribute="top" id="BR2-3S-oko"/>
                                             <constraint firstAttribute="height" constant="120" id="SCY-Bq-c6v">
                                                 <variation key="heightClass=compact-widthClass=compact" constant="56"/>
                                                 <variation key="heightClass=compact-widthClass=regular" constant="56"/>
                                             </constraint>
+                                            <constraint firstItem="Vyo-Sm-bWw" firstAttribute="leading" secondItem="Nec-at-nqN" secondAttribute="leading" id="cwi-IB-9GE"/>
                                             <constraint firstAttribute="trailing" secondItem="8Dr-VQ-jZs" secondAttribute="trailing" id="dad-Wv-e5q"/>
+                                            <constraint firstAttribute="trailing" secondItem="Vyo-Sm-bWw" secondAttribute="trailing" id="fCa-hU-7rC"/>
                                             <constraint firstItem="8Dr-VQ-jZs" firstAttribute="leading" secondItem="Nec-at-nqN" secondAttribute="leading" id="jnv-Ez-1pM"/>
                                             <constraint firstAttribute="bottom" secondItem="8Dr-VQ-jZs" secondAttribute="bottom" id="tGj-Bm-xvY"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SpE-9p-xVS" userLabel="ViewLoginButton">
-                                        <rect key="frame" x="0.0" y="276" width="560" height="56"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SpE-9p-xVS" userLabel="ViewLoginButton">
+                                        <rect key="frame" x="0.0" y="256" width="560" height="56"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SYT-cX-rdT">
-                                                <rect key="frame" x="0.0" y="0.0" width="560" height="30"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SYT-cX-rdT" customClass="AuthLoginButton" customModule="Baby_Sync" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="560" height="56"/>
                                                 <animations/>
-                                                <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                <state key="normal" title="Login"/>
+                                                <color key="backgroundColor" red="0.74509803921568629" green="0.86274509803921573" blue="0.90588235294117647" alpha="1" colorSpace="calibratedRGB"/>
+                                                <fontDescription key="fontDescription" name="ADAM.CGPRO" family="ADAM.CG PRO" pointSize="26"/>
+                                                <inset key="titleEdgeInsets" minX="0.0" minY="8" maxX="0.0" maxY="0.0"/>
+                                                <state key="normal" title="Login">
+                                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="pressedLoginButton:" destination="r8s-rl-uLS" eventType="touchUpInside" id="9QV-ba-MLx"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <animations/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="SYT-cX-rdT" secondAttribute="bottom" id="FB0-EE-BuZ"/>
                                             <constraint firstAttribute="height" constant="56" id="M4E-o5-4wq"/>
@@ -155,22 +260,40 @@
                                 </subviews>
                                 <animations/>
                             </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Baby Sync" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="45" translatesAutoresizingMaskIntoConstraints="NO" id="u9a-ea-85Y">
+                                <rect key="frame" x="20" y="28" width="560" height="232"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" name="ADAM.CGPRO" family="ADAM.CG PRO" pointSize="60"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" red="0.78431372549019607" green="0.77254901960784317" blue="0.75294117647058822" alpha="1" colorSpace="calibratedRGB"/>
+                                <size key="shadowOffset" width="2" height="1"/>
+                            </label>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" red="0.49411764705882355" green="0.62352941176470589" blue="0.71764705882352942" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="u9a-ea-85Y" firstAttribute="trailing" secondItem="g1A-H9-0nT" secondAttribute="trailingMargin" id="8zV-RW-N1z"/>
                             <constraint firstItem="Qq0-md-TA5" firstAttribute="top" secondItem="5QK-Kn-1xh" secondAttribute="bottom" constant="20" id="JNG-rx-Yka"/>
+                            <constraint firstItem="5QK-Kn-1xh" firstAttribute="top" secondItem="u9a-ea-85Y" secondAttribute="bottom" constant="8" id="NlB-82-pop"/>
                             <constraint firstItem="5QK-Kn-1xh" firstAttribute="trailing" secondItem="g1A-H9-0nT" secondAttribute="trailingMargin" id="PGP-Rb-RQK"/>
+                            <constraint firstItem="u9a-ea-85Y" firstAttribute="top" secondItem="Dlw-97-vcs" secondAttribute="bottom" constant="8" id="g79-lV-sdg"/>
                             <constraint firstItem="5QK-Kn-1xh" firstAttribute="leading" secondItem="g1A-H9-0nT" secondAttribute="leadingMargin" id="tK5-xA-hRK"/>
+                            <constraint firstItem="u9a-ea-85Y" firstAttribute="leading" secondItem="g1A-H9-0nT" secondAttribute="leadingMargin" id="xL7-9a-TQC"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="buttonLoginCustom" destination="SYT-cX-rdT" id="KtR-bN-BJm"/>
+                        <outlet property="buttonLoginFacebook" destination="dAn-iQ-Z93" id="iLq-e9-4I5"/>
+                        <outlet property="buttonLoginGoogle" destination="hZw-4A-96S" id="JLx-DU-daY"/>
+                        <outlet property="textFieldEmail" destination="NXp-UE-Xw7" id="U54-KX-ZAn"/>
+                        <outlet property="textFieldPassword" destination="JlQ-Id-ffd" id="Ol4-c8-bLy"/>
                         <segue destination="q67-HL-IdE" kind="show" identifier="SegueLoginToHome" id="y3W-jn-oIK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cjG-Rl-w3P" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="388" y="-339"/>
+            <point key="canvasLocation" x="387" y="-339"/>
         </scene>
         <!--Menu View Controller-->
         <scene sceneID="gAg-LJ-XLw">
@@ -811,8 +934,8 @@
                                         <variation key="heightClass=compact" ambiguous="YES">
                                             <rect key="frame" x="0.0" y="20" width="600" height="0.0"/>
                                         </variation>
-                                        <variation key="heightClass=compact-widthClass=compact" ambiguous="YES" misplaced="YES">
-                                            <rect key="frame" x="0.0" y="20" width="400" height="45"/>
+                                        <variation key="heightClass=compact-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="0.0" y="20" width="400" height="0.0"/>
                                         </variation>
                                         <variation key="heightClass=compact-widthClass=regular" misplaced="YES">
                                             <rect key="frame" x="0.0" y="20" width="800" height="26"/>
@@ -829,9 +952,6 @@
                                 </constraints>
                                 <variation key="heightClass=compact" ambiguous="YES">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="0.0"/>
-                                </variation>
-                                <variation key="heightClass=compact-widthClass=compact" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="0.0" y="0.0" width="400" height="65"/>
                                 </variation>
                                 <variation key="heightClass=compact-widthClass=regular" ambiguous="YES">
                                     <rect key="frame" x="0.0" y="0.0" width="800" height="0.0"/>
@@ -882,9 +1002,6 @@
                                 <variation key="heightClass=compact" ambiguous="YES">
                                     <rect key="frame" x="20" y="8" width="560" height="494"/>
                                 </variation>
-                                <variation key="heightClass=compact-widthClass=compact" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="20" y="73" width="360" height="494"/>
-                                </variation>
                                 <variation key="heightClass=compact-widthClass=regular" ambiguous="YES">
                                     <rect key="frame" x="20" y="8" width="760" height="494"/>
                                 </variation>
@@ -916,6 +1033,10 @@
             <point key="canvasLocation" x="2684" y="67"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="FacebookEmblem" width="132" height="134"/>
+        <image name="GoogleEmblem" width="136" height="135"/>
+    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="cnS-Px-wtS"/>
     </inferredMetricsTieBreakers>

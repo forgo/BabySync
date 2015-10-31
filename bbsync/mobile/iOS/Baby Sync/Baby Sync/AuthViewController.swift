@@ -10,8 +10,8 @@ import UIKit
 
 class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate {
 
-    @IBOutlet weak var buttonLoginFacebook: UIButton!
     @IBOutlet weak var buttonLoginGoogle: UIButton!
+    @IBOutlet weak var buttonLoginFacebook: UIButton!
     
     @IBOutlet weak var textFieldEmail: UITextField!
     @IBOutlet weak var textFieldPassword: UITextField!
@@ -34,10 +34,10 @@ class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate 
         //self.resetPlaceholder(self.textFieldPassword, placeholder: "password")
     }
     
-    func resetPlaceholder(textField: UITextField, placeholder: String) {
-        let placeholderTextColor: UIColor = UIColor.whiteColor()
-        textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSForegroundColorAttributeName:placeholderTextColor])
-    }
+//    func resetPlaceholder(textField: UITextField, placeholder: String) {
+//        let placeholderTextColor: UIColor = UIColor.whiteColor()
+//        textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSForegroundColorAttributeName:placeholderTextColor])
+//    }
     
     override func viewDidAppear(animated: Bool) {
         // Skip Login If Already Logged In
@@ -138,19 +138,17 @@ class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate 
             textField.placeholder = nil
         }
     }
-//    func textFieldShouldReturn(textField: UITextField) -> Bool {
-//        self.view.endEditing(true)
-//        return false
-//    }
+
     func textFieldDidEndEditing(textField: UITextField) {
         if(textField == self.textFieldEmail) {
             if(textField.text?.characters.count == 0) {
-                self.resetPlaceholder(textField, placeholder: "email")
+                
+//                self.resetPlaceholder(textField, placeholder: "email")
             }
         }
         else if(textField == self.textFieldPassword) {
             if(textField.text?.characters.count == 0) {
-                self.resetPlaceholder(textField, placeholder: "password")
+//                self.resetPlaceholder(textField, placeholder: "password")
             }
         }
     }

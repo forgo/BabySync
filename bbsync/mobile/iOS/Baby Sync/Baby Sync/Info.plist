@@ -90,6 +90,8 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>SourceCodePro-Regular.ttf</string>
+		<string>ADAM.CG PRO.otf</string>
+		<string>FACEBOLF.OTF</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

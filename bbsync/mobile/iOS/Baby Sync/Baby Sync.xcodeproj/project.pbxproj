@@ -21,6 +21,8 @@
 		4F08A3991BDFF45E000DE4EF /* AuthUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A38D1BDFF45E000DE4EF /* AuthUser.swift */; };
 		4F08A39B1BDFF480000DE4EF /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F08A39A1BDFF480000DE4EF /* AuthViewController.swift */; };
 		4F08A3A11BE03C3C000DE4EF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4F08A3A01BE03C3C000DE4EF /* GoogleService-Info.plist */; };
+		4F09705F1BE348FB008D743B /* AuthLoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F09705E1BE348FB008D743B /* AuthLoginTextField.swift */; };
+		4F0970611BE356EE008D743B /* AuthLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0970601BE356EE008D743B /* AuthLoginButton.swift */; };
 		4F23A8BF1BBBD7C7001FBCFF /* UIApplicationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8BE1BBBD7C7001FBCFF /* UIApplicationExtensions.swift */; };
 		4F23A8C91BBC55C7001FBCFF /* NewBabyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8C81BBC55C7001FBCFF /* NewBabyViewController.swift */; };
 		4F23A8CB1BBC55DB001FBCFF /* NewTimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8CA1BBC55DB001FBCFF /* NewTimerViewController.swift */; };
@@ -36,6 +38,7 @@
 		4F446ABD1BCE071100D0AD64 /* JSONExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */; };
 		4F446ABF1BCE159B00D0AD64 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABE1BCE159B00D0AD64 /* Error.swift */; };
 		4F53D9371BBBC15100EB598F /* SourceCodePro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F53D9351BBBBEB800EB598F /* SourceCodePro-Regular.ttf */; };
+		4FCEBA831BE432F1002562FB /* UIFontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCEBA821BE432F1002562FB /* UIFontExtension.swift */; };
 		4FD82E961BBB086900A06E0A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82E951BBB086900A06E0A /* AppDelegate.swift */; };
 		4FD82E9B1BBB086900A06E0A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FD82E991BBB086900A06E0A /* Main.storyboard */; };
 		4FD82E9D1BBB086900A06E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FD82E9C1BBB086900A06E0A /* Assets.xcassets */; };
@@ -52,6 +55,9 @@
 		4FD82EF91BBB789600A06E0A /* ISO8601DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EF81BBB789600A06E0A /* ISO8601DateFormatter.swift */; };
 		4FD82EFC1BBB897E00A06E0A /* BabyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EFB1BBB897E00A06E0A /* BabyCollectionViewCell.swift */; };
 		4FD82EFE1BBB97A300A06E0A /* TimerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EFD1BBB97A300A06E0A /* TimerCollectionViewCell.swift */; };
+		4FE9395D1BE2D98A00EA421C /* FACEBOLF.OTF in Resources */ = {isa = PBXBuildFile; fileRef = 4FE9395C1BE2D8AF00EA421C /* FACEBOLF.OTF */; };
+		4FE9395E1BE2D98A00EA421C /* ADAM.CG PRO.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4FE9395B1BE2D86C00EA421C /* ADAM.CG PRO.otf */; };
+		4FE939601BE3337700EA421C /* AuthLoginWithButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE9395F1BE3337700EA421C /* AuthLoginWithButton.swift */; };
 		4FFAE1E11BC1898A00FB2B73 /* GETFamily_New.json in Resources */ = {isa = PBXBuildFile; fileRef = 4FFAE1E01BC1898A00FB2B73 /* GETFamily_New.json */; };
 		4FFAE1E71BC1C5F600FB2B73 /* SelectIconViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE1E61BC1C5F600FB2B73 /* SelectIconViewController.swift */; };
 		4FFAE1E91BC1E57100FB2B73 /* IconCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE1E81BC1E57100FB2B73 /* IconCollectionViewCell.swift */; };
@@ -100,6 +106,8 @@
 		4F08A38D1BDFF45E000DE4EF /* AuthUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthUser.swift; sourceTree = "<group>"; };
 		4F08A39A1BDFF480000DE4EF /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		4F08A3A01BE03C3C000DE4EF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4F09705E1BE348FB008D743B /* AuthLoginTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthLoginTextField.swift; sourceTree = "<group>"; };
+		4F0970601BE356EE008D743B /* AuthLoginButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthLoginButton.swift; sourceTree = "<group>"; };
 		4F23A8BE1BBBD7C7001FBCFF /* UIApplicationExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIApplicationExtensions.swift; sourceTree = "<group>"; };
 		4F23A8C81BBC55C7001FBCFF /* NewBabyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewBabyViewController.swift; sourceTree = "<group>"; };
 		4F23A8CA1BBC55DB001FBCFF /* NewTimerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewTimerViewController.swift; sourceTree = "<group>"; };
@@ -115,6 +123,7 @@
 		4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONExtension.swift; sourceTree = "<group>"; };
 		4F446ABE1BCE159B00D0AD64 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		4F53D9351BBBBEB800EB598F /* SourceCodePro-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceCodePro-Regular.ttf"; sourceTree = "<group>"; };
+		4FCEBA821BE432F1002562FB /* UIFontExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFontExtension.swift; sourceTree = "<group>"; };
 		4FD82E921BBB086900A06E0A /* Baby Sync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Baby Sync.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FD82E951BBB086900A06E0A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4FD82E9A1BBB086900A06E0A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -133,6 +142,9 @@
 		4FD82EF81BBB789600A06E0A /* ISO8601DateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ISO8601DateFormatter.swift; sourceTree = "<group>"; };
 		4FD82EFB1BBB897E00A06E0A /* BabyCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BabyCollectionViewCell.swift; sourceTree = "<group>"; };
 		4FD82EFD1BBB97A300A06E0A /* TimerCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerCollectionViewCell.swift; sourceTree = "<group>"; };
+		4FE9395B1BE2D86C00EA421C /* ADAM.CG PRO.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ADAM.CG PRO.otf"; sourceTree = "<group>"; };
+		4FE9395C1BE2D8AF00EA421C /* FACEBOLF.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = FACEBOLF.OTF; sourceTree = "<group>"; };
+		4FE9395F1BE3337700EA421C /* AuthLoginWithButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthLoginWithButton.swift; sourceTree = "<group>"; };
 		4FFAE1E01BC1898A00FB2B73 /* GETFamily_New.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GETFamily_New.json; sourceTree = "<group>"; };
 		4FFAE1E61BC1C5F600FB2B73 /* SelectIconViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectIconViewController.swift; sourceTree = "<group>"; };
 		4FFAE1E81BC1E57100FB2B73 /* IconCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -176,6 +188,9 @@
 				4F08A38C1BDFF45E000DE4EF /* AuthState.swift */,
 				4F08A38D1BDFF45E000DE4EF /* AuthUser.swift */,
 				4F08A39A1BDFF480000DE4EF /* AuthViewController.swift */,
+				4FE9395F1BE3337700EA421C /* AuthLoginWithButton.swift */,
+				4F0970601BE356EE008D743B /* AuthLoginButton.swift */,
+				4F09705E1BE348FB008D743B /* AuthLoginTextField.swift */,
 			);
 			name = Auth;
 			sourceTree = "<group>";
@@ -185,6 +200,7 @@
 			children = (
 				4F23A8BE1BBBD7C7001FBCFF /* UIApplicationExtensions.swift */,
 				4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */,
+				4FCEBA821BE432F1002562FB /* UIFontExtension.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -223,6 +239,8 @@
 		4F53D9361BBBBEC000EB598F /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				4FE9395C1BE2D8AF00EA421C /* FACEBOLF.OTF */,
+				4FE9395B1BE2D86C00EA421C /* ADAM.CG PRO.otf */,
 				4F53D9351BBBBEB800EB598F /* SourceCodePro-Regular.ttf */,
 			);
 			name = Fonts;
@@ -397,6 +415,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FE9395D1BE2D98A00EA421C /* FACEBOLF.OTF in Resources */,
+				4FE9395E1BE2D98A00EA421C /* ADAM.CG PRO.otf in Resources */,
 				4F53D9371BBBC15100EB598F /* SourceCodePro-Regular.ttf in Resources */,
 				4FFAE1E11BC1898A00FB2B73 /* GETFamily_New.json in Resources */,
 				4FD82EA01BBB086900A06E0A /* LaunchScreen.storyboard in Resources */,
@@ -466,6 +486,7 @@
 				4F08A38F1BDFF45E000DE4EF /* AuthAppMethod.swift in Sources */,
 				4F446ABD1BCE071100D0AD64 /* JSONExtension.swift in Sources */,
 				4F23A8CB1BBC55DB001FBCFF /* NewTimerViewController.swift in Sources */,
+				4FCEBA831BE432F1002562FB /* UIFontExtension.swift in Sources */,
 				4F23A8D51BBC7960001FBCFF /* MenuTableViewCell.swift in Sources */,
 				4F08A3951BDFF45E000DE4EF /* AuthGoogle.swift in Sources */,
 				4FFAE1E91BC1E57100FB2B73 /* IconCollectionViewCell.swift in Sources */,
@@ -481,9 +502,11 @@
 				4F08A3911BDFF45E000DE4EF /* AuthCustom.swift in Sources */,
 				4FD82EF31BBB6EE800A06E0A /* Timer.swift in Sources */,
 				4F08A3981BDFF45E000DE4EF /* AuthState.swift in Sources */,
+				4FE939601BE3337700EA421C /* AuthLoginWithButton.swift in Sources */,
 				4FD82EEB1BBB6EC700A06E0A /* Baby.swift in Sources */,
 				4FFAE2401BC269E600FB2B73 /* BabyModel.swift in Sources */,
 				4FFAE1E71BC1C5F600FB2B73 /* SelectIconViewController.swift in Sources */,
+				4F09705F1BE348FB008D743B /* AuthLoginTextField.swift in Sources */,
 				4F08A3921BDFF45E000DE4EF /* AuthDefaults.swift in Sources */,
 				4F446ABB1BCE05E900D0AD64 /* BabySync.swift in Sources */,
 				4FD82EED1BBB6ECE00A06E0A /* Activity.swift in Sources */,
@@ -494,6 +517,7 @@
 				4F08A3971BDFF45E000DE4EF /* AuthMethodType.swift in Sources */,
 				4F08A39B1BDFF480000DE4EF /* AuthViewController.swift in Sources */,
 				4F08A3961BDFF45E000DE4EF /* AuthMethod.swift in Sources */,
+				4F0970611BE356EE008D743B /* AuthLoginButton.swift in Sources */,
 				4F08A3931BDFF45E000DE4EF /* AuthDelegate.swift in Sources */,
 				4F23A8CD1BBC55F0001FBCFF /* NewActivityViewController.swift in Sources */,
 				4F23A8CF1BBC562E001FBCFF /* SyncFamilyViewController.swift in Sources */,

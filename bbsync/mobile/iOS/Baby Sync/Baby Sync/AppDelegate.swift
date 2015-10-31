@@ -16,12 +16,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
-        return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        // Configure Google Sign-In
+        Auth.sharedInstance.google.signIn.uiDelegate = Auth.sharedInstance.google
+        let googleDidFinish: Bool = Auth.sharedInstance.google.configure(
+            application,
+            didFinishLaunchingWithOptions: launchOptions)
+        
+        // Configure Facebook Sign-In
+        let facebookDidFinish: Bool = Auth.sharedInstance.facebook.configure(
+            application,
+            didFinishLaunchingWithOptions: launchOptions)
+        
+        // Returns false if any service encountered a URL we cannot open
+        return googleDidFinish && facebookDidFinish
     }
     
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+        // URL intended for Google SDK
+        let isGoogleURL: Bool = Auth.sharedInstance.google.openURL(
+            application,
+            openURL: url,
+            sourceApplication: sourceApplication,
+            annotation: annotation)
+        
+        // URL intended for Facebook SDK
+        let isFacebookURL: Bool = Auth.sharedInstance.facebook.openURL(
+            application,
+            openURL: url,
+            sourceApplication: sourceApplication,
+            annotation: annotation)
+        
+        // Open URL if any service recognizes it
+        return isGoogleURL || isFacebookURL
     }
     
     func applicationWillResignActive(application: UIApplication) {
