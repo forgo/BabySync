@@ -10,7 +10,7 @@ import UIKit
 
 class TimerCollectionViewCell: UICollectionViewCell {
 
-    @IBOutlet weak var imageTimer: UIImageView!
+    @IBOutlet weak var viewTimer: TimerView!
     @IBOutlet weak var labelElapsedTimer: UILabel!
     @IBOutlet weak var labelActivityTimer: UILabel!
     

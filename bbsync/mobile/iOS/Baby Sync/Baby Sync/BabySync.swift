@@ -118,6 +118,15 @@ class BabySync {
         return (jsonData, jsonErrors)
     }
     
+    // Parse the high level response from static test JSON file
+    private func parseTest(jsonTest: JSON) -> (JSON, JSON) {
+        var jsonTestData: JSON = nil
+        var jsonTestErrors: JSON = nil
+        jsonTestData = jsonTest["data"]
+        jsonTestErrors = jsonTest["errors"]
+        return (jsonTestData, jsonTestErrors)
+    }
+    
     // For every error encountered, delegate out to whom it may concern
     private func handle(errors: [Error]) {
         for error in errors {
@@ -144,31 +153,26 @@ class BabySync {
         }
     }
     
-    func loginParent(parentEmail: String, loginType: UserLoginType) {
-        let endpointLoginParent = "parent/auth"
-        let loginTypeString: String = loginType.rawValue
-        var token: String = ""
-        switch loginType {
-        case .Facebook:
-            token = UserData.sharedInstance.facebookToken
-        case .Google:
-            token = UserData.sharedInstance.googleToken
-        case .BabySync:
-            token = ""
-        }
-        Alamofire.request(.POST, baseURL+endpointLoginParent, parameters: ["username":parentEmail,"password":"","loginType":loginTypeString,"token":token]).responseJSON { response in
-            let (jsonData, jsonErrors) = self.parse(response)
-            if (jsonErrors != nil) {
-                self.handle(self.errors(jsonErrors))
-                return
-            }
-            if (self.parseFamily(jsonData)) {
-                self.delegate?.didCreate(self.family)
-            }
-        }
-    }
+
     
     func createFamily(parentEmail: String) {
+        
+        let dummy: Bool = true
+        if (dummy) {
+            let jsonTest = JSON.fromFile("GETFamily_New")
+            let (jsonTestData, jsonTestErrors) = self.parseTest(jsonTest)
+            if (jsonTestErrors != nil) {
+                self.handle(self.errors(jsonTestErrors))
+                return
+            }
+            if (self.parseFamily(jsonTestData)) {
+                self.delegate?.didCreate(self.family)
+                return
+            }
+        }
+        
+        
+        
         let endpointCreateFamily = "parent/"
         Alamofire.request(.POST, baseURL+endpointCreateFamily, parameters: ["email":parentEmail]).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)

@@ -40,17 +40,20 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         BabySync.service.delegate = self;
         
+        // let's get dummy data for now
+        BabySync.service.createFamily(Auth.sharedInstance.securedUser.email)
+        
 //        self.ticker = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "tick", userInfo: nil, repeats: true)
         
         self.imageUser.layer.masksToBounds = true
-        self.imageUser.image = UserData.sharedInstance.pic
-        self.labelName.text = UserData.sharedInstance.name
-        self.labelEmail.text = UserData.sharedInstance.email
+        self.imageUser.image = Auth.sharedInstance.securedUser.pic
+        self.labelName.text = Auth.sharedInstance.securedUser.name
+        self.labelEmail.text = Auth.sharedInstance.securedUser.email
         
     }
     
     override func viewDidAppear(animated: Bool) {
-        BabySync.service.loginParent(UserData.sharedInstance.email, loginType: UserData.sharedInstance.loginType);
+        // do something to get data
     }
     
     override func didReceiveMemoryWarning() {
@@ -163,8 +166,9 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             let acts: [Activity] = BabySync.service.activities.filter{$0.id == timer.activityID}
             
             if (acts.count > 0) {
-                cell.imageTimer.layer.masksToBounds = true
-                cell.imageTimer.image = UIImage(named: acts[0].icon)
+                // TODO: loop through activities and match to timer setting properties of timer view critical/warn etc
+//                cell.imageTimer.layer.masksToBounds = true
+//                cell.imageTimer.image = UIImage(named: acts[0].icon)
                 cell.labelActivityTimer.text = acts[0].name
             }
             
@@ -238,14 +242,14 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         self.collectionTimers.collectionViewLayout.invalidateLayout()
     }
     
-    // MenuViewDelegate
+    // MARK: - MenuViewDelegate
     func menu(menuController: MenuViewController, didSelectItemWithSegueIdentifier segueID: String) {
         menuController.dismissViewControllerAnimated(false) { () -> Void in
             self.performSegueWithIdentifier(segueID, sender: self)
         }
     }
     
-    // BabySyncDelegate
+    // MARK: - BabySyncDelegate
     func didFind(parent: Parent) {
         
     }
@@ -255,7 +259,8 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
 
     func didCreate(family: Family) {
-        
+        print("didCreate family: ", family)
+        self.reloadCollections()
     }
     
     func didJoin(family: Family) {

@@ -8,4 +8,5 @@ target 'Baby Sync' do
     pod 'SwiftyJSON', '~> 2.3.1'
     pod 'Google/SignIn'
     pod 'Locksmith'
+    pod 'AngleGradientLayer', '~> 1.0'
 end

@@ -38,14 +38,14 @@
 		4F446ABD1BCE071100D0AD64 /* JSONExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */; };
 		4F446ABF1BCE159B00D0AD64 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABE1BCE159B00D0AD64 /* Error.swift */; };
 		4F53D9371BBBC15100EB598F /* SourceCodePro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F53D9351BBBBEB800EB598F /* SourceCodePro-Regular.ttf */; };
+		4FA4BE8A1BE5009700580FD3 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA4BE891BE5009700580FD3 /* TimerView.swift */; };
+		4FB1B71A1BE460D2007CA316 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB1B7191BE460D2007CA316 /* StringExtension.swift */; };
 		4FCEBA831BE432F1002562FB /* UIFontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCEBA821BE432F1002562FB /* UIFontExtension.swift */; };
 		4FD82E961BBB086900A06E0A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82E951BBB086900A06E0A /* AppDelegate.swift */; };
 		4FD82E9B1BBB086900A06E0A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FD82E991BBB086900A06E0A /* Main.storyboard */; };
 		4FD82E9D1BBB086900A06E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FD82E9C1BBB086900A06E0A /* Assets.xcassets */; };
 		4FD82EA01BBB086900A06E0A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4FD82E9E1BBB086900A06E0A /* LaunchScreen.storyboard */; };
-		4FD82EC41BBB09DE00A06E0A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EC31BBB09DE00A06E0A /* LoginViewController.swift */; };
 		4FD82EC61BBB0A2A00A06E0A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EC51BBB0A2A00A06E0A /* HomeViewController.swift */; };
-		4FD82ECF1BBB34C600A06E0A /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82ECE1BBB34C600A06E0A /* UserData.swift */; };
 		4FD82EE81BBB68F800A06E0A /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EE71BBB68F800A06E0A /* SwiftyJSON.swift */; };
 		4FD82EEB1BBB6EC700A06E0A /* Baby.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EEA1BBB6EC700A06E0A /* Baby.swift */; };
 		4FD82EED1BBB6ECE00A06E0A /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EEC1BBB6ECE00A06E0A /* Activity.swift */; };
@@ -123,6 +123,8 @@
 		4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONExtension.swift; sourceTree = "<group>"; };
 		4F446ABE1BCE159B00D0AD64 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		4F53D9351BBBBEB800EB598F /* SourceCodePro-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceCodePro-Regular.ttf"; sourceTree = "<group>"; };
+		4FA4BE891BE5009700580FD3 /* TimerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
+		4FB1B7191BE460D2007CA316 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		4FCEBA821BE432F1002562FB /* UIFontExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFontExtension.swift; sourceTree = "<group>"; };
 		4FD82E921BBB086900A06E0A /* Baby Sync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Baby Sync.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FD82E951BBB086900A06E0A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -130,9 +132,7 @@
 		4FD82E9C1BBB086900A06E0A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4FD82E9F1BBB086900A06E0A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4FD82EA11BBB086900A06E0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4FD82EC31BBB09DE00A06E0A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		4FD82EC51BBB0A2A00A06E0A /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
-		4FD82ECE1BBB34C600A06E0A /* UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		4FD82EE71BBB68F800A06E0A /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		4FD82EEA1BBB6EC700A06E0A /* Baby.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Baby.swift; sourceTree = "<group>"; };
 		4FD82EEC1BBB6ECE00A06E0A /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
@@ -201,6 +201,7 @@
 				4F23A8BE1BBBD7C7001FBCFF /* UIApplicationExtensions.swift */,
 				4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */,
 				4FCEBA821BE432F1002562FB /* UIFontExtension.swift */,
+				4FB1B7191BE460D2007CA316 /* StringExtension.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -276,7 +277,6 @@
 				4FD82E9E1BBB086900A06E0A /* LaunchScreen.storyboard */,
 				4FD82EA11BBB086900A06E0A /* Info.plist */,
 				4F08A3A01BE03C3C000DE4EF /* GoogleService-Info.plist */,
-				4FD82ECD1BBB34B500A06E0A /* Login */,
 				4F23A8C71BBC558D001FBCFF /* ViewControllers */,
 				4FD82EFA1BBB895A00A06E0A /* Views */,
 				4FD82EE91BBB6EB800A06E0A /* Models */,
@@ -286,15 +286,6 @@
 				4F53D9361BBBBEC000EB598F /* Fonts */,
 			);
 			path = "Baby Sync";
-			sourceTree = "<group>";
-		};
-		4FD82ECD1BBB34B500A06E0A /* Login */ = {
-			isa = PBXGroup;
-			children = (
-				4FD82EC31BBB09DE00A06E0A /* LoginViewController.swift */,
-				4FD82ECE1BBB34C600A06E0A /* UserData.swift */,
-			);
-			name = Login;
 			sourceTree = "<group>";
 		};
 		4FD82EE91BBB6EB800A06E0A /* Models */ = {
@@ -320,6 +311,7 @@
 				4FD82EFD1BBB97A300A06E0A /* TimerCollectionViewCell.swift */,
 				4F23A8D41BBC7960001FBCFF /* MenuTableViewCell.swift */,
 				4FFAE1E81BC1E57100FB2B73 /* IconCollectionViewCell.swift */,
+				4FA4BE891BE5009700580FD3 /* TimerView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -482,7 +474,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FFAE1EB1BC2161400FB2B73 /* BabyViewController.swift in Sources */,
-				4FD82EC41BBB09DE00A06E0A /* LoginViewController.swift in Sources */,
 				4F08A38F1BDFF45E000DE4EF /* AuthAppMethod.swift in Sources */,
 				4F446ABD1BCE071100D0AD64 /* JSONExtension.swift in Sources */,
 				4F23A8CB1BBC55DB001FBCFF /* NewTimerViewController.swift in Sources */,
@@ -501,6 +492,7 @@
 				4FD82EFC1BBB897E00A06E0A /* BabyCollectionViewCell.swift in Sources */,
 				4F08A3911BDFF45E000DE4EF /* AuthCustom.swift in Sources */,
 				4FD82EF31BBB6EE800A06E0A /* Timer.swift in Sources */,
+				4FB1B71A1BE460D2007CA316 /* StringExtension.swift in Sources */,
 				4F08A3981BDFF45E000DE4EF /* AuthState.swift in Sources */,
 				4FE939601BE3337700EA421C /* AuthLoginWithButton.swift in Sources */,
 				4FD82EEB1BBB6EC700A06E0A /* Baby.swift in Sources */,
@@ -521,12 +513,12 @@
 				4F08A3931BDFF45E000DE4EF /* AuthDelegate.swift in Sources */,
 				4F23A8CD1BBC55F0001FBCFF /* NewActivityViewController.swift in Sources */,
 				4F23A8CF1BBC562E001FBCFF /* SyncFamilyViewController.swift in Sources */,
-				4FD82ECF1BBB34C600A06E0A /* UserData.swift in Sources */,
 				4FD82EE81BBB68F800A06E0A /* SwiftyJSON.swift in Sources */,
 				4FD82EC61BBB0A2A00A06E0A /* HomeViewController.swift in Sources */,
 				4F08A38E1BDFF45E000DE4EF /* Auth.swift in Sources */,
 				4F446ABF1BCE159B00D0AD64 /* Error.swift in Sources */,
 				4F23A8C91BBC55C7001FBCFF /* NewBabyViewController.swift in Sources */,
+				4FA4BE8A1BE5009700580FD3 /* TimerView.swift in Sources */,
 				4F08A3901BDFF45E000DE4EF /* AuthConstant.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -37,8 +37,8 @@ module.exports = function Public(babySync) {
     // ---------------------------
 	// BabySync Service Operations
     // ---------------------------
+    Public.post('/user/auth', babySync.user.login);
     Public.post('/parent', babySync.createFamily);
-    Public.post('/parent/auth', babySync.user.login);
 
     // After this point should expect token
     // TODO: move these operations to the private section

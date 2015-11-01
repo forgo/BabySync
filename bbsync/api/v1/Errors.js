@@ -133,6 +133,12 @@ module.exports = function Errors() {
                 message: type + " login token invalid"
             };
         },
+        LOGIN_TOKEN_UNVERIFIABLE: function(type) {
+            return {
+                code: 3006,
+                message: type + " login token unverifiable"
+            };
+        }
         UNIDENTIFIABLE: function(id) {
             return {
                 code: 3003,

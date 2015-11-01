@@ -320,39 +320,39 @@ module.exports = function Validate(errors) {
                 var isEmailAsUsername = false;
 
                 // Valid Login Method Definitions
-                var loginMethods = [{
-                    type: "babysync",
+                var authMethods = [{
+                    type: "Custom",
                     validTokenURL: null,
                     validateResponse: null
                 }, {
-                    type: "facebook",
+                    type: "Facebook",
                     validTokenURL: "https://graph.facebook.com/me?access_token={accessToken}",
                     validateResponse: validate.facebookResponseBody
                 }, {
-                    type: "google",
+                    type: "Google",
                     validTokenURL: "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={accessToken}",
                     validateResponse: validate.googleResponseBody
                 }];
 
-                // Extract/delete loginType and token key/value from login object
-                var loginType = "babysync";
-                var token = "";
-                if(pre.loginType) {
-                    var loginMethodMatches = loginMethods.filter(function(method) {
-                        return method.type == pre.loginType;
+                // Extract/delete authMethod and token key/value from login object
+                var authMethod = "Custom";
+                var accessToken = "";
+                if(pre.authMethod) {
+                    var authMethodMatches = authMethods.filter(function(method) {
+                        return method.type == pre.authMethod;
                     });
-                    if (loginMethodMatches.length == 1) {
-                        loginType = pre.loginType;
-                        delete pre.loginType;
-                        var method = loginMethodMatches[0];
-                        // No token was provided and login method needs it
-                        if(!pre.token && method.validTokenURL != null) {
+                    if (authMethodMatches.length == 1) {
+                        authMethod = pre.authMethod;
+                        delete pre.authMethod;
+                        var method = authMethodMatches[0];
+                        // No token was provided and auth method needs it
+                        if(!pre.accessToken && method.validTokenURL != null) {
                             reponse.valid = false;
-                            response.errors = [errors.LOGIN_TOKEN_EXPECTED(loginType)];
+                            response.errors = [errors.LOGIN_TOKEN_EXPECTED(authMethod)];
                             return response;
                         }
                         // Token provided and we have an auth service to check against
-                        else if(pre.token && method.validTokenURL != null) {
+                        else if(pre.accessToken && method.validTokenURL != null) {
                             var tokenURL = method.validTokenURL.replace(/\{accessToken\}/, pre.token);
                             console.log("TOKEN URL = ", tokenURL);
                             var options = { url: tokenURL };
@@ -364,6 +364,10 @@ module.exports = function Validate(errors) {
                                 response.errors = [errors.LOGIN_TOKEN_INVALID(loginType)];
                                 return response;
                             }
+                        }
+                        else if(pre.accessToken && method.validTokenURL == null) {
+                            response.valid = false;
+                            response.errors = [errors.LOGIN_TOKEN_UNVERIFIABLE(loginType)];
                         }
                     }
                     else {

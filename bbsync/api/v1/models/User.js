@@ -26,14 +26,20 @@ module.exports = function User(RESTUser, db, validate, errors, response) {
     // User Validations
     // ---------------------------------------------------------------------
     var userValidate = {
+        email: function() {
+            return validate.regex(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)\b/);
+        },
         username: function() {
             return validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
         },
         password: function() {
             return validate.regex(/^(?=[^\d_].*?\d)\w(\w|[!@#$%]){7,20}/);
         },
-        email: function() {
-            return validate.regex(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)\b/);
+        firstname: function() {
+            return validate.regex(/^[a-zA-Z0-9]+$/);
+        },
+        lastname: function() {
+            return validate.regex(/^[a-zA-Z0-9]+$/);
         },
         birthday: function() {
             return validate.ageInRange({
@@ -43,12 +49,6 @@ module.exports = function User(RESTUser, db, validate, errors, response) {
         },
         phone: function() {
             return validate.regex(/^[a-zA-Z0-9]+$/);
-        },
-        firstname: function() {
-            return validate.regex(/^[a-zA-Z0-9]+$/);
-        },
-        lastname: function() {
-            return validate.regex(/^[a-zA-Z0-9]+$/);
         }
     };
 
@@ -56,6 +56,11 @@ module.exports = function User(RESTUser, db, validate, errors, response) {
     // User Schema
     // ---------------------------------------------------------------------
     var userSchema = [{
+        attribute: "email",
+        type: "text",
+        required: true,
+        test: userValidate.email()
+    }, {
         attribute: "username",
         type: "text",
         required: true,
@@ -66,10 +71,15 @@ module.exports = function User(RESTUser, db, validate, errors, response) {
         required: true,
         test: userValidate.password()
     }, {
-        attribute: "email",
+        attribute: "firstname",
         type: "text",
-        required: true,
-        test: userValidate.email()
+        required: false,
+        test: userValidate.firstname()
+    }, {
+        attribute: "lastname",
+        type: "text",
+        required: false,
+        test: userValidate.lastname()
     }, {
         attribute: "birthday",
         type: "date",
@@ -80,16 +90,6 @@ module.exports = function User(RESTUser, db, validate, errors, response) {
         type: "text",
         required: false,
         test: userValidate.phone()
-    }, {
-        attribute: "firstname",
-        type: "text",
-        required: false,
-        test: userValidate.firstname()
-    }, {
-        attribute: "lastname",
-        type: "text",
-        required: false,
-        test: userValidate.lastname()
     }];
 
     var user = new RESTUser("User", "u", userSchema, db, validate, errors, response);

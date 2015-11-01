@@ -63,7 +63,7 @@ class Auth: NSObject, AuthDelegate {
     var authUIDelegate: AuthUIDelegate?
     
     // Login View Controller from which authentication controllers are presented
-    var loginViewController: UIViewController?
+    var loginViewController: AuthViewController?
     
     // Locksmith Secure Storable
     var securedUser: AuthUser
@@ -97,7 +97,7 @@ class Auth: NSObject, AuthDelegate {
         do {
             try self.securedUser.deleteFromSecureStore()
         } catch {
-            print("Something went wrong trying to delete existing secure store user")
+            print("Something went wrong trying to delete existing secure store user. Perhaps this is your first login, and there's nothing to delete.")
         }
         
         do {
