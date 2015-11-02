@@ -12,17 +12,17 @@ import UIKit
 @IBDesignable
 class TimerView: UIView {
     
-    @IBInspectable var actualElapsed: Double = 15.0
+    @IBInspectable var actualElapsed: Double = 52.0
     @IBInspectable var warnElapsed: Double = 45.0
     @IBInspectable var criticalElapsed: Double = 60.0
     
-    @IBInspectable var bgColor: UIColor = UIColor.whiteColor()
-    @IBInspectable var borderColor: UIColor = UIColor.blackColor()
-    @IBInspectable var borderThickness: CGFloat = 5.0
-    @IBInspectable var fillColor: UIColor = UIColor.purpleColor()
-    @IBInspectable var okColor: UIColor = UIColor.blackColor()
+    @IBInspectable var color: UIColor = UIColor.blackColor()
+    @IBInspectable var innerMargin: CGFloat = 0.3
+    @IBInspectable var outerMargin: CGFloat = 0.1
+    @IBInspectable var okColor: UIColor = UIColor.greenColor()
     @IBInspectable var warnColor: UIColor = UIColor.yellowColor()
     @IBInspectable var criticalColor: UIColor = UIColor.redColor()
+    @IBInspectable var nTicks: Int = 36
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -58,18 +58,15 @@ class TimerView: UIView {
     }
 
     func drawMeterOverlay(gradientLayer: AngleGradientLayer) -> CAShapeLayer {
-        let radius = (self.frame.width - self.borderThickness)/2.0
+        let radius = self.frame.width/2.0
         let overlay = CAShapeLayer()
         overlay.bounds = gradientLayer.bounds
         overlay.position = gradientLayer.position
-        overlay.lineWidth = self.borderThickness
+        overlay.lineWidth = 0.0
         overlay.path = UIBezierPath(arcCenter: self.center, radius: radius, startAngle: 0.0, endAngle: CGFloat(M_PI * 2.0), clockwise: true).CGPath
-        overlay.strokeStart = 0.0
-        overlay.strokeEnd = 1.0
-        overlay.strokeColor = self.borderColor.CGColor
-        overlay.fillColor = self.fillColor.CGColor
+        overlay.fillColor = self.color.CGColor
         overlay.opacity = 1.0
-        overlay.backgroundColor = UIColor.blackColor().CGColor
+        overlay.backgroundColor = UIColor.clearColor().CGColor
         gradientLayer.addSublayer(overlay)
         return overlay
     }
@@ -82,7 +79,15 @@ class TimerView: UIView {
     
     func maskPath(percentElapsed: Double, center: CGPoint, radius: CGFloat) -> UIBezierPath {
         let tau: Double = 2.0 * M_PI
-        let nSlices: UInt = 60
+        
+        var nSlices: UInt = UInt(self.nTicks * 2)
+        
+        if(nSlices < 2) {
+            nSlices = 2
+        }
+        else if(nSlices > 288) {
+            nSlices = 288
+        }
         
         let arcAngle: Double = tau / Double(nSlices)
         var startAngle: Double = arcAngle
@@ -91,7 +96,6 @@ class TimerView: UIView {
             endAngle = percentElapsed * tau
         }
         
-        assert((nSlices > 1) && (nSlices % 2 == 0), "nSlices for TimerView should be a positive even number")
         
         let piePath: UIBezierPath = UIBezierPath()
 
@@ -109,51 +113,49 @@ class TimerView: UIView {
     }
     
     func drawMeterMask(overlay: CAShapeLayer) {
+    
+        let percentDone: Double = self.actualElapsed / self.criticalElapsed
+        
         let center = CGPointMake(overlay.frame.width/2.0, overlay.frame.height/2.0)
-        let radius: CGFloat =  self.frame.width/2.0 - self.borderThickness/2.0
+        let radius: CGFloat =  (self.frame.width/2.0) * (1.0 - self.outerMargin)
         
         let path: UIBezierPath = UIBezierPath(roundedRect: overlay.bounds, cornerRadius: 0)
-        let maskPath: UIBezierPath = self.maskPath(0.25, center: center, radius: radius)
+        let maskPath: UIBezierPath = self.maskPath(percentDone, center: center, radius: radius)
         
         path.usesEvenOddFillRule = true
-
         path.appendPath(maskPath)
-        
-        
-        
+    
         let mask: CAShapeLayer = CAShapeLayer()
         mask.path = path.CGPath
-//        mask.frame = overlay.bounds
-//        mask.path = maskPath.CGPath
         mask.fillRule = kCAFillRuleEvenOdd
         mask.fillColor = UIColor.blackColor().CGColor
         mask.opacity = 1.0
-        
-//        overlay.addSublayer(mask)
-
         overlay.mask = mask
-        
-        //
-
-
-
-//        [path appendPath:circlePath];
-//        [path setUsesEvenOddFillRule:YES];
-//        
-//        CAShapeLayer *fillLayer = [CAShapeLayer layer];
-//        fillLayer.path = path.CGPath;
-//        fillLayer.fillRule = kCAFillRuleEvenOdd;
-//        fillLayer.fillColor = [UIColor grayColor].CGColor;
-//        fillLayer.opacity = 0.5;
-//        [view.layer addSublayer:fillLayer];
-        
-        
+    }
+    
+    func drawMeterCenter(overlay: CAShapeLayer) -> CAShapeLayer {
+        let radius: CGFloat =  (self.frame.width/2.0) * self.innerMargin
+        let hole = CAShapeLayer()
+        hole.bounds = overlay.bounds
+        hole.position = overlay.position
+        hole.lineWidth = 0.0
+        let circlePath: UIBezierPath = UIBezierPath(arcCenter: self.center, radius: radius, startAngle: 0.0, endAngle: CGFloat(M_PI * 2.0), clockwise: true)
+        hole.path = circlePath.CGPath
+        hole.fillColor = self.color.CGColor
+        hole.opacity = 1.0
+        hole.backgroundColor = UIColor.clearColor().CGColor
+        self.layer.addSublayer(hole)
+        return hole
     }
     
     override func drawRect(rect: CGRect) {
         let gradientLayer = self.drawGradient()
         let overlay = self.drawMeterOverlay(gradientLayer)
         self.drawMeterMask(overlay)
+        _ = self.drawMeterCenter(overlay)
+
+        
+        
     }
     
 

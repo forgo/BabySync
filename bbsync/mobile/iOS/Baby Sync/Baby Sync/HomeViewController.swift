@@ -16,7 +16,8 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     var isTest: Bool = false
     
-    var ticker: NSTimer = NSTimer()
+    private var refreshTimer: NSTimer = NSTimer()
+    @IBOutlet weak var labelRefreshCountdown: UILabel!
     
     @IBOutlet weak var imageUser: UIImageView!
     @IBOutlet weak var labelName: UILabel!
@@ -30,8 +31,11 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
 //    var alert: UIAlertController = UIAlertController()
 //    var alertAction: UIAlertAction = UIAlertAction()
     
-    func tick() {
+    func refresh() {
+        print("Performing \(self.refreshTimer.timeInterval) sec periodic refresh.")
+        // TODO: Call web service to sync every minute or on TBD interval
         self.reloadCollections()
+        self.labelRefreshCountdown.text = "\(self.refreshTimer.fireDate.timeIntervalSinceNow) sec"
     }
     
     override func viewDidLoad() {
@@ -43,8 +47,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         // let's get dummy data for now
         BabySync.service.createFamily(Auth.sharedInstance.securedUser.email)
         
-//        self.ticker = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "tick", userInfo: nil, repeats: true)
-        
+        self.refreshTimer = NSTimer.scheduledTimerWithTimeInterval(60.0, target: self, selector: "refresh", userInfo: nil, repeats: true)
         self.imageUser.layer.masksToBounds = true
         self.imageUser.image = Auth.sharedInstance.securedUser.pic
         self.labelName.text = Auth.sharedInstance.securedUser.name
@@ -67,7 +70,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     // Convenience
     @IBAction func reloadCollections() {
-        print("Reloading collections...")
         self.collectionBabies.reloadData()
         self.collectionTimers.reloadData()
     }
@@ -169,8 +171,14 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
                 // TODO: loop through activities and match to timer setting properties of timer view critical/warn etc
 //                cell.imageTimer.layer.masksToBounds = true
 //                cell.imageTimer.image = UIImage(named: acts[0].icon)
+                cell.viewTimer.actualElapsed = abs(timer.resetDate.timeIntervalSinceNow)
+                cell.viewTimer.warnElapsed = acts[0].warn
+                cell.viewTimer.criticalElapsed = acts[0].critical
+                cell.viewTimer.setNeedsDisplay()
                 cell.labelActivityTimer.text = acts[0].name
             }
+            
+//            cell.updateElapsed
             
             cell.labelElapsedTimer.font = UIFont(name: "SourceCodePro-Regular", size: 40)
             cell.labelElapsedTimer.attributedText = ElapsedTimeFormatter.sharedInstance.attributedString(timer.resetDate)
