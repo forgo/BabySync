@@ -19,6 +19,7 @@ class TimerView: UIView {
     @IBInspectable var bgColor: UIColor = UIColor.whiteColor()
     @IBInspectable var borderColor: UIColor = UIColor.blackColor()
     @IBInspectable var borderThickness: CGFloat = 5.0
+    @IBInspectable var fillColor: UIColor = UIColor.purpleColor()
     @IBInspectable var okColor: UIColor = UIColor.blackColor()
     @IBInspectable var warnColor: UIColor = UIColor.yellowColor()
     @IBInspectable var criticalColor: UIColor = UIColor.redColor()
@@ -31,62 +32,13 @@ class TimerView: UIView {
         super.init(frame: frame)
     }
     
-    func gradientFrom(percentWarn: Double, percentCritical: Double) {
-//        let gradient: CAGradientLayer = CAGradientLayer()
-//        
-//        let gradientThickness: CGFloat = 10.0
-//        let gradientCircumference: CGFloat = CGFloat(M_PI) * self.bounds.width
-//        
-//        gradient.bounds = CGRectMake(0, 0, gradientCircumference, gradientThickness)
-//        gradient.position = self.center
-//        gradient.colors = [self.okColor.CGColor, self.warnColor.CGColor, self.criticalColor.CGColor]
-//        let warnLocation: NSNumber = NSNumber(double: self.warnElapsed / self.criticalElapsed)
-//        gradient.locations = [0.0, warnLocation, 1.0]
-//        gradient.startPoint = CGPointMake(0.0, 0.5)
-//        gradient.endPoint = CGPointMake(0.5, 0.5)
-        
-        let gradient: AngleGradientLayer = AngleGradientLayer()
-        gradient.bounds = self.bounds
-        gradient.position = self.center
-        gradient.colors = [self.criticalColor.CGColor, self.warnColor.CGColor, self.okColor.CGColor]
-        let warnLocation: NSNumber = NSNumber(double: self.warnElapsed / self.criticalElapsed)
-        gradient.locations = [0.0, warnLocation, 1.0]
-
-        gradient.cornerRadius = self.bounds.width / 2.0
-        gradient.transform = CATransform3DRotate(gradient.transform, CGFloat(-M_PI_2), 0.0, 0.0, 1.0)
-        
-        
-        layer.addSublayer(gradient)
-    }
-
-    func addOval(lineWidth: CGFloat, path: CGPathRef, strokeStart: CGFloat, strokeEnd: CGFloat, strokeColor: UIColor, fillColor: UIColor, shadowRadius: CGFloat, shadowOpacity: Float, shadowOffsset: CGSize) {
-        
-        let arc = CAShapeLayer()
-        arc.lineWidth = lineWidth
-        arc.path = path
-        arc.strokeStart = strokeStart
-        arc.strokeEnd = strokeEnd
-        arc.strokeColor = strokeColor.CGColor
-        arc.fillColor = fillColor.CGColor
-        arc.shadowColor = UIColor.blackColor().CGColor
-        arc.shadowRadius = shadowRadius
-        arc.shadowOpacity = shadowOpacity
-        arc.shadowOffset = shadowOffsset
-        layer.addSublayer(arc)
-    }
-    
-    func addBackgroundCircle() {
-        
-
-        
-        
+    func drawGradient() -> AngleGradientLayer {
         let gradient: AngleGradientLayer = AngleGradientLayer()
         gradient.bounds = self.bounds
         gradient.position = self.center
         
         gradient.colors = [self.criticalColor.CGColor, self.criticalColor.CGColor, self.warnColor.CGColor, self.warnColor.CGColor, self.okColor.CGColor]
-        
-        
+
         let criticalLocation: Double = 0.0
         let warnLocation: Double = 1.0 - (self.warnElapsed / self.criticalElapsed)
         let okLocation: Double = 1.0
@@ -100,73 +52,108 @@ class TimerView: UIView {
         gradient.transform = CATransform3DRotate(gradient.transform, CGFloat(-M_PI_2), 0.0, 0.0, 1.0)
         
         gradient.masksToBounds = true
+        gradient.backgroundColor = UIColor.clearColor().CGColor
         layer.addSublayer(gradient)
+        return gradient
+    }
 
-        
-        
+    func drawMeterOverlay(gradientLayer: AngleGradientLayer) -> CAShapeLayer {
         let radius = (self.frame.width - self.borderThickness)/2.0
-        
-        let bgCircle = CAShapeLayer()
-        bgCircle.lineWidth = self.borderThickness
-        bgCircle.path = UIBezierPath(arcCenter: self.center, radius: radius, startAngle: 0.0, endAngle: CGFloat(M_PI * 2.0), clockwise: true).CGPath
-        bgCircle.strokeStart = 0.0
-        bgCircle.strokeEnd = 1.0
-        bgCircle.strokeColor = self.borderColor.CGColor
-        bgCircle.fillColor = UIColor.clearColor().CGColor
-        bgCircle.shadowColor = UIColor.darkGrayColor().CGColor
-        bgCircle.shadowRadius = 3.0
-        bgCircle.shadowOpacity = 0.5
-        bgCircle.shadowOffset = CGSizeMake(2, 2)
-        bgCircle.backgroundColor = UIColor.clearColor().CGColor
-        gradient.addSublayer(bgCircle)
-        
+        let overlay = CAShapeLayer()
+        overlay.bounds = gradientLayer.bounds
+        overlay.position = gradientLayer.position
+        overlay.lineWidth = self.borderThickness
+        overlay.path = UIBezierPath(arcCenter: self.center, radius: radius, startAngle: 0.0, endAngle: CGFloat(M_PI * 2.0), clockwise: true).CGPath
+        overlay.strokeStart = 0.0
+        overlay.strokeEnd = 1.0
+        overlay.strokeColor = self.borderColor.CGColor
+        overlay.fillColor = self.fillColor.CGColor
+        overlay.opacity = 1.0
+        overlay.backgroundColor = UIColor.blackColor().CGColor
+        gradientLayer.addSublayer(overlay)
+        return overlay
     }
     
-    func addCirle(arcRadius: CGFloat, capRadius: CGFloat, color: UIColor, fillColor: UIColor) {
-        let X = CGRectGetMidX(self.bounds)
-        let Y = CGRectGetMidY(self.bounds)
+    func pointOnCircleWith(center: CGPoint, radius: CGFloat, angle: Double) -> CGPoint {
+        let x: CGFloat = center.x + radius * CGFloat(cos(angle))
+        let y: CGFloat = center.y + radius * CGFloat(sin(angle))
+        return CGPointMake(x, y)
+    }
+    
+    func maskPath(percentElapsed: Double, center: CGPoint, radius: CGFloat) -> UIBezierPath {
+        let tau: Double = 2.0 * M_PI
+        let nSlices: UInt = 60
         
-        // Bottom Oval
-        let pathBottom = UIBezierPath(ovalInRect: CGRectMake((X - (arcRadius/2)), (Y - (arcRadius/2)), arcRadius, arcRadius)).CGPath
-        self.addOval(20.0, path: pathBottom, strokeStart: 0, strokeEnd: 0.5, strokeColor: color, fillColor: fillColor, shadowRadius: 0, shadowOpacity: 0, shadowOffsset: CGSizeZero)
+        let arcAngle: Double = tau / Double(nSlices)
+        var startAngle: Double = arcAngle
+        var endAngle: Double = tau
+        if(percentElapsed < 1.0) {
+            endAngle = percentElapsed * tau
+        }
         
-        // Middle Cap
-        let pathMiddle = UIBezierPath(ovalInRect: CGRectMake((X - (capRadius/2)) - (arcRadius/2), (Y - (capRadius/2)), capRadius, capRadius)).CGPath
-        self.addOval(0.0, path: pathMiddle, strokeStart: 0, strokeEnd: 1.0, strokeColor: color, fillColor: color, shadowRadius: 5.0, shadowOpacity: 0.5, shadowOffsset: CGSizeZero)
+        assert((nSlices > 1) && (nSlices % 2 == 0), "nSlices for TimerView should be a positive even number")
         
-        // Top Oval
-        let pathTop = UIBezierPath(ovalInRect: CGRectMake((X - (arcRadius/2)), (Y - (arcRadius/2)), arcRadius, arcRadius)).CGPath
-        self.addOval(20.0, path: pathTop, strokeStart: 0.5, strokeEnd: 1.0, strokeColor: color, fillColor: fillColor, shadowRadius: 0, shadowOpacity: 0, shadowOffsset: CGSizeZero)
+        let piePath: UIBezierPath = UIBezierPath()
+
+        while startAngle < endAngle {
+            piePath.moveToPoint(center)
+            let startArcPoint: CGPoint = self.pointOnCircleWith(center, radius: radius, angle: startAngle)
+            piePath.addLineToPoint(center)
+            piePath.addLineToPoint(startArcPoint)
+            piePath.addArcWithCenter(center, radius: radius, startAngle: CGFloat(startAngle), endAngle: CGFloat(startAngle+arcAngle), clockwise: true)
+            piePath.addLineToPoint(center)
+            startAngle += arcAngle * 2.0
+        }
+        piePath.closePath()
+        return piePath
+    }
+    
+    func drawMeterMask(overlay: CAShapeLayer) {
+        let center = CGPointMake(overlay.frame.width/2.0, overlay.frame.height/2.0)
+        let radius: CGFloat =  self.frame.width/2.0 - self.borderThickness/2.0
+        
+        let path: UIBezierPath = UIBezierPath(roundedRect: overlay.bounds, cornerRadius: 0)
+        let maskPath: UIBezierPath = self.maskPath(0.25, center: center, radius: radius)
+        
+        path.usesEvenOddFillRule = true
+
+        path.appendPath(maskPath)
+        
+        
+        
+        let mask: CAShapeLayer = CAShapeLayer()
+        mask.path = path.CGPath
+//        mask.frame = overlay.bounds
+//        mask.path = maskPath.CGPath
+        mask.fillRule = kCAFillRuleEvenOdd
+        mask.fillColor = UIColor.blackColor().CGColor
+        mask.opacity = 1.0
+        
+//        overlay.addSublayer(mask)
+
+        overlay.mask = mask
+        
+        //
+
+
+
+//        [path appendPath:circlePath];
+//        [path setUsesEvenOddFillRule:YES];
+//        
+//        CAShapeLayer *fillLayer = [CAShapeLayer layer];
+//        fillLayer.path = path.CGPath;
+//        fillLayer.fillRule = kCAFillRuleEvenOdd;
+//        fillLayer.fillColor = [UIColor grayColor].CGColor;
+//        fillLayer.opacity = 0.5;
+//        [view.layer addSublayer:fillLayer];
+        
         
     }
     
     override func drawRect(rect: CGRect) {
-
-        let percentWarning: Double = self.actualElapsed / self.warnElapsed
-        let percentCritical: Double = self.actualElapsed / self.criticalElapsed
-        
-        var shouldWarn: Bool = false
-        var shouldAlarm: Bool = false
-        
-        if(percentWarning >= 1) {
-            shouldWarn = true
-        }
-        
-        if(percentCritical >= 1) {
-            shouldAlarm = true
-        }
-        
-//        self.gradientFrom(percentWarning, percentCritical: percentCritical)
-//        self.clipsToBounds = true
-
-        self.addBackgroundCircle()
-//        self.clipsToBounds = true
-
-        
-
-//        self.addCirle(self.frame.width / 2.0, capRadius: 0.0, color: UIColor.greenColor(), fillColor: self.bgColor)
-//        self.addCirle(80, capRadius: 20, color: self.warnColor, fillColor: UIColor.clearColor())
-//        self.addCirle(150, capRadius: 20, color: self.criticalColor, fillColor: UIColor.clearColor())
+        let gradientLayer = self.drawGradient()
+        let overlay = self.drawMeterOverlay(gradientLayer)
+        self.drawMeterMask(overlay)
     }
     
 
