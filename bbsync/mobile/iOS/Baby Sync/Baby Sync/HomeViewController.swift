@@ -9,7 +9,7 @@
 import Alamofire
 import UIKit
 
-class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate, MenuViewDelegate, BabySyncDelegate {
+class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate,  UIPopoverPresentationControllerDelegate, MenuViewDelegate, BabySyncDelegate {
     
     // FOR LATER REFERENCE
     //collectionView.reloadItemsAtIndexPaths([NSIndexPath(forItem: 14, inSection: 0)])
@@ -27,9 +27,11 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     @IBOutlet weak var labelName: UILabel!
     @IBOutlet weak var labelEmail: UILabel!
     
+    var viewBabies: UIView!
+    private var viewBabiesHeight: CGFloat = 0
     @IBOutlet weak var collectionBabies: UICollectionView!
     @IBOutlet weak var tableTimers: UITableView!
-    
+
     var selectedBabyIndexPath: NSIndexPath = NSIndexPath(forItem: 0, inSection: 0)
     var selectedBabyID: Int?
     var selectedTimerID: Int?
@@ -61,11 +63,43 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         self.refreshTimer.invalidate()
     }
     
+    func updateBabiesView() {
+        var babiesViewRect: CGRect = CGRect(x: 0, y: -self.viewBabiesHeight, width: self.tableTimers.bounds.width, height: self.viewBabiesHeight)
+        if(self.tableTimers.contentOffset.y < -self.viewBabiesHeight) {
+            babiesViewRect.origin.y = self.tableTimers.contentOffset.y
+            babiesViewRect.size.height = -self.tableTimers.contentOffset.y
+        }
+        self.viewBabies.frame = babiesViewRect
+        
+        // The underlying babies collection view needs to relayout so insets match
+        // after a rotation, for example (updateBabiesView fxn called on willRotate...)
+        self.collectionBabies.collectionViewLayout.invalidateLayout()
+    }
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        if(scrollView == self.tableTimers) {
+            updateBabiesView()
+        }
+    }
+    
+    override func viewWillLayoutSubviews() {
+        updateBabiesView()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
         BabySync.service.delegate = self;
+        
+        
+        self.viewBabies = self.tableTimers.tableHeaderView
+        self.tableTimers.tableHeaderView = nil
+        self.tableTimers.addSubview(self.viewBabies)
+        self.viewBabiesHeight = self.viewBabies.frame.height
+        self.tableTimers.contentInset = UIEdgeInsets(top: viewBabiesHeight, left: 0, bottom: 0, right: 0)
+        self.tableTimers.contentOffset = CGPoint(x: 0, y: -viewBabiesHeight)
+        self.updateBabiesView()
         
         // let's get dummy data for now
         BabySync.service.createFamily(Auth.sharedInstance.securedUser.email)
@@ -146,7 +180,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         return false
     }
     
-    // UICollectionViewDataSource
+    // MARK: - UICollectionViewDataSource
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
         if(collectionView == self.collectionBabies) {
@@ -174,7 +208,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         return 0
     }
     
-    // UICollectionViewDelegate
+    // MARK: - UICollectionViewDelegate
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         if (collectionView == self.collectionBabies) {
             
@@ -196,6 +230,12 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
             return UIEdgeInsetsZero
         }
     }
+    
+    
+    override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
+        self.updateBabiesView()
+    }
+
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         if (collectionView == self.collectionBabies) {
