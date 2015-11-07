@@ -15,6 +15,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     //collectionView.reloadItemsAtIndexPaths([NSIndexPath(forItem: 14, inSection: 0)])
     
     var isTest: Bool = false
+    var isEditingTimer: Bool = false
     
     private var ticker: NSTimer = NSTimer()
     private var refreshTimer: NSTimer = NSTimer()
@@ -40,13 +41,24 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         self.tableTimers.reloadData()
         print(self.tic ? "tic" : "toc")
         self.tic = !self.tic
+        let secondsUntilRefresh: UInt = UInt(abs(round(self.refreshTimer.fireDate.timeIntervalSinceNow)))
+        self.labelRefreshCountdown.text = "\(secondsUntilRefresh) sec"
     }
     
     func refresh() {
         print("Performing \(self.refreshTimer.timeInterval) sec periodic refresh.")
         // TODO: Call web service to sync every minute or on TBD interval
         self.reloadCollections()
-        self.labelRefreshCountdown.text = "\(self.refreshTimer.fireDate.timeIntervalSinceNow) sec"
+    }
+    
+    func startTimers() {
+        self.ticker = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "tick", userInfo: nil, repeats: true)
+        self.refreshTimer = NSTimer.scheduledTimerWithTimeInterval(60.0, target: self, selector: "refresh", userInfo: nil, repeats: true)
+    }
+    
+    func stopTimers() {
+        self.ticker.invalidate()
+        self.refreshTimer.invalidate()
     }
     
     override func viewDidLoad() {
@@ -58,9 +70,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         // let's get dummy data for now
         BabySync.service.createFamily(Auth.sharedInstance.securedUser.email)
         
-        self.ticker = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "tick", userInfo: nil, repeats: true)
-        self.refreshTimer = NSTimer.scheduledTimerWithTimeInterval(60.0, target: self, selector: "refresh", userInfo: nil, repeats: true)
-        
+        self.startTimers()
         
         self.imageUser.layer.masksToBounds = true
         self.imageUser.image = Auth.sharedInstance.securedUser.pic
@@ -236,6 +246,59 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
         return 0
     }
+    
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        if (tableView == self.tableTimers) {
+            let editAction = UITableViewRowAction(style: .Normal, title: "EDIT") { (action, indexPath) -> Void in
+                // TODO: Edit timer handler
+            }
+            editAction.backgroundColor = UIColor.blueColor()
+            
+            let deleteAction = UITableViewRowAction(style: .Normal, title: "DEL") { (action, indexPath) -> Void in
+                // TODO: Delete timer handler
+            }
+            deleteAction.backgroundColor = UIColor.redColor()
+            
+            return [deleteAction, editAction]
+        }
+        return []
+    }
+    
+    func visibleTimerCellsExcept(indexPath: NSIndexPath, action: (TimerTableViewCell)->()) {
+        let timerException: TimerTableViewCell = self.tableTimers.cellForRowAtIndexPath(indexPath) as! TimerTableViewCell
+        for visibleCell in self.tableTimers.visibleCells {
+            let timerCell: TimerTableViewCell = visibleCell as! TimerTableViewCell
+            if (timerCell != timerException) {
+                action(timerCell)
+            }
+        }
+    }
+    
+    func tableView(tableView: UITableView, willBeginEditingRowAtIndexPath indexPath: NSIndexPath) {
+        if(tableView == self.tableTimers) {
+            self.isEditingTimer = true
+            self.stopTimers()
+            
+            self.visibleTimerCellsExcept(indexPath, action: { (cell) -> () in
+                cell.contentView.alpha = 0.5
+            })
+        }
+    }
+    
+    func tableView(tableView: UITableView, didEndEditingRowAtIndexPath indexPath: NSIndexPath) {
+        if(tableView == self.tableTimers) {
+            // Apple bug calls this method twice, so this avoid that
+            if (self.isEditingTimer) {
+                self.isEditingTimer = false
+                self.startTimers()
+                
+                self.visibleTimerCellsExcept(indexPath, action: { (cell) -> () in
+                    cell.contentView.alpha = 1.0
+                })
+            }
+        }
+    }
+    
 
     // MARK: - UITableViewDelegate
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
