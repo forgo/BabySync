@@ -263,4 +263,31 @@ class BabySync {
     }
     
     static let service = BabySync()
+    
+    // MARK: - Helper Methods
+    static func babyByID(babyID: Int) -> Baby? {
+        let babies: [Baby] = BabySync.service.babies.filter {$0.id == babyID}
+        if (babies.count == 1) {
+            return babies[0]
+        }
+        return nil
+    }
+    
+    static func timersForBabyID(babyID: Int) -> [Timer] {
+        if let baby = BabySync.babyByID(babyID) {
+            var timers: [Timer] = baby.timers
+            // always get timers in id sorted order
+            timers.sortInPlace { return $0.id < $1.id }
+            return timers
+        }
+        return []
+    }
+    
+    static func activityForTimer(timer: Timer) -> Activity? {
+        let activities: [Activity] = BabySync.service.activities.filter {$0.id == timer.activityID}
+        if (activities.count == 1) {
+            return activities[0]
+        }
+        return nil
+    }
 }

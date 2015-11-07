@@ -37,6 +37,7 @@
 		4F446ABB1BCE05E900D0AD64 /* BabySync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABA1BCE05E900D0AD64 /* BabySync.swift */; };
 		4F446ABD1BCE071100D0AD64 /* JSONExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */; };
 		4F446ABF1BCE159B00D0AD64 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABE1BCE159B00D0AD64 /* Error.swift */; };
+		4F508D751BE8A8E900EE9D1A /* NBUIKitMainThreadGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F508D741BE8A8E900EE9D1A /* NBUIKitMainThreadGuard.swift */; };
 		4F53D9371BBBC15100EB598F /* SourceCodePro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F53D9351BBBBEB800EB598F /* SourceCodePro-Regular.ttf */; };
 		4FA4BE8A1BE5009700580FD3 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA4BE891BE5009700580FD3 /* TimerView.swift */; };
 		4FB1B71A1BE460D2007CA316 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB1B7191BE460D2007CA316 /* StringExtension.swift */; };
@@ -54,7 +55,6 @@
 		4FD82EF31BBB6EE800A06E0A /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EF21BBB6EE800A06E0A /* Timer.swift */; };
 		4FD82EF91BBB789600A06E0A /* ISO8601DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EF81BBB789600A06E0A /* ISO8601DateFormatter.swift */; };
 		4FD82EFC1BBB897E00A06E0A /* BabyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EFB1BBB897E00A06E0A /* BabyCollectionViewCell.swift */; };
-		4FD82EFE1BBB97A300A06E0A /* TimerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD82EFD1BBB97A300A06E0A /* TimerCollectionViewCell.swift */; };
 		4FE9395D1BE2D98A00EA421C /* FACEBOLF.OTF in Resources */ = {isa = PBXBuildFile; fileRef = 4FE9395C1BE2D8AF00EA421C /* FACEBOLF.OTF */; };
 		4FE9395E1BE2D98A00EA421C /* ADAM.CG PRO.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4FE9395B1BE2D86C00EA421C /* ADAM.CG PRO.otf */; };
 		4FE939601BE3337700EA421C /* AuthLoginWithButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE9395F1BE3337700EA421C /* AuthLoginWithButton.swift */; };
@@ -65,6 +65,7 @@
 		4FFAE1EE1BC246D100FB2B73 /* BabySyncModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE1EC1BC246D100FB2B73 /* BabySyncModel.xcdatamodeld */; };
 		4FFAE23F1BC269E600FB2B73 /* BabyModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE23D1BC269E600FB2B73 /* BabyModel+CoreDataProperties.swift */; };
 		4FFAE2401BC269E600FB2B73 /* BabyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAE23E1BC269E600FB2B73 /* BabyModel.swift */; };
+		4FFDB3771BEDA09800E18113 /* TimerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FFDB3761BEDA09800E18113 /* TimerTableViewCell.swift */; };
 		9F1EE6A9144C98A05D3E91BB /* Pods_Baby_Sync.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6954D39A27CD490B5C692EA7 /* Pods_Baby_Sync.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -122,6 +123,8 @@
 		4F446ABA1BCE05E900D0AD64 /* BabySync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BabySync.swift; sourceTree = "<group>"; };
 		4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONExtension.swift; sourceTree = "<group>"; };
 		4F446ABE1BCE159B00D0AD64 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		4F508D711BE8A84A00EE9D1A /* Baby Sync-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Baby Sync-Bridging-Header.h"; sourceTree = "<group>"; };
+		4F508D741BE8A8E900EE9D1A /* NBUIKitMainThreadGuard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NBUIKitMainThreadGuard.swift; sourceTree = "<group>"; };
 		4F53D9351BBBBEB800EB598F /* SourceCodePro-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceCodePro-Regular.ttf"; sourceTree = "<group>"; };
 		4FA4BE891BE5009700580FD3 /* TimerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		4FB1B7191BE460D2007CA316 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
@@ -141,7 +144,6 @@
 		4FD82EF21BBB6EE800A06E0A /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		4FD82EF81BBB789600A06E0A /* ISO8601DateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ISO8601DateFormatter.swift; sourceTree = "<group>"; };
 		4FD82EFB1BBB897E00A06E0A /* BabyCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BabyCollectionViewCell.swift; sourceTree = "<group>"; };
-		4FD82EFD1BBB97A300A06E0A /* TimerCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerCollectionViewCell.swift; sourceTree = "<group>"; };
 		4FE9395B1BE2D86C00EA421C /* ADAM.CG PRO.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ADAM.CG PRO.otf"; sourceTree = "<group>"; };
 		4FE9395C1BE2D8AF00EA421C /* FACEBOLF.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = FACEBOLF.OTF; sourceTree = "<group>"; };
 		4FE9395F1BE3337700EA421C /* AuthLoginWithButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthLoginWithButton.swift; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 		4FFAE1ED1BC246D100FB2B73 /* BabySyncModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BabySyncModel.xcdatamodel; sourceTree = "<group>"; };
 		4FFAE23D1BC269E600FB2B73 /* BabyModel+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "BabyModel+CoreDataProperties.swift"; path = "../BabyModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4FFAE23E1BC269E600FB2B73 /* BabyModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BabyModel.swift; path = ../BabyModel.swift; sourceTree = "<group>"; };
+		4FFDB3761BEDA09800E18113 /* TimerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerTableViewCell.swift; sourceTree = "<group>"; };
 		6954D39A27CD490B5C692EA7 /* Pods_Baby_Sync.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Baby_Sync.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		73A00B3E26825B875D04ABB0 /* Pods-Baby Sync.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Baby Sync.release.xcconfig"; path = "Pods/Target Support Files/Pods-Baby Sync/Pods-Baby Sync.release.xcconfig"; sourceTree = "<group>"; };
 		DB48E194E4D45DC98F24B365 /* Pods-Baby Sync.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Baby Sync.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Baby Sync/Pods-Baby Sync.debug.xcconfig"; sourceTree = "<group>"; };
@@ -270,6 +273,7 @@
 			children = (
 				4F08A3811BDFF452000DE4EF /* Auth */,
 				4F446AB71BCE05C400D0AD64 /* Service */,
+				4F508D741BE8A8E900EE9D1A /* NBUIKitMainThreadGuard.swift */,
 				4FD82E951BBB086900A06E0A /* AppDelegate.swift */,
 				4FD82E991BBB086900A06E0A /* Main.storyboard */,
 				4FD82E9C1BBB086900A06E0A /* Assets.xcassets */,
@@ -284,6 +288,7 @@
 				4F23A8C41BBBD7E7001FBCFF /* Extensions */,
 				4F23A8D61BBC8AA1001FBCFF /* TestData */,
 				4F53D9361BBBBEC000EB598F /* Fonts */,
+				4F508D711BE8A84A00EE9D1A /* Baby Sync-Bridging-Header.h */,
 			);
 			path = "Baby Sync";
 			sourceTree = "<group>";
@@ -308,7 +313,7 @@
 			isa = PBXGroup;
 			children = (
 				4FD82EFB1BBB897E00A06E0A /* BabyCollectionViewCell.swift */,
-				4FD82EFD1BBB97A300A06E0A /* TimerCollectionViewCell.swift */,
+				4FFDB3761BEDA09800E18113 /* TimerTableViewCell.swift */,
 				4F23A8D41BBC7960001FBCFF /* MenuTableViewCell.swift */,
 				4FFAE1E81BC1E57100FB2B73 /* IconCollectionViewCell.swift */,
 				4FA4BE891BE5009700580FD3 /* TimerView.swift */,
@@ -376,6 +381,7 @@
 		4FD82E8A1BBB086900A06E0A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0710;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Elliott Richerson";
 				TargetAttributes = {
@@ -484,15 +490,16 @@
 				4FD82EEF1BBB6ED700A06E0A /* Parent.swift in Sources */,
 				4F23A8BF1BBBD7C7001FBCFF /* UIApplicationExtensions.swift in Sources */,
 				4F08A3991BDFF45E000DE4EF /* AuthUser.swift in Sources */,
-				4FD82EFE1BBB97A300A06E0A /* TimerCollectionViewCell.swift in Sources */,
 				4FD82EF11BBB6EDF00A06E0A /* Family.swift in Sources */,
 				4F08A3941BDFF45E000DE4EF /* AuthFacebook.swift in Sources */,
 				4FFAE23F1BC269E600FB2B73 /* BabyModel+CoreDataProperties.swift in Sources */,
 				4FD82EF91BBB789600A06E0A /* ISO8601DateFormatter.swift in Sources */,
 				4FD82EFC1BBB897E00A06E0A /* BabyCollectionViewCell.swift in Sources */,
 				4F08A3911BDFF45E000DE4EF /* AuthCustom.swift in Sources */,
+				4FFDB3771BEDA09800E18113 /* TimerTableViewCell.swift in Sources */,
 				4FD82EF31BBB6EE800A06E0A /* Timer.swift in Sources */,
 				4FB1B71A1BE460D2007CA316 /* StringExtension.swift in Sources */,
+				4F508D751BE8A8E900EE9D1A /* NBUIKitMainThreadGuard.swift in Sources */,
 				4F08A3981BDFF45E000DE4EF /* AuthState.swift in Sources */,
 				4FE939601BE3337700EA421C /* AuthLoginWithButton.swift in Sources */,
 				4FD82EEB1BBB6EC700A06E0A /* Baby.swift in Sources */,
@@ -635,6 +642,7 @@
 			baseConfigurationReference = DB48E194E4D45DC98F24B365 /* Pods-Baby Sync.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -646,6 +654,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.beyondaphelion.Baby-Sync";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Baby Sync/Baby Sync-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -654,6 +664,7 @@
 			baseConfigurationReference = 73A00B3E26825B875D04ABB0 /* Pods-Baby Sync.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -665,6 +676,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.beyondaphelion.Baby-Sync";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Baby Sync/Baby Sync-Bridging-Header.h";
 			};
 			name = Release;
 		};

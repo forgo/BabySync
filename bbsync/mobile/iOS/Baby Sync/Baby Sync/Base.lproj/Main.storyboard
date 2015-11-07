@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="r8s-rl-uLS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="r8s-rl-uLS">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
@@ -299,7 +299,7 @@
                                         <rect key="frame" x="0.0" y="28" width="130" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="25l-0H-7nC" id="cV9-c9-UTg">
-                                            <rect key="frame" x="0.0" y="0.0" width="130" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="130" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hO9-46-RwU">
@@ -728,129 +728,116 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gug-PE-LwY">
                                 <rect key="frame" x="0.0" y="174" width="600" height="382"/>
                                 <subviews>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="od3-CC-3EX">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="61" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="LAw-Ek-J2N">
                                         <rect key="frame" x="8" y="0.0" width="584" height="382"/>
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="U2I-MV-cl2">
-                                            <size key="itemSize" width="584" height="80"/>
-                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                            <inset key="sectionInset" minX="0.0" minY="8" maxX="0.0" maxY="0.0"/>
-                                        </collectionViewFlowLayout>
-                                        <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TimerCell" id="65P-4R-0tt" customClass="TimerCollectionViewCell" customModule="Baby_Sync" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="8" width="584" height="80"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                    <rect key="frame" x="0.0" y="0.0" width="584" height="80"/>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <prototypes>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="TimerCell" rowHeight="61" id="c7r-Fi-vxR" customClass="TimerTableViewCell" customModule="Baby_Sync" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="28" width="584" height="61"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="c7r-Fi-vxR" id="sZq-dG-DwF">
+                                                    <rect key="frame" x="0.0" y="0.0" width="584" height="60.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lml-NP-7uJ">
-                                                            <rect key="frame" x="40" y="0.0" width="544" height="81.5"/>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PDP-vW-n91">
+                                                            <rect key="frame" x="30" y="0.0" width="554" height="60"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0d 00:00:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="24" translatesAutoresizingMaskIntoConstraints="NO" id="xFX-j3-QNq">
-                                                                    <rect key="frame" x="48" y="0.0" width="488" height="46"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0d 00:00:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="s3c-Da-Z0w">
+                                                                    <rect key="frame" x="38" y="4" width="508" height="26"/>
                                                                     <animations/>
-                                                                    <fontDescription key="fontDescription" name="SourceCodePro-Regular" family="Source Code Pro" pointSize="36"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="26" id="bq9-5c-Oro"/>
+                                                                    </constraints>
+                                                                    <fontDescription key="fontDescription" name="SourceCodePro-Regular" family="Source Code Pro" pointSize="26"/>
                                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g5p-ns-Ke6">
-                                                                    <rect key="frame" x="48" y="45" width="488" height="20"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d03-5c-y5P">
+                                                                    <rect key="frame" x="38" y="30" width="508" height="26"/>
                                                                     <animations/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="height" constant="20" id="0tk-TE-eyA"/>
+                                                                        <constraint firstAttribute="height" constant="26" id="Spb-0g-fO3"/>
                                                                     </constraints>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                             </subviews>
                                                             <animations/>
-                                                            <color key="backgroundColor" red="0.63529411759999999" green="0.74117647060000003" blue="0.80784313730000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <color key="backgroundColor" red="0.63529411764705879" green="0.74117647058823533" blue="0.80784313725490198" alpha="1" colorSpace="calibratedRGB"/>
                                                             <constraints>
-                                                                <constraint firstItem="xFX-j3-QNq" firstAttribute="leading" secondItem="g5p-ns-Ke6" secondAttribute="leading" id="NMW-2f-2R1"/>
-                                                                <constraint firstItem="g5p-ns-Ke6" firstAttribute="bottom" secondItem="lml-NP-7uJ" secondAttribute="bottomMargin" constant="-8.5" id="Qt1-Qk-Kca"/>
-                                                                <constraint firstItem="g5p-ns-Ke6" firstAttribute="top" secondItem="xFX-j3-QNq" secondAttribute="bottom" constant="-1" id="VdS-8N-Xky"/>
-                                                                <constraint firstItem="xFX-j3-QNq" firstAttribute="trailing" secondItem="g5p-ns-Ke6" secondAttribute="trailing" id="e4B-PT-mSd"/>
-                                                                <constraint firstItem="xFX-j3-QNq" firstAttribute="top" secondItem="lml-NP-7uJ" secondAttribute="top" id="jfY-Zf-nVh"/>
-                                                                <constraint firstItem="xFX-j3-QNq" firstAttribute="leading" secondItem="lml-NP-7uJ" secondAttribute="leading" constant="48" id="ruU-Gv-Qcz"/>
-                                                                <constraint firstItem="g5p-ns-Ke6" firstAttribute="trailing" secondItem="lml-NP-7uJ" secondAttribute="trailingMargin" id="xl6-2l-z2v"/>
+                                                                <constraint firstAttribute="height" constant="60" id="6oT-4Y-c1e"/>
+                                                                <constraint firstItem="s3c-Da-Z0w" firstAttribute="leading" secondItem="PDP-vW-n91" secondAttribute="leading" constant="38" id="Cld-oN-Fgo"/>
+                                                                <constraint firstItem="d03-5c-y5P" firstAttribute="leading" secondItem="PDP-vW-n91" secondAttribute="leading" constant="38" id="YX2-Oe-Wwa"/>
+                                                                <constraint firstAttribute="trailing" secondItem="d03-5c-y5P" secondAttribute="trailing" constant="8" id="abU-19-edl"/>
+                                                                <constraint firstAttribute="bottom" secondItem="d03-5c-y5P" secondAttribute="bottom" constant="4" id="dA6-J8-VVX"/>
+                                                                <constraint firstItem="s3c-Da-Z0w" firstAttribute="top" secondItem="PDP-vW-n91" secondAttribute="top" constant="4" id="pBh-Ht-bsh"/>
+                                                                <constraint firstAttribute="trailing" secondItem="s3c-Da-Z0w" secondAttribute="trailing" constant="8" id="utf-aL-HHZ"/>
                                                             </constraints>
+                                                            <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
                                                         </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2l4-gL-JpT" userLabel="TimerView" customClass="TimerView" customModule="Baby_Sync" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qJ0-42-kVr" customClass="TimerView" customModule="Baby_Sync" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                                             <animations/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="80" id="9vV-yN-svS"/>
-                                                                <constraint firstAttribute="width" secondItem="2l4-gL-JpT" secondAttribute="height" multiplier="1:1" id="HOa-i4-wYo"/>
+                                                                <constraint firstAttribute="width" constant="60" id="0ZL-ye-J9e"/>
+                                                                <constraint firstAttribute="height" constant="60" id="LuU-64-uti"/>
                                                             </constraints>
                                                             <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="color" keyPath="criticalColor">
-                                                                    <color key="value" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                                <userDefinedRuntimeAttribute type="color" keyPath="warnColor">
-                                                                    <color key="value" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                                <userDefinedRuntimeAttribute type="color" keyPath="okColor">
-                                                                    <color key="value" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="criticalElapsed">
-                                                                    <real key="value" value="3600"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="warnElapsed">
-                                                                    <real key="value" value="1800"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="actualElapsed">
-                                                                    <real key="value" value="3400"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="nTicks">
-                                                                    <integer key="value" value="32"/>
-                                                                </userDefinedRuntimeAttribute>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="innerMargin">
                                                                     <real key="value" value="0.5"/>
                                                                 </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="outerMargin">
+                                                                    <real key="value" value="0.10000000000000001"/>
+                                                                </userDefinedRuntimeAttribute>
                                                                 <userDefinedRuntimeAttribute type="color" keyPath="color">
                                                                     <color key="value" red="0.38431372549019605" green="0.30980392156862746" blue="0.32549019607843138" alpha="1" colorSpace="calibratedRGB"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="color" keyPath="offColor">
+                                                                    <color key="value" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                         </view>
                                                     </subviews>
                                                     <animations/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                </view>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailingMargin" secondItem="PDP-vW-n91" secondAttribute="trailing" id="8sx-J9-3vq"/>
+                                                        <constraint firstItem="qJ0-42-kVr" firstAttribute="leading" secondItem="sZq-dG-DwF" secondAttribute="leadingMargin" id="OO5-3n-DgC"/>
+                                                        <constraint firstItem="PDP-vW-n91" firstAttribute="leading" secondItem="sZq-dG-DwF" secondAttribute="leading" constant="30" id="OsM-9b-oXt"/>
+                                                        <constraint firstItem="PDP-vW-n91" firstAttribute="top" secondItem="sZq-dG-DwF" secondAttribute="topMargin" id="Ud2-mf-nLE"/>
+                                                        <constraint firstItem="qJ0-42-kVr" firstAttribute="top" secondItem="sZq-dG-DwF" secondAttribute="topMargin" id="vRH-aZ-arr"/>
+                                                    </constraints>
+                                                    <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
+                                                </tableViewCellContentView>
                                                 <animations/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstItem="2l4-gL-JpT" firstAttribute="top" secondItem="65P-4R-0tt" secondAttribute="top" id="B0A-6e-45a"/>
-                                                    <constraint firstItem="lml-NP-7uJ" firstAttribute="top" secondItem="65P-4R-0tt" secondAttribute="top" id="GMI-HZ-Edy"/>
-                                                    <constraint firstAttribute="bottom" secondItem="2l4-gL-JpT" secondAttribute="bottom" id="NcM-qc-BzJ"/>
-                                                    <constraint firstAttribute="trailing" secondItem="lml-NP-7uJ" secondAttribute="trailing" id="iMs-IQ-RTe"/>
-                                                    <constraint firstItem="lml-NP-7uJ" firstAttribute="leading" secondItem="65P-4R-0tt" secondAttribute="leadingMargin" constant="32" id="mer-Ph-h24"/>
-                                                    <constraint firstItem="2l4-gL-JpT" firstAttribute="leading" secondItem="65P-4R-0tt" secondAttribute="leading" id="tTn-mm-zUT"/>
-                                                </constraints>
+                                                <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
+                                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                 <connections>
-                                                    <outlet property="labelActivityTimer" destination="g5p-ns-Ke6" id="fGa-09-hl9"/>
-                                                    <outlet property="labelElapsedTimer" destination="xFX-j3-QNq" id="QSb-sC-2RG"/>
-                                                    <outlet property="viewTimer" destination="2l4-gL-JpT" id="8NF-0z-hwI"/>
+                                                    <outlet property="labelActivityTimer" destination="d03-5c-y5P" id="TBi-Jd-c4g"/>
+                                                    <outlet property="labelElapsedTimer" destination="s3c-Da-Z0w" id="NME-nO-A5d"/>
+                                                    <outlet property="viewBackground" destination="PDP-vW-n91" id="SS4-8B-kLi"/>
+                                                    <outlet property="viewTimer" destination="qJ0-42-kVr" id="jic-W9-J8O"/>
                                                 </connections>
-                                            </collectionViewCell>
-                                        </cells>
+                                            </tableViewCell>
+                                        </prototypes>
                                         <connections>
-                                            <outlet property="dataSource" destination="q67-HL-IdE" id="zjW-yZ-a9K"/>
-                                            <outlet property="delegate" destination="q67-HL-IdE" id="K2P-H3-CfE"/>
+                                            <outlet property="dataSource" destination="q67-HL-IdE" id="itf-MU-CZl"/>
+                                            <outlet property="delegate" destination="q67-HL-IdE" id="LGB-Gr-mIs"/>
                                         </connections>
-                                    </collectionView>
+                                    </tableView>
                                 </subviews>
                                 <animations/>
                                 <color key="backgroundColor" red="0.78431372549019607" green="0.77254901960784317" blue="0.75294117647058822" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="od3-CC-3EX" firstAttribute="leading" secondItem="gug-PE-LwY" secondAttribute="leading" constant="8" id="6mp-My-0tm"/>
-                                    <constraint firstAttribute="bottom" secondItem="od3-CC-3EX" secondAttribute="bottom" id="C3m-ur-869"/>
-                                    <constraint firstItem="od3-CC-3EX" firstAttribute="top" secondItem="gug-PE-LwY" secondAttribute="top" id="REV-xY-Zjc"/>
-                                    <constraint firstAttribute="trailing" secondItem="od3-CC-3EX" secondAttribute="trailing" constant="8" id="ZoD-Rf-Odq"/>
+                                    <constraint firstAttribute="trailing" secondItem="LAw-Ek-J2N" secondAttribute="trailing" constant="8" id="KKp-YC-rQP"/>
+                                    <constraint firstAttribute="bottom" secondItem="LAw-Ek-J2N" secondAttribute="bottom" id="c9c-C9-4vC"/>
+                                    <constraint firstItem="LAw-Ek-J2N" firstAttribute="top" secondItem="gug-PE-LwY" secondAttribute="top" id="g51-Gu-RUe"/>
+                                    <constraint firstItem="LAw-Ek-J2N" firstAttribute="leading" secondItem="gug-PE-LwY" secondAttribute="leading" constant="8" id="xi8-ow-3SP"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MUU-gn-yMw">
@@ -922,11 +909,11 @@
                     </view>
                     <connections>
                         <outlet property="collectionBabies" destination="yZY-q3-4cr" id="VRb-34-CqH"/>
-                        <outlet property="collectionTimers" destination="od3-CC-3EX" id="jBR-A1-kwb"/>
                         <outlet property="imageUser" destination="BRc-LX-z3U" id="T5f-5R-QtG"/>
                         <outlet property="labelEmail" destination="CzD-mD-Jnx" id="PzZ-lg-5mC"/>
                         <outlet property="labelName" destination="WVn-Au-sWO" id="t6C-n5-0GA"/>
                         <outlet property="labelRefreshCountdown" destination="mJG-pu-Lpp" id="5n0-C0-iKy"/>
+                        <outlet property="tableTimers" destination="LAw-Ek-J2N" id="6Zx-Hb-xtK"/>
                         <segue destination="ZoD-co-ErJ" kind="show" identifier="SegueHomeToNewBaby" id="cnS-Px-wtS"/>
                         <segue destination="nos-QA-UVr" kind="unwind" identifier="UnwindSegueHomeToLogin" unwindAction="prepareForUnwindToLogin:" id="7JZ-3Y-zkt"/>
                     </connections>

@@ -9,14 +9,17 @@
 import Alamofire
 import UIKit
 
-class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIPopoverPresentationControllerDelegate, MenuViewDelegate, BabySyncDelegate {
+class HomeViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate, MenuViewDelegate, BabySyncDelegate {
     
     // FOR LATER REFERENCE
     //collectionView.reloadItemsAtIndexPaths([NSIndexPath(forItem: 14, inSection: 0)])
     
     var isTest: Bool = false
     
+    private var ticker: NSTimer = NSTimer()
     private var refreshTimer: NSTimer = NSTimer()
+    
+    private var tic: Bool = true
     @IBOutlet weak var labelRefreshCountdown: UILabel!
     
     @IBOutlet weak var imageUser: UIImageView!
@@ -24,12 +27,20 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     @IBOutlet weak var labelEmail: UILabel!
     
     @IBOutlet weak var collectionBabies: UICollectionView!
-    @IBOutlet weak var collectionTimers: UICollectionView!
+    @IBOutlet weak var tableTimers: UITableView!
     
     var selectedBabyIndexPath: NSIndexPath = NSIndexPath(forItem: 0, inSection: 0)
+    var selectedBabyID: Int?
+    var selectedTimerID: Int?
     
 //    var alert: UIAlertController = UIAlertController()
 //    var alertAction: UIAlertAction = UIAlertAction()
+    
+    func tick() {
+        self.tableTimers.reloadData()
+        print(self.tic ? "tic" : "toc")
+        self.tic = !self.tic
+    }
     
     func refresh() {
         print("Performing \(self.refreshTimer.timeInterval) sec periodic refresh.")
@@ -47,7 +58,10 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         // let's get dummy data for now
         BabySync.service.createFamily(Auth.sharedInstance.securedUser.email)
         
+        self.ticker = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "tick", userInfo: nil, repeats: true)
         self.refreshTimer = NSTimer.scheduledTimerWithTimeInterval(60.0, target: self, selector: "refresh", userInfo: nil, repeats: true)
+        
+        
         self.imageUser.layer.masksToBounds = true
         self.imageUser.image = Auth.sharedInstance.securedUser.pic
         self.labelName.text = Auth.sharedInstance.securedUser.name
@@ -71,7 +85,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     // Convenience
     @IBAction func reloadCollections() {
         self.collectionBabies.reloadData()
-        self.collectionTimers.reloadData()
+        self.tableTimers.reloadData()
     }
     
     // Segues
@@ -123,100 +137,42 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     // UICollectionViewDataSource
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if (collectionView == self.collectionBabies) {
-            return BabySync.service.babies.count
-        }
-        else if (collectionView == self.collectionTimers && BabySync.service.babies.count > 0) {
-            // Find the number of timers associated with this baby
-            let selectedBaby: Baby = BabySync.service.babies[self.selectedBabyIndexPath.row]
-            return selectedBaby.timers.count
-        }
-        else {
-            return 0
-        }
-    }
-    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
         if(collectionView == self.collectionBabies) {
             let cell: BabyCollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("BabyCell", forIndexPath: indexPath) as! BabyCollectionViewCell
             let baby: Baby = BabySync.service.babies[indexPath.row]
-            cell.imageBaby.layer.masksToBounds = true
-            cell.imageBaby.image = UIImage(named: "Boy")
-            cell.labelBaby.text = baby.name
-            
-            if(cell.selected) {
-                cell.labelBaby.backgroundColor = UIColor.orangeColor()
-            }
-            
-            return cell
-        }
-        else if (collectionView == self.collectionTimers) {
-            let cell: TimerCollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("TimerCell", forIndexPath: indexPath) as! TimerCollectionViewCell
-            
-            // Get activity associated with this timer
-            let selectedBaby: Baby = BabySync.service.babies[self.selectedBabyIndexPath.row]
-            
-            // Always get timers in the id sorted order
-            var timers: [Timer] = selectedBaby.timers
-            timers.sortInPlace {
-                return $0.id < $1.id
-            }
-            
-            let timer: Timer = timers[indexPath.row]
-            let acts: [Activity] = BabySync.service.activities.filter{$0.id == timer.activityID}
-            
-            if (acts.count > 0) {
-                // TODO: loop through activities and match to timer setting properties of timer view critical/warn etc
-//                cell.imageTimer.layer.masksToBounds = true
-//                cell.imageTimer.image = UIImage(named: acts[0].icon)
-                cell.viewTimer.actualElapsed = abs(timer.resetDate.timeIntervalSinceNow)
-                cell.viewTimer.warnElapsed = acts[0].warn
-                cell.viewTimer.criticalElapsed = acts[0].critical
-                cell.viewTimer.setNeedsDisplay()
-                cell.labelActivityTimer.text = acts[0].name
-            }
-            
-//            cell.updateElapsed
-            
-            cell.labelElapsedTimer.font = UIFont(name: "SourceCodePro-Regular", size: 40)
-            cell.labelElapsedTimer.attributedText = ElapsedTimeFormatter.sharedInstance.attributedString(timer.resetDate)
-            
-            if(cell.selected) {
-                cell.backgroundColor = UIColor.purpleColor()
-            }
-
+            cell.baby = baby
             return cell
         }
         else {
-            return UICollectionViewCell();
+            return UICollectionViewCell()
         }
-        
-
     }
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         if (collectionView == self.collectionBabies) {
             return 1
         }
-        else if (collectionView == self.collectionTimers) {
-            return 1
-        }
-        else {
-            return 0
-        }
+        return 0
     }
-        
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if (collectionView == self.collectionBabies) {
+            return BabySync.service.babies.count
+        }
+        return 0
+    }
+    
     // UICollectionViewDelegate
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         if (collectionView == self.collectionBabies) {
+            
+            let baby: Baby = BabySync.service.babies[indexPath.row]
+            self.selectedBabyID = baby.id
+            
             self.collectionBabies.cellForItemAtIndexPath(indexPath)?.selected = true
             self.collectionBabies.reloadItemsAtIndexPaths([indexPath])
-        }
-        else if (collectionView == self.collectionTimers) {
-            self.collectionTimers.cellForItemAtIndexPath(indexPath)?.selected = true
-            self.collectionTimers.reloadItemsAtIndexPaths([indexPath])
         }
     }
     
@@ -225,9 +181,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         if (collectionView == self.collectionBabies) {
             let edgeInsets = (collectionView.frame.size.width - (CGFloat(BabySync.service.babies.count) * 50) - (CGFloat(BabySync.service.babies.count) * 10)) / 2
             return UIEdgeInsetsMake(0, edgeInsets, 0, 0)
-        }
-        else if (collectionView == self.collectionTimers) {
-            return UIEdgeInsetsMake(8, 0, 0, 0)
         }
         else {
             return UIEdgeInsetsZero
@@ -238,16 +191,64 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         if (collectionView == self.collectionBabies) {
             return CGSizeMake(60, 80)
         }
-        else if (collectionView == self.collectionTimers) {
-            return CGSizeMake(collectionView.bounds.size.width, 80)
-        }
         else {
             return CGSizeMake(0,0)
         }
     }
     
-    override func viewWillLayoutSubviews() {
-        self.collectionTimers.collectionViewLayout.invalidateLayout()
+    // MARK: - UITableViewDataSource
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        if (tableView == self.tableTimers) {
+            let cell: TimerTableViewCell = tableView.dequeueReusableCellWithIdentifier("TimerCell", forIndexPath: indexPath) as! TimerTableViewCell
+                        
+            // TimerTableViewCell will handle updates on didSet of timer property
+            if let selectedBabyID = self.selectedBabyID {
+                var timers: [Timer] = BabySync.timersForBabyID(selectedBabyID)
+                cell.timer = timers[indexPath.row]
+            }
+            
+            // Bug in storyboard, have to programatically set cell background to clear
+            // otherwise it shows up white
+            cell.backgroundColor = UIColor.clearColor()
+            
+            return cell
+        }
+        else {
+            return UITableViewCell()
+        }
+    }
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        if(tableView == self.tableTimers) {
+            return 1
+        }
+        return 0
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if (tableView == self.tableTimers && BabySync.service.babies.count > 0) {
+            // Find the number of timers associated with this baby
+            if let selectedBabyID = self.selectedBabyID {
+                if let baby = BabySync.babyByID(selectedBabyID) {
+                    return baby.timers.count
+                }
+            }
+        }
+        return 0
+    }
+
+    // MARK: - UITableViewDelegate
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if (tableView == self.tableTimers) {
+            print("selected timer at index \(indexPath.row)")
+            let cell: TimerTableViewCell = tableView.cellForRowAtIndexPath(indexPath) as! TimerTableViewCell
+            if let timer = cell.timer {
+                self.selectedTimerID = timer.id
+            }
+            else {
+                self.selectedTimerID = nil
+            }
+        }
     }
     
     // MARK: - MenuViewDelegate
@@ -268,6 +269,11 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
 
     func didCreate(family: Family) {
         print("didCreate family: ", family)
+        
+        // Default to selecting the first baby (if existing) on new family creation
+        if(BabySync.service.babies.count > 0) {
+            self.selectedBabyID = BabySync.service.babies[0].id
+        }
         self.reloadCollections()
     }
     
@@ -284,7 +290,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     func didEncounter(error: Error) {
-        
 //        print("DID ENCOUNTER")
 //        let alertController: UIAlertController = UIAlertController(title: "Error code: "+String(error.code), message: error.message, preferredStyle: .Alert);
 //        
