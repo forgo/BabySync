@@ -15,6 +15,50 @@ class TimerTableViewCell: UITableViewCell {
     @IBOutlet weak var labelElapsedTimer: UILabel!
     @IBOutlet weak var labelActivityTimer: UILabel!
     
+    private func setup() {
+
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.setup()
+    }
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.setup()
+    }
+    
+    func layoutForEdit(on: Bool) {
+        if(on) {
+            self.labelElapsedTimer.hidden = true
+            self.labelActivityTimer.textAlignment = NSTextAlignment.Right
+        }
+        else {
+            self.labelElapsedTimer.hidden = false
+            self.labelActivityTimer.textAlignment = NSTextAlignment.Left
+        }
+    }
+    
+    func blur(on: Bool) {
+        if(on) {
+            // Blur On Animation
+            UIView.animateWithDuration(0.4, animations: { () -> Void in
+                self.contentView.alpha = 0.5
+                }, completion: { (finished) -> Void in
+                    // Finished
+            })
+        }
+        else {
+            // Blur Off Animation
+            UIView.animateWithDuration(0.4, animations: { () -> Void in
+                self.contentView.alpha = 1.0
+                }, completion: { (finished) -> Void in
+                    // Finished
+            })
+        }
+    }
+    
     var timer: Timer? {
         didSet {
             if let t = self.timer {
@@ -36,5 +80,4 @@ class TimerTableViewCell: UITableViewCell {
             }
         }
     }
-
 }

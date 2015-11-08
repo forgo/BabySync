@@ -287,40 +287,44 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         return 0
     }
     
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        if (tableView == self.tableTimers) {
-            let editAction = UITableViewRowAction(style: .Normal, title: "EDIT") { (action, indexPath) -> Void in
-                // TODO: Edit timer handler
-            }
-            editAction.backgroundColor = UIColor.blueColor()
-            
-            let deleteAction = UITableViewRowAction(style: .Normal, title: "DEL") { (action, indexPath) -> Void in
-                // TODO: Delete timer handler
-            }
-            deleteAction.backgroundColor = UIColor.redColor()
-            
-            return [deleteAction, editAction]
-        }
-        return []
-    }
-    
-    func visibleTimerCellsExcept(indexPath: NSIndexPath, action: (TimerTableViewCell)->()) {
+    func visibleTimerCellsExcept(indexPath: NSIndexPath, action: (TimerTableViewCell)->(), exceptAction: (TimerTableViewCell)->()) {
         let timerException: TimerTableViewCell = self.tableTimers.cellForRowAtIndexPath(indexPath) as! TimerTableViewCell
         for visibleCell in self.tableTimers.visibleCells {
             let timerCell: TimerTableViewCell = visibleCell as! TimerTableViewCell
             if (timerCell != timerException) {
                 action(timerCell)
             }
+            else {
+                exceptAction(timerCell)
+            }
         }
     }
     
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        if (tableView == self.tableTimers) {
+            let editAction = UITableViewRowAction(style: .Destructive, title: "EDIT") { (action, indexPath) -> Void in
+                // TODO: Edit timer handler
+            }
+            editAction.backgroundColor = BabySyncConstant.Color.Secondary
+            let deleteAction = UITableViewRowAction(style: .Normal, title: "DELETE") { (action, indexPath) -> Void in
+                // TODO: Delete timer handler
+            }
+            deleteAction.backgroundColor = BabySyncConstant.Color.Dark
+            
+            return [deleteAction, editAction]
+        }
+        return []
+    }
+    
     func tableView(tableView: UITableView, willBeginEditingRowAtIndexPath indexPath: NSIndexPath) {
-        if(tableView == self.tableTimers) {
+        
+        if(tableView == self.tableTimers) {            
             self.isEditingTimer = true
             self.stopTimers()
-            
-            self.visibleTimerCellsExcept(indexPath, action: { (cell) -> () in
-                cell.contentView.alpha = 0.5
+            self.visibleTimerCellsExcept(indexPath, action: { (nonEditCell) -> () in
+                nonEditCell.blur(true)
+                }, exceptAction: { (editCell) -> () in
+                    editCell.layoutForEdit(true)
             })
         }
     }
@@ -332,13 +336,14 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
                 self.isEditingTimer = false
                 self.startTimers()
                 
-                self.visibleTimerCellsExcept(indexPath, action: { (cell) -> () in
-                    cell.contentView.alpha = 1.0
+                self.visibleTimerCellsExcept(indexPath, action: { (nonEditCell) -> () in
+                    nonEditCell.blur(false)
+                    }, exceptAction: { (editCell) -> () in
+                        editCell.layoutForEdit(false)
                 })
             }
         }
     }
-    
 
     // MARK: - UITableViewDelegate
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
