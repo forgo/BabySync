@@ -9,14 +9,31 @@
 import Google
 import UIKit
 
+struct GoogleInfo {
+    var userId: String = ""
+    var accessToken: String = ""
+    var name: String = ""
+    var email: String = ""
+    var pic: UIImage = AuthConstant.Default.ProfilePic
+    
+    init() {
+        self.userId = ""
+        self.accessToken = ""
+        self.name = ""
+        self.email = ""
+        self.pic = AuthConstant.Default.ProfilePic
+    }
+}
+
 // MARK: - AuthGoogle
-class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSignInUIDelegate {
+class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSignInUIDelegate, BabySyncLoginDelegate {
     
     // Singleton
     static let sharedInstance = AuthGoogle()
     private override init() {
         self.signIn = GIDSignIn.sharedInstance()
         self.signIn.shouldFetchBasicProfile = true
+        self.info = GoogleInfo()
     }
     
     // Auth method classes invokes AuthDelegate methods to align SDK differences
@@ -24,6 +41,8 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
     
     var signIn: GIDSignIn
     private var signInButton: GIDSignInButton!
+    
+    private var info: GoogleInfo
     
     // MARK: - AuthAppMethod Protocol
     func configure(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
@@ -76,24 +95,25 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
     func signIn(signIn: GIDSignIn!, didSignInForUser user: GIDGoogleUser!, withError error: NSError!) {
         if (error == nil) {
             // TODO: Can we leverage user.serverAuthCode for token validation?
-            let userId: String = user.userID                        // For client-side use only!
-            let accessToken: String = user.authentication.idToken   // Safe to sendn to the server
-            let name: String = user.profile.name
-            let email: String = user.profile.email
+            self.info.userId = user.userID                        // For client-side use only!
+            self.info.accessToken = user.authentication.idToken   // Safe to sendn to the server
+            self.info.name = user.profile.name
+            self.info.email = user.profile.email
             
-            var pic: UIImage = UIImage()
             if(user.profile.hasImage) {
                 // TODO: Profile pic retrieval is synchronous, do we care for login?
                 let picURL: NSURL = user.profile.imageURLWithDimension(256)
                 let picData: NSData = NSData(contentsOfURL: picURL)!
-                pic = UIImage(data: picData)!
+                self.info.pic = UIImage(data: picData)!
             }
             else {
-                pic = AuthConstant.Default.ProfilePic
+                self.info.pic = AuthConstant.Default.ProfilePic
             }
             
-            let authUser = AuthUser(service: .Google, userId: userId, accessToken: accessToken, name: name, email: email, pic: pic)
-            self.delegate?.loginSuccess(.Google, user: authUser)
+            // We got some Google data, now let's validate on our own server!
+            BabySync.service.delegateLogin = Auth.sharedInstance.google // necessary to switch for each auth method!
+            BabySync.service.login(.Google, email: nil, password: nil, accessToken: self.info.accessToken)
+
         } else {
             self.delegate?.loginError(.Google, error: error)
         }
@@ -133,6 +153,20 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
     func signIn(signIn: GIDSignIn!, dismissViewController viewController: UIViewController!) {
         print("signIn dismissViewController (Google)")
         Auth.sharedInstance.loginViewController?.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    // MARK: - BabySyncLoginDelegate
+    func didLogin(method: AuthMethodType, jwt: String, email: String, accessToken: String) {
+        let authUser = AuthUser(service: method, userId: self.info.userId, accessToken: accessToken, name: self.info.name, email: email, pic: self.info.pic, jwt: jwt)
+        self.delegate?.loginSuccess(method, user: authUser)
+    }
+    
+    func didEncounterLogin(errors: [Error]) {
+        // TODO: Do we need to take into account errors past one if they exist?
+        if(errors.count > 0) {
+            let e: NSError? = BabySync.nsErrorFrom(errors[0])
+            self.delegate?.loginError(.Google, error: e)
+        }
     }
     
 }

@@ -53,7 +53,9 @@ class Auth: NSObject, AuthDelegate {
             let name: String = secureData?["name"] as! String
             let email: String = secureData?["email"] as! String
             let pic: UIImage = secureData?["pic"] as! UIImage
-            securedUser = AuthUser(service: authMethod, userId: userId, accessToken: accessToken, name: name, email: email, pic: pic)
+            let jwt: String = secureData?["jwt"] as! String
+            
+            securedUser = AuthUser(service: authMethod, userId: userId, accessToken: accessToken, name: name, email: email, pic: pic, jwt: jwt)
         }
         
         return securedUser
@@ -106,19 +108,7 @@ class Auth: NSObject, AuthDelegate {
             print("Something went wrong trying to create secure store user")
         }
         
-
-        
-        
-        // If we logged in via something besides our own service (FB/Google)
-        // we don't care about creating a User in our database
-        // they only need to be referenced by a unique email constraint
-
-        // If we logged in via our own service
-        // we can be sure there is a valid User in our database
-        
-        
-        // Validate token on server, with the appropriate method
-        
+        // TODO: something
         
         self.authUIDelegate?.authUILoginDidSucceed()
     }

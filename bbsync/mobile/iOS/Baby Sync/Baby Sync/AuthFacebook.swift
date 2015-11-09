@@ -10,19 +10,38 @@ import FBSDKCoreKit
 import FBSDKLoginKit
 import UIKit
 
+struct FacebookInfo {
+    var userId: String = ""
+    var accessToken: String = ""
+    var name: String = ""
+    var email: String = ""
+    var pic: UIImage = AuthConstant.Default.ProfilePic
+    
+    init() {
+        self.userId = ""
+        self.accessToken = ""
+        self.name = ""
+        self.email = ""
+        self.pic = AuthConstant.Default.ProfilePic
+    }
+}
+
 // MARK: - AuthFacebook
-class AuthFacebook: NSObject, AuthAppMethod, AuthMethod {
+class AuthFacebook: NSObject, AuthAppMethod, AuthMethod, BabySyncLoginDelegate {
     
     // Singleton
     static let sharedInstance = AuthFacebook()
     private override init() {
         self.loginManager.loginBehavior = .Native
+        self.info = FacebookInfo()
     }
     
     // Auth method classes invokes AuthDelegate methods to align SDK differences
     var delegate: AuthDelegate?
     
     private let loginManager: FBSDKLoginManager = FBSDKLoginManager()
+    
+    private var info: FacebookInfo
     
     // MARK: - AuthAppMethod Protocol
     func configure(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
@@ -76,20 +95,34 @@ class AuthFacebook: NSObject, AuthAppMethod, AuthMethod {
             self.loginManager.logOut()
             self.delegate?.loginError(.Facebook, error: error)
         } else {
-            let userId: String = result.valueForKey("id") as! String
-            let accessToken: String = FBSDKAccessToken.currentAccessToken().tokenString
-            let name: String = result.valueForKey("name") as! String
-            let email: String = result.valueForKey("email") as! String
+            self.info.userId = result.valueForKey("id") as! String
+            self.info.accessToken = FBSDKAccessToken.currentAccessToken().tokenString
+            self.info.name = result.valueForKey("name") as! String
+            self.info.email = result.valueForKey("email") as! String
             
             // TODO: Profile pic retrieval is synchronous, do we care for login?
             let picURLString = result.valueForKeyPath("picture.data.url") as! String
             let picURL: NSURL = NSURL(string: picURLString)!
             let picData: NSData = NSData(contentsOfURL: picURL)!
-            let pic: UIImage = UIImage(data: picData)!
+            self.info.pic = UIImage(data: picData)!
             
-            let authUser = AuthUser(service: .Facebook, userId: userId, accessToken: accessToken, name: name, email: email, pic: pic)
-            self.delegate?.loginSuccess(.Facebook, user: authUser)
+            // We got some Facebook data, now let's validate on our own server!
+            BabySync.service.delegateLogin = Auth.sharedInstance.facebook // necessary to switch for each auth method!
+            BabySync.service.login(.Facebook, email: nil, password: nil, accessToken: self.info.accessToken)
         }
     }
     
+    // MARK: - BabySyncLoginDelegate
+    func didLogin(method: AuthMethodType, jwt: String, email: String, accessToken: String) {
+        let authUser = AuthUser(service: method, userId: self.info.userId, accessToken: accessToken, name: self.info.name, email: email, pic: self.info.pic, jwt: jwt)
+        self.delegate?.loginSuccess(method, user: authUser)
+    }
+    
+    func didEncounterLogin(errors: [Error]) {
+        // TODO: Do we need to take into account errors past one if they exist?
+        if(errors.count > 0) {
+            let e: NSError? = BabySync.nsErrorFrom(errors[0])
+            self.delegate?.loginError(.Facebook, error: e)
+        }
+    }
 }

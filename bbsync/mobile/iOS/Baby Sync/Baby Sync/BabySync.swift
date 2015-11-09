@@ -14,7 +14,8 @@ import Foundation
 struct BabySyncErrors {
     struct Client {
         static let Parse = Error(code: 9999, message: "Client failed to parse response data.")
-        static let ParseToken = Error(code: 9998, message: "Client failed to parse BabySync login token.")
+        static let ParseLoginToken = Error(code: 9998, message: "Client failed to parse BabySync login token.")
+        static let ParseLoginEmail = Error(code: 9997, message: "Client failed to parse BabySync login email.")
         static let ParseFamily = Error(code: 9998, message: "Client received unexpected Family data.")
         static let ParseParent = Error(code: 9997, message: "Client received unexpected Parent data.")
         static let ParseParents = Error(code: 9996, message: "Client received unexpected [Parent] data.")
@@ -24,24 +25,30 @@ struct BabySyncErrors {
 }
 
 // MARK: - BabySyncDelegate Protocol
+protocol BabySyncLoginDelegate {
+    func didLogin(method: AuthMethodType, jwt: String, email: String, accessToken: String)
+    func didEncounterLogin(errors: [Error])
+}
+
 protocol BabySyncDelegate {
-    func didLogin(email: String);
     func didFind(parent: Parent)
     func didCreate(family: Family)
     func didJoin(family: Family)
     func didMerge(family: Family)
     func didRetrieve(family: Family)
-    func didEncounter(error: Error)
+    func didEncounter(errors: [Error])
 }
 
 // MARK: - BabySync Service
 class BabySync {
     
+    var delegateLogin: BabySyncLoginDelegate?
     var delegate: BabySyncDelegate?
     
     // MARK: - JWT to use for authenticated requests
     // TODO: store the encrypted or some other way?
-    var token: String?
+    private var jwt: String?
+    private var email: String?
     
     // MARK: - Synced data arrays!
     var family: Family = Family()
@@ -73,12 +80,17 @@ class BabySync {
         return errors
     }
     
-    private func parseToken(jsonData: JSON) -> Bool {
+    private func parseLogin(jsonData: JSON) -> Bool {
         guard let token: String = jsonData["token"].stringValue else {
-            self.handle([BabySyncErrors.Client.ParseToken])
+            self.handleLogin([BabySyncErrors.Client.ParseLoginToken])
             return false
         }
-        self.token = token
+        guard let email: String = jsonData["email"].stringValue else {
+            self.handleLogin([BabySyncErrors.Client.ParseLoginEmail])
+            return false
+        }
+        self.jwt = token
+        self.email = email
         return true
     }
     
@@ -134,11 +146,13 @@ class BabySync {
         return (jsonTestData, jsonTestErrors)
     }
     
-    // For every error encountered, delegate out to whom it may concern
+    // For errors encountered, delegate out to whom it may concern
     private func handle(errors: [Error]) {
-        for error in errors {
-            self.delegate?.didEncounter(error)
-        }
+        self.delegate?.didEncounter(errors)
+    }
+    
+    private func handleLogin(errors: [Error]) {
+        self.delegateLogin?.didEncounterLogin(errors)
     }
     
     // MARK: - Primary Service Operations
@@ -175,11 +189,16 @@ class BabySync {
         Alamofire.request(.POST, BabySyncConstant.baseURL+endpointLogin, parameters: loginParams).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
-                self.handle(self.errors(jsonErrors))
+                self.handleLogin(self.errors(jsonErrors))
                 return
             }
-            if (self.parseToken(jsonData)) {
-                self.delegate?.didLogin(<#T##email: String##String#>)
+            if (self.parseLogin(jsonData)) {
+                if let tok = accessToken {
+                    self.delegateLogin?.didLogin(method, jwt: self.jwt!, email: self.email!, accessToken: tok)
+                }
+                else {
+                    self.delegateLogin?.didLogin(method, jwt: self.jwt!, email: self.email!, accessToken: "")
+                }                
             }
         }
     }
@@ -315,6 +334,15 @@ class BabySync {
     static let service = BabySync()
     
     // MARK: - Helper Methods
+    static func nsErrorFrom(error: Error) -> NSError? {
+        var nsError: NSError?
+        if let domain = AuthConstant.Error.Domain {
+            let errorInfo: [NSObject : AnyObject]? = ["message": error.message]
+            nsError = NSError(domain: domain, code: error.code, userInfo: errorInfo)
+        }
+        return nsError
+    }
+    
     static func babyByID(babyID: Int) -> Baby? {
         let babies: [Baby] = BabySync.service.babies.filter {$0.id == babyID}
         if (babies.count == 1) {

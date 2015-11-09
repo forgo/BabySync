@@ -16,6 +16,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        // Tell Auth to delegate for all auth methods
+        Auth.sharedInstance.custom.delegate = Auth.sharedInstance
+        Auth.sharedInstance.google.delegate = Auth.sharedInstance
+        Auth.sharedInstance.facebook.delegate = Auth.sharedInstance
+
         // Configure Google Sign-In
         Auth.sharedInstance.google.signIn.uiDelegate = Auth.sharedInstance.google
         let googleDidFinish: Bool = Auth.sharedInstance.google.configure(

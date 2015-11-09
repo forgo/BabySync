@@ -397,19 +397,18 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
     }
     
-    func didEncounter(error: Error) {
-//        print("DID ENCOUNTER")
-//        let alertController: UIAlertController = UIAlertController(title: "Error code: "+String(error.code), message: error.message, preferredStyle: .Alert);
-//        
-//        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action: UIAlertAction!) -> Void in
-//            print("Cancel action")
-//        }
-//        
-//        let okAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default) { (action: UIAlertAction!) -> Void in
-//            print("OK action")
-//        }
-//        alertController.addAction(cancelAction);
-//        alertController.addAction(okAction);
-    }
-    
+    func didEncounter(errors: [Error]) {
+        //        print("DID ENCOUNTER")
+        //        let alertController: UIAlertController = UIAlertController(title: "Error code: "+String(error.code), message: error.message, preferredStyle: .Alert);
+        //
+        //        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action: UIAlertAction!) -> Void in
+        //            print("Cancel action")
+        //        }
+        //
+        //        let okAction: UIAlertAction = UIAlertAction(title: "OK", style: .Default) { (action: UIAlertAction!) -> Void in
+        //            print("OK action")
+        //        }
+        //        alertController.addAction(cancelAction);
+        //        alertController.addAction(okAction);
+    }    
 }

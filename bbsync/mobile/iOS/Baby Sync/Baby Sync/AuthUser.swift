@@ -20,6 +20,7 @@ struct AuthUser: CreateableSecureStorable,
     var name: String
     var email: String
     var pic: UIImage
+    var jwt: String
     
     // Required by GenericPasswordSecureStorable
     var service: String
@@ -32,7 +33,8 @@ struct AuthUser: CreateableSecureStorable,
             "accessToken": accessToken,
             "name": name,
             "email": email,
-            "pic": pic
+            "pic": pic,
+            "jwt": jwt
         ]
     }
     
@@ -43,19 +45,22 @@ struct AuthUser: CreateableSecureStorable,
         self.name = ""
         self.email = ""
         self.pic = AuthConstant.Default.ProfilePic
+        self.jwt = ""
     }
     
-    init(service: AuthMethodType, userId: String, accessToken: String, name: String, email: String, pic: UIImage) {
+    init(service: AuthMethodType, userId: String, accessToken: String, name: String, email: String, pic: UIImage, jwt: String) {
         self.service = service.rawValue
         self.userId = userId
         self.accessToken = accessToken
         self.name = name
         self.email = email
         self.pic = pic
+        self.jwt = jwt
     }
     
     var description: String {
         let tokenAbbreviation: String = self.accessToken.substringWithRange(Range<String.Index>(start: self.accessToken.startIndex, end: self.accessToken.startIndex.advancedBy(10))) + "..."
-        return "AuthUser(\n\tservice: \(self.service)\n\tuserId: \(self.userId)\n\taccessToken: \(tokenAbbreviation)\n\tname: \(self.name)\n\temail: \(self.email)\n\tpic: \(self.pic)\n)"
+        let jwtAbbreviation: String = self.jwt.substringWithRange(Range<String.Index>(start: self.jwt.startIndex, end: self.jwt.startIndex.advancedBy(10))) + "..."
+        return "AuthUser(\n\tservice: \(self.service)\n\tuserId: \(self.userId)\n\taccessToken: \(tokenAbbreviation)\n\tname: \(self.name)\n\temail: \(self.email)\n\tpic: \(self.pic)\n\tjwt: \(jwtAbbreviation)\n)"
     }
 }

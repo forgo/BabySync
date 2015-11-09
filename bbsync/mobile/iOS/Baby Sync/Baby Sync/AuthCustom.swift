@@ -10,7 +10,7 @@ import Alamofire
 import UIKit
 
 // MARK: - AuthCustom
-class AuthCustom: NSObject, AuthAppMethod, AuthMethod {
+class AuthCustom: NSObject, AuthAppMethod, AuthMethod, BabySyncLoginDelegate {
     
     // Singleton
     static let sharedInstance = AuthCustom()
@@ -35,7 +35,8 @@ class AuthCustom: NSObject, AuthAppMethod, AuthMethod {
     
     func login(email: String?, password: String?) {
         if let e = email, p = password {
-            BabySync.service.login(e, password: p)
+            BabySync.service.delegateLogin = Auth.sharedInstance.custom // necessary to switch for each auth method!
+            BabySync.service.login(.Custom, email: e, password: p, accessToken: nil)
         }
         else {
             if let domain = AuthConstant.Error.Domain {
@@ -47,5 +48,21 @@ class AuthCustom: NSObject, AuthAppMethod, AuthMethod {
     
     func logout() {
         // TODO: implement custom logout
+        
+        self.delegate?.didLogout(.Custom)
+    }
+    
+    // MARK: - BabySyncLoginDelegate
+    func didLogin(method: AuthMethodType, jwt: String, email: String, accessToken: String) {
+        let authUser = AuthUser(service: .Custom, userId: "", accessToken: accessToken, name: "Some Person", email: email, pic: AuthConstant.Default.ProfilePic, jwt: jwt)
+        self.delegate?.loginSuccess(.Custom, user: authUser)
+    }
+    
+    func didEncounterLogin(errors: [Error]) {
+        // TODO: Do we need to take into account errors past one if they exist?
+        if(errors.count > 0) {
+            let e: NSError? = BabySync.nsErrorFrom(errors[0])
+            self.delegate?.loginError(.Custom, error: e)
+        }
     }
 }

@@ -85,8 +85,8 @@ login: function * (next) {
                     // Set and return JWT
                     var privateKey = fs.readFileSync('v1/auth/ssl/demo.rsa');
                     var claims = {
-                        iss: "digeocache",
-                        username: userToCompare.username,
+                        iss: "babysync",
+                        username: login_test.isEmailAsUsername ? userUpdate.data.email : userUpdate.data.username,
                         user: true
                     };
                     var token = jwt.sign(claims, privateKey, {
