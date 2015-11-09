@@ -302,6 +302,7 @@ module.exports = function Validate(errors) {
             }
             else {
                 response.valid = true;
+                response.data = body
             }
             return response;
         },
@@ -344,51 +345,74 @@ module.exports = function Validate(errors) {
                     });
                     if (authMethodMatches.length == 1) {
 
-
-                        // email/username and password  unexpected with
+                        // password unexpected with
                         // accessToken for oAuth provider and vice-versa
-                        if((pre.email || pre.username || pre.password) && pre.accessToken) {
+                        if(pre.password && pre.accessToken) {
                             response.valid = false;
-                            response.errors = [errors.LOGIN_FAILURE("expected credentials or accessToken, not both")];
+                            response.errors = [errors.LOGIN_FAILURE("expected password or accessToken, not both")];
                             return response;
                         }
 
-                        authMethod = pre.authMethod;
-                        delete pre.authMethod;
-                        var method = authMethodMatches[0];
-
-                        // No token was provided and auth method needs it
-                        if(!pre.accessToken && method.validTokenURL != null) {
+                        // email must accompany accessToken in case we need to create a new user
+                        if(pre.accessToken && !pre.email) {
                             response.valid = false;
-                            response.errors = [errors.LOGIN_TOKEN_EXPECTED(authMethod)];
+                            response.errors = [errors.LOGIN_FAILURE("email must accompany accessToken")];
                             return response;
                         }
-                        // Token provided and we have an auth service to check against
-                        else if(pre.accessToken && method.validTokenURL != null) {
 
-                            var tokenURL = method.validTokenURL.replace(/\{accessToken\}/, pre.accessToken);
-                            var options = { url: tokenURL };
-                            var tokenCheckResponse = yield req(options);
+                        // ensure email is clean before moving on
+                        // (a valid oAuth token will try to create a user with this email 
+                        //  if they don't already exist)
+                        var oauth_email_test = validate.attribute(sch, pre, "email");
+                        if(oauth_email_test.valid) {
 
-                            var tokenCheckBody = JSON.parse(tokenCheckResponse.body);
-                            var token_test = method.validateResponse(tokenCheckBody);
-                            console.log("TOKEN TEST = ", token_test);
-                            if(!token_test.valid) {
+                            authMethod = pre.authMethod;
+                            delete pre.authMethod;
+                            var method = authMethodMatches[0];
+
+                            // No token was provided and auth method needs it
+                            if(!pre.accessToken && method.validTokenURL != null) {
                                 response.valid = false;
-                                response.errors = [errors.LOGIN_TOKEN_INVALID(authMethod)];
+                                response.errors = [errors.LOGIN_TOKEN_EXPECTED(authMethod)];
                                 return response;
                             }
-                            else {
-                                console.log("TOKEN TEST WAS VALID, data = ");
-                                console.log(token_test.data);
-                                // Effectively need to ADD the username here that comes 
-                                // back from oAuth validated token into our pre data
-                                // since 
+                            // Token provided and we have an auth service to check against
+                            else if(pre.accessToken && method.validTokenURL != null) {
+
+                                var tokenURL = method.validTokenURL.replace(/\{accessToken\}/, pre.accessToken);
+                                var options = { url: tokenURL };
+                                var tokenCheckResponse = yield req(options);
+
+                                var tokenCheckBody = JSON.parse(tokenCheckResponse.body);
+                                var token_test = method.validateResponse(tokenCheckBody);
+                                console.log("TOKEN TEST = ", token_test);
+                                if(!token_test.valid) {
+                                    response.valid = false;
+                                    response.errors = [errors.LOGIN_TOKEN_INVALID(authMethod)];
+                                    return response;
+                                }
+                                else {
+                                    console.log("TOKEN TEST WAS VALID, data = ");
+                                    console.log(token_test.data);
+                                    // Return IMMEDIATELY if valid oauth token found
+                                    // let endpoint handle user get/post 
+                                    // depending on pre-existing user oauth data
+                                    response.valid = true
+                                    response.isValidOAuth = true
+                                    response.data = { authMethod: authMethod, email: oauth_email_test.data, oAuth: token_test.data }
+                                    return response
+                                }
                             }
+                            else if(pre.accessToken && method.validTokenURL == null) {
+                                response.valid = false;
+                                response.errors = [errors.LOGIN_TOKEN_UNVERIFIABLE(authMethod)];
+                            }
+
                         }
-                        else if(pre.accessToken && method.validTokenURL == null) {
+                        else {
                             response.valid = false;
-                            response.errors = [errors.LOGIN_TOKEN_UNVERIFIABLE(authMethod)];
+                            response.errors = [errors.LOGIN_FAILURE("oauth email incompatible")];
+                            return response;
                         }
                     }
                     else {

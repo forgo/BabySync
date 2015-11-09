@@ -43,7 +43,7 @@
 		4FB1B71A1BE460D2007CA316 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB1B7191BE460D2007CA316 /* StringExtension.swift */; };
 		4FB636F41BF071CB00D7EC43 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB636F31BF071CB00D7EC43 /* ErrorView.swift */; };
 		4FB636F61BF1051D00D7EC43 /* ErrorContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB636F51BF1051D00D7EC43 /* ErrorContentView.swift */; };
-		4FB636F81BF10E3C00D7EC43 /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB636F71BF10E3C00D7EC43 /* ErrorViewController.swift */; };
+		4FB636F81BF10E3C00D7EC43 /* AuthErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB636F71BF10E3C00D7EC43 /* AuthErrorViewController.swift */; };
 		4FB801BC1BEED623007AA09B /* BabySyncConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB801BB1BEED623007AA09B /* BabySyncConstant.swift */; };
 		4FB801BE1BEFA6C4007AA09B /* BabyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB801BD1BEFA6C4007AA09B /* BabyButton.swift */; };
 		4FB801C01BEFAE5C007AA09B /* BabyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB801BF1BEFAE5C007AA09B /* BabyTextField.swift */; };
@@ -136,7 +136,7 @@
 		4FB1B7191BE460D2007CA316 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		4FB636F31BF071CB00D7EC43 /* ErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		4FB636F51BF1051D00D7EC43 /* ErrorContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorContentView.swift; sourceTree = "<group>"; };
-		4FB636F71BF10E3C00D7EC43 /* ErrorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorViewController.swift; sourceTree = "<group>"; };
+		4FB636F71BF10E3C00D7EC43 /* AuthErrorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthErrorViewController.swift; sourceTree = "<group>"; };
 		4FB801BB1BEED623007AA09B /* BabySyncConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BabySyncConstant.swift; sourceTree = "<group>"; };
 		4FB801BD1BEFA6C4007AA09B /* BabyButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BabyButton.swift; sourceTree = "<group>"; };
 		4FB801BF1BEFAE5C007AA09B /* BabyTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BabyTextField.swift; sourceTree = "<group>"; };
@@ -203,6 +203,7 @@
 				4F08A38C1BDFF45E000DE4EF /* AuthState.swift */,
 				4F08A38D1BDFF45E000DE4EF /* AuthUser.swift */,
 				4F08A39A1BDFF480000DE4EF /* AuthViewController.swift */,
+				4FB636F71BF10E3C00D7EC43 /* AuthErrorViewController.swift */,
 				4FE9395F1BE3337700EA421C /* AuthLoginWithButton.swift */,
 				4F0970601BE356EE008D743B /* AuthLoginButton.swift */,
 				4F09705E1BE348FB008D743B /* AuthLoginTextField.swift */,
@@ -232,7 +233,6 @@
 				4F23A8CA1BBC55DB001FBCFF /* NewTimerViewController.swift */,
 				4F23A8CC1BBC55F0001FBCFF /* NewActivityViewController.swift */,
 				4F23A8CE1BBC562E001FBCFF /* SyncFamilyViewController.swift */,
-				4FB636F71BF10E3C00D7EC43 /* ErrorViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -504,7 +504,7 @@
 				4F23A8CB1BBC55DB001FBCFF /* NewTimerViewController.swift in Sources */,
 				4FCEBA831BE432F1002562FB /* UIFontExtension.swift in Sources */,
 				4F23A8D51BBC7960001FBCFF /* MenuTableViewCell.swift in Sources */,
-				4FB636F81BF10E3C00D7EC43 /* ErrorViewController.swift in Sources */,
+				4FB636F81BF10E3C00D7EC43 /* AuthErrorViewController.swift in Sources */,
 				4F08A3951BDFF45E000DE4EF /* AuthGoogle.swift in Sources */,
 				4FFAE1E91BC1E57100FB2B73 /* IconCollectionViewCell.swift in Sources */,
 				4FD82EEF1BBB6ED700A06E0A /* Parent.swift in Sources */,

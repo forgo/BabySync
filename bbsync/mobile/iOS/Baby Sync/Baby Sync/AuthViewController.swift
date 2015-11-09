@@ -8,8 +8,9 @@
 
 import UIKit
 
-class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ErrorViewDelegate {
+class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, AuthErrorViewDelegate {
 
+    var isFirstLoginAppearance: Bool = true
     var currentTextFieldOffset: CGFloat = 0.0
     
     @IBOutlet weak var labelLogo: UILabel!
@@ -35,6 +36,10 @@ class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // For view did load, let's reset the first login apperance
+        // Typically, this should only happen once (default init value = true)
+        self.isFirstLoginAppearance = true
+        
         // Setup Auth Helper
         Auth.sharedInstance.authUIDelegate = self
         Auth.sharedInstance.loginViewController = self
@@ -53,11 +58,19 @@ class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate,
     
     override func viewDidAppear(animated: Bool) {
         // Skip Login If Already Logged In
-        if(Auth.sharedInstance.isLoggedIn()) {
+        // and this is our first login screen appearance.
+        // This avoids auto-navigation after things like error
+        // popover dismissal which recalls viewDidAppear here
+        if(Auth.sharedInstance.isLoggedIn() && self.isFirstLoginAppearance) {
             self.performSegueWithIdentifier("SegueLoginToHome", sender: self)
         }
         else {
             self.view.hidden = false
+        }
+        
+        // We appeared once, so we can't be first again!
+        if(self.isFirstLoginAppearance) {
+            self.isFirstLoginAppearance = false
         }
     }
     
@@ -154,10 +167,25 @@ class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate,
             //homeVC.isTest = self.switchBypass.on
         }
         else if (segue.identifier == "SegueErrorPopover") {
-            let errorPopupVC: ErrorViewController = segue.destinationViewController as! ErrorViewController
-
+            let errorPopupVC: AuthErrorViewController = segue.destinationViewController as! AuthErrorViewController
+            
+            // Set the error received in popover
+            if let error: NSError = sender as? NSError {
+                if let message: String = error.userInfo["message"] as? String {
+                    errorPopupVC.message = message
+                }
+                else {
+                    errorPopupVC.message = "Something's not right..."
+                }
+            }
+            else {
+                errorPopupVC.message = "Unknown cause."
+            }
+            
             errorPopupVC.popoverPresentationController!.delegate = self
             errorPopupVC.delegate = self
+            errorPopupVC.parentVC = self
+
         }
     }
     
@@ -191,9 +219,9 @@ class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate,
         print("Login was cancelled")
     }
     
-    func authUILoginDidError() {
+    func authUILoginDidError(error: NSError?) {
         print("Login was unsuccessful")
-        self.performSegueWithIdentifier("SegueErrorPopover", sender: self)
+        self.performSegueWithIdentifier("SegueErrorPopover", sender: error)
     }
     
     // MARK: Touch Interactions

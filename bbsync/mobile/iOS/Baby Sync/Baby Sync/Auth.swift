@@ -13,7 +13,7 @@ import UIKit
 protocol AuthUIDelegate {
     func authUILoginDidSucceed()
     func authUILoginDidCancel()
-    func authUILoginDidError()
+    func authUILoginDidError(error: NSError?)
 }
 
 class Auth: NSObject, AuthDelegate {
@@ -135,9 +135,7 @@ class Auth: NSObject, AuthDelegate {
         case .Custom:
             print("Custom login error.")
         }
-        print("\(error?.localizedDescription)")
-        
-        self.authUIDelegate?.authUILoginDidError()
+        self.authUIDelegate?.authUILoginDidError(error)
     }
     
     func didLogout(method: AuthMethodType) {
@@ -200,7 +198,10 @@ class Auth: NSObject, AuthDelegate {
                     self.custom.login(e, password: p)
                 }
                 else {
-                    self.authUIDelegate?.authUILoginDidError()
+                    let errorRef = AuthConstant.Error.Client.BadEmailOrPassword.self
+                    let error: Error = Error(code: errorRef.code, message: errorRef.message)
+                    let nsError: NSError? = BabySync.nsErrorFrom(error)
+                    self.authUIDelegate?.authUILoginDidError(nsError)
                 }
             }
         }

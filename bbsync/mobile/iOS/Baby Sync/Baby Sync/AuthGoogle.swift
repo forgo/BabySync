@@ -120,7 +120,7 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
             }
             
             // We got some Google data, now let's validate on our own server!
-            BabySync.service.login(.Google, email: nil, password: nil, accessToken: self.info.accessToken)
+            BabySync.service.login(.Google, email: self.info.email, password: nil, accessToken: self.info.accessToken)
 
         } else {
             self.delegate?.loginError(.Google, error: error)

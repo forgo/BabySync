@@ -39,9 +39,48 @@ login: function * (next) {
         var login_test = yield validate.login(schema, login_pre, req);
         console.log("login_test = ", login_test);
         if (login_test.valid) {
-            // See if this username or email exists in the user database
+
             var userToCompare = null;
-            if (login_test.isEmailAsUsername) {
+
+            if (login_test.isValidOAuth) {
+                var method = login_test.data.authMethod
+                var oAuthEmail = login_test.data.email
+                var oAuth = login_test.data.oAuth
+
+                if(method == "Google") {
+                    // is google's success response property "id"?
+                    var googleUserByEmail = yield db.user_by_email_for_login(oAuthEmail, label, alias, schema);
+                    console.log("googleUserByEmail = ", googleUserByEmail);
+                    if (googleUserByEmail.sucess) {
+                        if(googleUserByEmail.data.length == 0) {
+                            // User not found at all, let's create one with a google ID!
+
+                        } else {
+                            // User found, let's check to see if they have a google ID set
+                            
+                        }
+                    } else {
+                        return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to login via Google")]);
+                    }
+                }
+                else if(method == "Facebook") {
+                    var facebookUserByEmail = yield db.user_by_email_for_login(oAuthEmail, label, alias, schema);
+                    console.log("facebookUserByEmail = ", facebookUserByEmail);
+                    if (facebookUserByEmail.success) {
+                        if(facebookUserByEmail.data.length == 0) {
+                            // User not found at all, let's create one with a facebook ID!
+
+                        } else {
+                            // User found, let's check to see if they have a facebook ID set
+                            
+                        }
+                    } else {
+                        return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to login via Facebook")]);
+                    }
+                }
+
+            }
+            else if (login_test.isEmailAsUsername) {
                 var userByEmail = yield db.user_by_email_for_login(login_test.data.email, label, alias, schema);
 
                 console.log("userByEmail = ", userByEmail);

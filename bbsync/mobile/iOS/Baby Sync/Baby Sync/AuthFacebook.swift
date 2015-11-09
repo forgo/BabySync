@@ -116,7 +116,7 @@ class AuthFacebook: NSObject, AuthAppMethod, AuthMethod, AuthFacebookDelegate {
             self.info.pic = UIImage(data: picData)!
             
             // We got some Facebook data, now let's validate on our own server!
-            BabySync.service.login(.Facebook, email: nil, password: nil, accessToken: self.info.accessToken)
+            BabySync.service.login(.Facebook, email: self.info.email, password: nil, accessToken: self.info.accessToken)
         }
     }
     

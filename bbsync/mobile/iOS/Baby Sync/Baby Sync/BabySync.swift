@@ -168,18 +168,18 @@ class BabySync {
         switch method {
         case .Google:
             print("About to login to BabySync using Google token...")
-            guard let token = accessToken else {
-                print("Aborting Google oAuth due to lack of accessToken")
+            guard let token = accessToken, e = email else {
+                print("Aborting Google oAuth due to lack of accessToken or email")
                 return
             }
-            loginParams = ["authMethod":AuthMethodType.Google.rawValue,"accessToken":token]
+            loginParams = ["authMethod":AuthMethodType.Google.rawValue,"accessToken":token,"email":e]
         case .Facebook:
             print("About to login to BabySync using Facebook token...")
-            guard let token = accessToken else {
-                print("Aborting Facebook oAuth due to lack of accessToken")
+            guard let token = accessToken, e = email else {
+                print("Aborting Facebook oAuth due to lack of accessToken or email")
                 return
             }
-            loginParams = ["authMethod":AuthMethodType.Facebook.rawValue,"accessToken":token]
+            loginParams = ["authMethod":AuthMethodType.Facebook.rawValue,"accessToken":token,"email":e]
         case .Custom:
             print("About to login to BabySync using Custom credentials...")
             guard let e = email, p = password else {
@@ -192,11 +192,13 @@ class BabySync {
         let endpointLogin = "user/auth"
         
         Alamofire.request(.POST, BabySyncConstant.baseURL+endpointLogin, parameters: loginParams).responseJSON { response in
+            
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
                 self.handleLogin(method, errors: self.errors(jsonErrors))
                 return
             }
+            
             if (self.parseLogin(method, jsonData: jsonData)) {
                 
                 if let j = self.jwt, e = self.email {

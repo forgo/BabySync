@@ -59,8 +59,9 @@ struct AuthUser: CreateableSecureStorable,
     }
     
     var description: String {
-        let tokenAbbreviation: String = self.accessToken.substringWithRange(Range<String.Index>(start: self.accessToken.startIndex, end: self.accessToken.startIndex.advancedBy(10))) + "..."
-        let jwtAbbreviation: String = self.jwt.substringWithRange(Range<String.Index>(start: self.jwt.startIndex, end: self.jwt.startIndex.advancedBy(10))) + "..."
+        
+        let tokenAbbreviation: String = self.accessToken.substringWithRange(Range<String.Index>(start: self.accessToken.startIndex, end: self.accessToken.startIndex.advancedBy(min(self.accessToken.characters.count, 10)))) + "..."
+        let jwtAbbreviation: String = self.jwt.substringWithRange(Range<String.Index>(start: self.jwt.startIndex, end: self.jwt.startIndex.advancedBy(min(self.jwt.characters.count, 10)))) + "..."
         return "AuthUser(\n\tservice: \(self.service)\n\tuserId: \(self.userId)\n\taccessToken: \(tokenAbbreviation)\n\tname: \(self.name)\n\temail: \(self.email)\n\tpic: \(self.pic)\n\tjwt: \(jwtAbbreviation)\n)"
     }
 }
