@@ -71,22 +71,22 @@ class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate 
     }
 
     // MARK: Validations
-    func emailFieldValid() -> Bool {
+    func emailFieldValid() -> String? {
         if let email = self.textFieldEmail.text {
             if (email.isValidEmail()) {
-                return true
+                return email
             }
         }
-        return false
+        return nil
     }
     
-    func passwordFieldValid() -> Bool {
+    func passwordFieldValid() -> String? {
         if let password = self.textFieldPassword.text {
             if (password.isValidPassword()) {
-                return true
+                return password
             }
         }
-        return false
+        return nil
     }
     
     func animateInvalid(textField: UITextField) {
@@ -125,25 +125,22 @@ class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate 
         else if(sender == self.buttonLoginCustom) {
             
             // Auto login when returning from password field and basic criteria met.
-            let emailValid = self.emailFieldValid()
-            let passwordValid = self.passwordFieldValid()
-            
-            if (!emailValid) {
+            guard let emailValid = self.emailFieldValid() else {
                 self.animateInvalid(self.textFieldEmail)
+                return
             }
             
-            if(!passwordValid) {
+            guard let passwordValid = self.passwordFieldValid() else {
                 self.animateInvalid(self.textFieldPassword)
+                return
             }
             
-            if(emailValid && passwordValid) {
-                if(Auth.sharedInstance.custom.isLoggedIn()) {
-                    print("Pressed Custom login button but already logged in.")
-                    self.performSegueWithIdentifier("SegueLoginToHome", sender: self)
-                }
-                else {
-                    Auth.sharedInstance.login(.Custom)
-                }
+            if(Auth.sharedInstance.custom.isLoggedIn()) {
+                print("Pressed Custom login button but already logged in.")
+                self.performSegueWithIdentifier("SegueLoginToHome", sender: self)
+            }
+            else {
+                Auth.sharedInstance.login(.Custom, email: emailValid, password: passwordValid)
             }
         }
     }

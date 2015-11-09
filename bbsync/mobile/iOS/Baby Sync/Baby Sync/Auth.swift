@@ -179,7 +179,7 @@ class Auth: NSObject, AuthDelegate {
         return self.google.isLoggedIn() || self.facebook.isLoggedIn() || self.custom.isLoggedIn()
     }
     
-    func login(method: AuthMethodType) {
+    func login(method: AuthMethodType, email: String? = nil, password: String? = nil) {
         switch method {
         case .Google:
             print("Attempting Google login.")
@@ -206,7 +206,12 @@ class Auth: NSObject, AuthDelegate {
                 self.authUIDelegate?.authUILoginDidSucceed()
             }
             else {
-                self.custom.login()
+                if let e = email, p = password {
+                    self.custom.login(e, password: p)
+                }
+                else {
+                    self.authUIDelegate?.authUILoginDidError()
+                }
             }
         }
     }

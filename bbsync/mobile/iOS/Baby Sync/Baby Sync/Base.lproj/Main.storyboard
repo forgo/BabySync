@@ -644,7 +644,7 @@
                                     </view>
                                 </subviews>
                                 <animations/>
-                                <color key="backgroundColor" red="0.63529411759999999" green="0.74117647060000003" blue="0.80784313730000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.38431372549019605" green="0.30980392156862746" blue="0.32549019607843138" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="idH-BM-ZR6" firstAttribute="leading" secondItem="iF1-12-SG3" secondAttribute="leading" id="DGz-5h-9iM"/>
                                     <constraint firstAttribute="height" constant="78" id="FlR-e9-6Ul"/>

@@ -17,4 +17,8 @@ struct AuthConstant {
         static let NeverLoggedInAuthMethod = "UserDefaultsNeverLoggedInAuthMethod"
         static let ProfilePic = UIImage(named: "defaultProfilePic")!
     }
+    struct Error {
+        static let Domain = NSBundle.mainBundle().bundleIdentifier
+        static let CodeClientBadEmailOrPassword = 701
+    }
 }

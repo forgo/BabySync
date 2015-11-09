@@ -308,7 +308,9 @@ module.exports = function Validate(errors) {
         googleResponseBody: function(body) {
             var response = {}
             console.log("googleResponseBody = ", body);
-
+            if(body.error || !body.name || !body.id) {
+                
+            }
 
             response.valid = true;
             return response;
@@ -316,8 +318,8 @@ module.exports = function Validate(errors) {
         ////////////////////////////////////////////////////////////////////////
         login: function(sch, pre, req) {
             return function * (next) {
+
                 var response = {};
-                var isEmailAsUsername = false;
 
                 // Valid Login Method Definitions
                 var authMethods = [{
@@ -336,76 +338,110 @@ module.exports = function Validate(errors) {
 
                 // Extract/delete authMethod and token key/value from login object
                 var authMethod = "Custom";
-                var accessToken = "";
                 if(pre.authMethod) {
                     var authMethodMatches = authMethods.filter(function(method) {
                         return method.type == pre.authMethod;
                     });
                     if (authMethodMatches.length == 1) {
+
+
+                        // email/username and password  unexpected with
+                        // accessToken for oAuth provider and vice-versa
+                        if((pre.email || pre.username || pre.password) && pre.accessToken) {
+                            response.valid = false;
+                            response.errors = [errors.LOGIN_FAILURE("expected credentials or accessToken, not both")];
+                            return response;
+                        }
+
                         authMethod = pre.authMethod;
                         delete pre.authMethod;
                         var method = authMethodMatches[0];
+
                         // No token was provided and auth method needs it
                         if(!pre.accessToken && method.validTokenURL != null) {
-                            reponse.valid = false;
+                            response.valid = false;
                             response.errors = [errors.LOGIN_TOKEN_EXPECTED(authMethod)];
                             return response;
                         }
                         // Token provided and we have an auth service to check against
                         else if(pre.accessToken && method.validTokenURL != null) {
-                            var tokenURL = method.validTokenURL.replace(/\{accessToken\}/, pre.token);
-                            console.log("TOKEN URL = ", tokenURL);
+
+                            var tokenURL = method.validTokenURL.replace(/\{accessToken\}/, pre.accessToken);
                             var options = { url: tokenURL };
                             var tokenCheckResponse = yield req(options);
+
                             var tokenCheckBody = JSON.parse(tokenCheckResponse.body);
                             var token_test = method.validateResponse(tokenCheckBody);
+                            console.log("TOKEN TEST = ", token_test);
                             if(!token_test.valid) {
                                 response.valid = false;
-                                response.errors = [errors.LOGIN_TOKEN_INVALID(loginType)];
+                                response.errors = [errors.LOGIN_TOKEN_INVALID(authMethod)];
                                 return response;
+                            }
+                            else {
+                                console.log("TOKEN TEST WAS VALID, data = ");
+                                console.log(token_test.data);
+                                // Effectively need to ADD the username here that comes 
+                                // back from oAuth validated token into our pre data
+                                // since 
                             }
                         }
                         else if(pre.accessToken && method.validTokenURL == null) {
                             response.valid = false;
-                            response.errors = [errors.LOGIN_TOKEN_UNVERIFIABLE(loginType)];
+                            response.errors = [errors.LOGIN_TOKEN_UNVERIFIABLE(authMethod)];
                         }
                     }
                     else {
                         response.valid = false;
-                        response.errors = [errors.LOGIN_TYPE_INVALID(pre.loginType)];
+                        response.errors = [errors.LOGIN_TYPE_INVALID(pre.authMethod)];
                         return response;
                     }
                 }
-                if(pre.token) {
-                    token = pre.token;
-                    delete pre.token;
+                else {
+                    response.valid = false;
+                    response.errors = [errors.LOGIN_TYPE_UNSPECIFIED()];
+                    return response;
                 }
 
-                // We only care about username and password for login schema
+                // Remove Non-Schema Validatable Items Already Processed
+                if(pre.authMethod) {
+                    delete pre.authMethod;
+                }
+
+                if(pre.accessToken) {
+                    delete pre.accessToken;
+                }
+
+                //////
+                var isEmailAsUsername = true;
+                if(pre.email && pre.username) {
+                    response.valid = false;
+                    response.errors = [errors.LOGIN_FAILURE("expected email or username, not both")];
+                    return response;
+                }
+
+                if(!pre.email && !pre.username) {
+                    response.valid = false;
+                    response.errors = [errors.LOGIN_FAILURE("expected email or username")];
+                    return response;
+                }
+
+                if(pre.username) {
+                    isEmailAsUsername = false
+                }
+                /////
+
+                // We only care about email/username and password for login schema
                 var modifiedSchema = sch.filter(function(s) {
-                    return (s.attribute == "username") || (s.attribute == "password");
+                    return (s.attribute == (isEmailAsUsername ? "email" : "username")) || (s.attribute == "password");
                 });
 
-                // If the username field appears to contain an email address (has an @ symbol)
-                // then create a modified schema object with proper email regex test
-                var schemaIndexUsername = modifiedSchema.map(function(s) {
-                    return s.attribute;
-                }).indexOf('username');
+                var login_schema_test = validate.schema(modifiedSchema, pre);
 
-                var schemaIndexEmail = modifiedSchema.map(function(s) {
-                    return s.attribute;
-                }).indexOf('email');
-
-                if (pre.username.indexOf('@') !== -1) {
-                    isEmailAsUsername = true;
-                    modifiedSchema[schemaIndexUsername].test = modifiedSchema[schemaIndexEmail].test;
-                }
-                var login_schema_test = validate.schema(modifiedSchema, login_pre);
                 if (login_schema_test.valid) {
                     response.valid = true;
                     response.data = login_schema_test.data;
                     response.isEmailAsUsername = isEmailAsUsername;
-                    response.loginType = loginType;
                 } 
                 else {
                     response.valid = false;

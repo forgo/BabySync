@@ -15,7 +15,7 @@ protocol AuthMethod {
     func isLoggedIn() -> Bool
     
     // Each auth method should have a way to initiate login
-    func login()
+    func login(email: String?, password: String?)
     
     // Each auth method should have a way to logout
     func logout()

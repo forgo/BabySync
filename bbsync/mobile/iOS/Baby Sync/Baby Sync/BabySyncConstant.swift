@@ -9,6 +9,14 @@
 import UIKit
 
 struct BabySyncConstant {
+
+    // Conditionally set host in DEBUG mode
+    #if DEBUG
+    static let baseURL: String = "http://localhost:8111/api/v1/"
+    #else
+    static let baseURL: String = "http://beyondaphelion/babysync/api/v1/"
+    #endif
+    
     struct Color {
         static let Dark = UIColor(red:0.38, green:0.31, blue:0.33, alpha:1.0)
         static let Mid = UIColor(red:0.78, green:0.77, blue:0.75, alpha:1.0)

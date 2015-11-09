@@ -121,6 +121,12 @@ module.exports = function Errors() {
                 message: type + " is an invalid login type"
             };
         },
+        LOGIN_TYPE_UNSPECIFIED: function() {
+            return {
+                code: 3004,
+                message: "login type not specified"
+            }
+        },
         LOGIN_TOKEN_EXPECTED: function(type) {
             return {
                 code: 3004,
@@ -138,7 +144,7 @@ module.exports = function Errors() {
                 code: 3006,
                 message: type + " login token unverifiable"
             };
-        }
+        },
         UNIDENTIFIABLE: function(id) {
             return {
                 code: 3003,

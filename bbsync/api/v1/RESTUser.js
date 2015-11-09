@@ -42,7 +42,10 @@ login: function * (next) {
             // See if this username or email exists in the user database
             var userToCompare = null;
             if (login_test.isEmailAsUsername) {
-                var userByEmail = yield db.user_by_email_for_login(login_test.data.username, label, alias, schema);
+                var userByEmail = yield db.user_by_email_for_login(login_test.data.email, label, alias, schema);
+
+                console.log("userByEmail = ", userByEmail);
+
                 if (userByEmail.success) {
                     if (userByEmail.data.length == 0) {
                         // Email not found (only return generic login failure error for security purposes)
@@ -90,9 +93,17 @@ login: function * (next) {
                         algorithm: 'RS256',
                         expiresInMinutes: 120
                     });
-                    return yield response.success({
-                        token: token
-                    });
+
+                    var responseObject = { token: token };
+                    if(login_test.isEmailAsUsername) {
+                        responseObject["email"] = userUpdate.data.email;
+                    }
+                    else {
+                        responseObject["username"] = userUpdate.data.username;
+                    }
+
+                    return yield response.success(responseObject);
+
                 } else {
                     // Failed to Update Last Login Date When Logging In
                     return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to update login_on")]);

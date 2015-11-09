@@ -14,6 +14,7 @@ import Foundation
 struct BabySyncErrors {
     struct Client {
         static let Parse = Error(code: 9999, message: "Client failed to parse response data.")
+        static let ParseToken = Error(code: 9998, message: "Client failed to parse BabySync login token.")
         static let ParseFamily = Error(code: 9998, message: "Client received unexpected Family data.")
         static let ParseParent = Error(code: 9997, message: "Client received unexpected Parent data.")
         static let ParseParents = Error(code: 9996, message: "Client received unexpected [Parent] data.")
@@ -24,8 +25,8 @@ struct BabySyncErrors {
 
 // MARK: - BabySyncDelegate Protocol
 protocol BabySyncDelegate {
+    func didLogin(email: String);
     func didFind(parent: Parent)
-    func didLogin(parent: Parent);
     func didCreate(family: Family)
     func didJoin(family: Family)
     func didMerge(family: Family)
@@ -38,12 +39,9 @@ class BabySync {
     
     var delegate: BabySyncDelegate?
     
-    // Conditionally set host in DEBUG mode
-    #if DEBUG
-        let baseURL: String = "http://localhost:8111/api/v1/"
-    #else
-        let baseURL: String = "http://beyondaphelion/babysync/api/v1/"
-    #endif
+    // MARK: - JWT to use for authenticated requests
+    // TODO: store the encrypted or some other way?
+    var token: String?
     
     // MARK: - Synced data arrays!
     var family: Family = Family()
@@ -75,14 +73,23 @@ class BabySync {
         return errors
     }
     
+    private func parseToken(jsonData: JSON) -> Bool {
+        guard let token: String = jsonData["token"].stringValue else {
+            self.handle([BabySyncErrors.Client.ParseToken])
+            return false
+        }
+        self.token = token
+        return true
+    }
+    
     private func parseFamily(jsonData: JSON) -> Bool {
         guard let family: Family = Family(family: jsonData["family"]) else {
             self.handle([BabySyncErrors.Client.ParseFamily])
-            return false;
+            return false
         }
         guard let parents: [Parent] = self.parentsFrom(jsonData) else {
             self.handle([BabySyncErrors.Client.ParseParents])
-            return false;
+            return false
         }
         guard let activities: [Activity] = self.activitiesFrom(jsonData) else {
             self.handle([BabySyncErrors.Client.ParseActivities])
@@ -135,9 +142,52 @@ class BabySync {
     }
     
     // MARK: - Primary Service Operations
+    func login(method: AuthMethodType, email: String? = nil, password: String? = nil, accessToken: String? = nil) {
+        
+        var loginParams: [String : AnyObject]?
+        
+        switch method {
+        case .Google:
+            print("About to login to BabySync using Google token...")
+            guard let token = accessToken else {
+                print("Aborting Google oAuth due to lack of accessToken")
+                return
+            }
+            loginParams = ["authMethod":AuthMethodType.Google.rawValue,"accessToken":token]
+        case .Facebook:
+            print("About to login to BabySync using Facebook token...")
+            guard let token = accessToken else {
+                print("Aborting Facebook oAuth due to lack of accessToken")
+                return
+            }
+            loginParams = ["authMethod":AuthMethodType.Facebook.rawValue,"accessToken":token]
+        case .Custom:
+            print("About to login to BabySync using Custom credentials...")
+            guard let e = email, p = password else {
+                print("Aborting Custom login due to lack of credentials")
+                return
+            }
+            loginParams = ["authMethod":AuthMethodType.Custom.rawValue,"email":e,"password":p]
+        }
+        
+        let endpointLogin = "user/auth"
+        
+        Alamofire.request(.POST, BabySyncConstant.baseURL+endpointLogin, parameters: loginParams).responseJSON { response in
+            let (jsonData, jsonErrors) = self.parse(response)
+            if (jsonErrors != nil) {
+                self.handle(self.errors(jsonErrors))
+                return
+            }
+            if (self.parseToken(jsonData)) {
+                self.delegate?.didLogin(<#T##email: String##String#>)
+            }
+        }
+    }
+    
+    
     func findParent(parentEmail: String) {
         let endpointFindParent = "parent/" + parentEmail
-        Alamofire.request(.GET, baseURL+endpointFindParent).responseJSON { response in
+        Alamofire.request(.GET, BabySyncConstant.baseURL+endpointFindParent).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
                 self.handle(self.errors(jsonErrors))
@@ -174,7 +224,7 @@ class BabySync {
         
         
         let endpointCreateFamily = "parent/"
-        Alamofire.request(.POST, baseURL+endpointCreateFamily, parameters: ["email":parentEmail]).responseJSON { response in
+        Alamofire.request(.POST, BabySyncConstant.baseURL+endpointCreateFamily, parameters: ["email":parentEmail]).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
                 self.handle(self.errors(jsonErrors))
@@ -188,7 +238,7 @@ class BabySync {
     
     func joinFamily(familyID: Int, parentEmail: String) {
         let endpointJoinFamily = "parent/join/" + String(familyID)
-        Alamofire.request(.PUT, baseURL+endpointJoinFamily, parameters: ["email":parentEmail]).responseJSON { response in
+        Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointJoinFamily, parameters: ["email":parentEmail]).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
                 self.handle(self.errors(jsonErrors))
@@ -202,7 +252,7 @@ class BabySync {
     
     func mergeFamily(familyID: Int, parentEmail: String) {
         let endpointMergeFamily = "parent/merge/" + String(familyID)
-        Alamofire.request(.PUT, baseURL+endpointMergeFamily, parameters: ["email":parentEmail]).responseJSON { response in
+        Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointMergeFamily, parameters: ["email":parentEmail]).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
                 self.handle(self.errors(jsonErrors))
@@ -216,7 +266,7 @@ class BabySync {
     
     func detachFamily(familyID: Int, parentEmail: String) {
         let endpointDetachFamily = "parent/detach"
-        Alamofire.request(.PUT, baseURL+endpointDetachFamily, parameters: ["email":parentEmail]).responseJSON { response in
+        Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointDetachFamily, parameters: ["email":parentEmail]).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
                 self.handle(self.errors(jsonErrors))

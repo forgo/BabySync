@@ -63,7 +63,7 @@ module.exports = function User(RESTUser, db, validate, errors, response) {
     }, {
         attribute: "username",
         type: "text",
-        required: true,
+        required: false,
         test: userValidate.username()
     }, {
         attribute: "password",

@@ -44,7 +44,7 @@ class AuthFacebook: NSObject, AuthAppMethod, AuthMethod {
         }
     }
     
-    func login() {
+    func login(email: String? = nil, password: String? = nil) {
         self.loginManager.logInWithReadPermissions(["public_profile", "email"], fromViewController: Auth.sharedInstance.loginViewController, handler: self.loginHandler)
     }
     

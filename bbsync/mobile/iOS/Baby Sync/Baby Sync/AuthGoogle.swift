@@ -49,7 +49,7 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
         }
     }
     
-    func login() {
+    func login(email: String? = nil, password: String? = nil) {
         self.signIn.signIn();
     }
 
