@@ -16,10 +16,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
         // Tell Auth to delegate for all auth methods
         Auth.sharedInstance.custom.delegate = Auth.sharedInstance
         Auth.sharedInstance.google.delegate = Auth.sharedInstance
         Auth.sharedInstance.facebook.delegate = Auth.sharedInstance
+        
+        // Tell individual auth methods to delegate for BabySync
+        BabySync.service.delegateLoginCustom = Auth.sharedInstance.custom
+        BabySync.service.delegateLoginGoogle = Auth.sharedInstance.google
+        BabySync.service.delegateLoginFacebook = Auth.sharedInstance.facebook
 
         // Configure Google Sign-In
         Auth.sharedInstance.google.signIn.uiDelegate = Auth.sharedInstance.google

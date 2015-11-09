@@ -9,15 +9,43 @@
 import Alamofire
 import UIKit
 
+// MARK: - AuthCustomDelegate Protocol
+protocol AuthCustomDelegate {
+    func didLogin(jwt: String, email: String)
+    func didEncounterLogin(errors: [Error])
+}
+
+// MARK: - Custom Info Struct
+struct AuthCustomInfo {
+    var userId: String = ""
+    var accessToken: String = ""
+    var name: String = ""
+    var email: String = ""
+    var pic: UIImage = AuthConstant.Default.ProfilePic
+    
+    init() {
+        self.userId = ""
+        self.accessToken = ""
+        self.name = ""
+        self.email = ""
+        self.pic = AuthConstant.Default.ProfilePic
+    }
+}
+
 // MARK: - AuthCustom
-class AuthCustom: NSObject, AuthAppMethod, AuthMethod, BabySyncLoginDelegate {
+class AuthCustom: NSObject, AuthAppMethod, AuthMethod, AuthCustomDelegate {
     
     // Singleton
     static let sharedInstance = AuthCustom()
-    private override init() {}
+    private override init() {
+        self.info = AuthCustomInfo()
+    }
     
     // Auth method classes invokes AuthDelegate methods to align SDK differences
     var delegate: AuthDelegate?
+    
+    // To keep track of internally until login process resolves
+    var info: AuthCustomInfo
     
     // MARK: - AuthAppMethod Protocol
     func configure(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
@@ -35,14 +63,13 @@ class AuthCustom: NSObject, AuthAppMethod, AuthMethod, BabySyncLoginDelegate {
     
     func login(email: String?, password: String?) {
         if let e = email, p = password {
-            BabySync.service.delegateLogin = Auth.sharedInstance.custom // necessary to switch for each auth method!
             BabySync.service.login(.Custom, email: e, password: p, accessToken: nil)
         }
         else {
-            if let domain = AuthConstant.Error.Domain {
-                let error: NSError = NSError(domain: domain, code: AuthConstant.Error.CodeClientBadEmailOrPassword , userInfo: nil)
-                self.delegate?.loginError(.Custom, error: error)
-            }
+            let errorRef = AuthConstant.Error.Client.BadEmailOrPassword.self
+            let error: Error = Error(code: errorRef.code, message: errorRef.message)
+            let nsError: NSError? = BabySync.nsErrorFrom(error)
+            self.delegate?.loginError(.Custom, error: nsError)
         }
     }
     
@@ -52,9 +79,9 @@ class AuthCustom: NSObject, AuthAppMethod, AuthMethod, BabySyncLoginDelegate {
         self.delegate?.didLogout(.Custom)
     }
     
-    // MARK: - BabySyncLoginDelegate
-    func didLogin(method: AuthMethodType, jwt: String, email: String, accessToken: String) {
-        let authUser = AuthUser(service: .Custom, userId: "", accessToken: accessToken, name: "Some Person", email: email, pic: AuthConstant.Default.ProfilePic, jwt: jwt)
+    // MARK: - AuthCustomDelegate
+    func didLogin(jwt: String, email: String) {
+        let authUser = AuthUser(service: .Custom, userId: "", accessToken: "", name: "Some Person", email: email, pic: AuthConstant.Default.ProfilePic, jwt: jwt)
         self.delegate?.loginSuccess(.Custom, user: authUser)
     }
     
@@ -65,4 +92,5 @@ class AuthCustom: NSObject, AuthAppMethod, AuthMethod, BabySyncLoginDelegate {
             self.delegate?.loginError(.Custom, error: e)
         }
     }
+
 }

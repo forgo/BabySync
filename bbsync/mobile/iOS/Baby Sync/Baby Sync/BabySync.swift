@@ -25,11 +25,6 @@ struct BabySyncErrors {
 }
 
 // MARK: - BabySyncDelegate Protocol
-protocol BabySyncLoginDelegate {
-    func didLogin(method: AuthMethodType, jwt: String, email: String, accessToken: String)
-    func didEncounterLogin(errors: [Error])
-}
-
 protocol BabySyncDelegate {
     func didFind(parent: Parent)
     func didCreate(family: Family)
@@ -42,7 +37,9 @@ protocol BabySyncDelegate {
 // MARK: - BabySync Service
 class BabySync {
     
-    var delegateLogin: BabySyncLoginDelegate?
+    var delegateLoginCustom: AuthCustomDelegate?
+    var delegateLoginGoogle: AuthGoogleDelegate?
+    var delegateLoginFacebook: AuthFacebookDelegate?
     var delegate: BabySyncDelegate?
     
     // MARK: - JWT to use for authenticated requests
@@ -80,13 +77,13 @@ class BabySync {
         return errors
     }
     
-    private func parseLogin(jsonData: JSON) -> Bool {
+    private func parseLogin(method: AuthMethodType, jsonData: JSON) -> Bool {
         guard let token: String = jsonData["token"].stringValue else {
-            self.handleLogin([BabySyncErrors.Client.ParseLoginToken])
+            self.handleLogin(method, errors: [BabySyncErrors.Client.ParseLoginToken])
             return false
         }
         guard let email: String = jsonData["email"].stringValue else {
-            self.handleLogin([BabySyncErrors.Client.ParseLoginEmail])
+            self.handleLogin(method, errors: [BabySyncErrors.Client.ParseLoginEmail])
             return false
         }
         self.jwt = token
@@ -151,8 +148,16 @@ class BabySync {
         self.delegate?.didEncounter(errors)
     }
     
-    private func handleLogin(errors: [Error]) {
-        self.delegateLogin?.didEncounterLogin(errors)
+    // For errors encountered during login, delegate out to appropriate auth method
+    private func handleLogin(method: AuthMethodType, errors: [Error]) {
+        switch method {
+        case .Google:
+            self.delegateLoginGoogle?.didEncounterLogin(errors)
+        case .Facebook:
+            self.delegateLoginFacebook?.didEncounterLogin(errors)
+        case .Custom:
+            self.delegateLoginCustom?.didEncounterLogin(errors)
+        }
     }
     
     // MARK: - Primary Service Operations
@@ -189,16 +194,33 @@ class BabySync {
         Alamofire.request(.POST, BabySyncConstant.baseURL+endpointLogin, parameters: loginParams).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
-                self.handleLogin(self.errors(jsonErrors))
+                self.handleLogin(method, errors: self.errors(jsonErrors))
                 return
             }
-            if (self.parseLogin(jsonData)) {
-                if let tok = accessToken {
-                    self.delegateLogin?.didLogin(method, jwt: self.jwt!, email: self.email!, accessToken: tok)
+            if (self.parseLogin(method, jsonData: jsonData)) {
+                
+                if let j = self.jwt, e = self.email {
+                    switch method {
+                    case .Google:
+                        self.delegateLoginGoogle?.didLogin(j, email: e)
+                    case .Facebook:
+                        self.delegateLoginFacebook?.didLogin(j, email: e)
+                    case .Custom:
+                        self.delegateLoginCustom?.didLogin(j, email: e)
+                    }
                 }
                 else {
-                    self.delegateLogin?.didLogin(method, jwt: self.jwt!, email: self.email!, accessToken: "")
-                }                
+                    let errorRef = AuthConstant.Error.Client.BadEmailOrPassword.self
+                    let error: Error = Error(code: errorRef.code, message: errorRef.message)
+                    switch method {
+                    case .Google:
+                        self.delegateLoginGoogle?.didEncounterLogin([error])
+                    case .Facebook:
+                        self.delegateLoginFacebook?.didEncounterLogin([error])
+                    case .Custom:
+                        self.delegateLoginCustom?.didEncounterLogin([error])
+                    }
+                }
             }
         }
     }

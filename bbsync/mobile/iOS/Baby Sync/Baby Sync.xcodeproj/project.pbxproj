@@ -41,6 +41,8 @@
 		4F53D9371BBBC15100EB598F /* SourceCodePro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F53D9351BBBBEB800EB598F /* SourceCodePro-Regular.ttf */; };
 		4FA4BE8A1BE5009700580FD3 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA4BE891BE5009700580FD3 /* TimerView.swift */; };
 		4FB1B71A1BE460D2007CA316 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB1B7191BE460D2007CA316 /* StringExtension.swift */; };
+		4FB636F41BF071CB00D7EC43 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB636F31BF071CB00D7EC43 /* ErrorView.swift */; };
+		4FB636F61BF1051D00D7EC43 /* ErrorContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB636F51BF1051D00D7EC43 /* ErrorContentView.swift */; };
 		4FB801BC1BEED623007AA09B /* BabySyncConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB801BB1BEED623007AA09B /* BabySyncConstant.swift */; };
 		4FB801BE1BEFA6C4007AA09B /* BabyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB801BD1BEFA6C4007AA09B /* BabyButton.swift */; };
 		4FB801C01BEFAE5C007AA09B /* BabyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB801BF1BEFAE5C007AA09B /* BabyTextField.swift */; };
@@ -131,6 +133,8 @@
 		4F53D9351BBBBEB800EB598F /* SourceCodePro-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceCodePro-Regular.ttf"; sourceTree = "<group>"; };
 		4FA4BE891BE5009700580FD3 /* TimerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		4FB1B7191BE460D2007CA316 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		4FB636F31BF071CB00D7EC43 /* ErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		4FB636F51BF1051D00D7EC43 /* ErrorContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorContentView.swift; sourceTree = "<group>"; };
 		4FB801BB1BEED623007AA09B /* BabySyncConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BabySyncConstant.swift; sourceTree = "<group>"; };
 		4FB801BD1BEFA6C4007AA09B /* BabyButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BabyButton.swift; sourceTree = "<group>"; };
 		4FB801BF1BEFAE5C007AA09B /* BabyTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BabyTextField.swift; sourceTree = "<group>"; };
@@ -187,9 +191,9 @@
 				4F08A3821BDFF45E000DE4EF /* Auth.swift */,
 				4F08A3831BDFF45E000DE4EF /* AuthAppMethod.swift */,
 				4F08A3841BDFF45E000DE4EF /* AuthConstant.swift */,
-				4F08A3851BDFF45E000DE4EF /* AuthCustom.swift */,
 				4F08A3861BDFF45E000DE4EF /* AuthDefaults.swift */,
 				4F08A3871BDFF45E000DE4EF /* AuthDelegate.swift */,
+				4F08A3851BDFF45E000DE4EF /* AuthCustom.swift */,
 				4F08A3881BDFF45E000DE4EF /* AuthFacebook.swift */,
 				4F08A3891BDFF45E000DE4EF /* AuthGoogle.swift */,
 				4F08A38A1BDFF45E000DE4EF /* AuthMethod.swift */,
@@ -325,6 +329,8 @@
 				4FFAE1E81BC1E57100FB2B73 /* IconCollectionViewCell.swift */,
 				4FA4BE891BE5009700580FD3 /* TimerView.swift */,
 				4FB801BD1BEFA6C4007AA09B /* BabyButton.swift */,
+				4FB636F31BF071CB00D7EC43 /* ErrorView.swift */,
+				4FB636F51BF1051D00D7EC43 /* ErrorContentView.swift */,
 				4FB801BF1BEFAE5C007AA09B /* BabyTextField.swift */,
 			);
 			name = Views;
@@ -488,6 +494,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FB636F61BF1051D00D7EC43 /* ErrorContentView.swift in Sources */,
 				4FFAE1EB1BC2161400FB2B73 /* BabyViewController.swift in Sources */,
 				4F08A38F1BDFF45E000DE4EF /* AuthAppMethod.swift in Sources */,
 				4F446ABD1BCE071100D0AD64 /* JSONExtension.swift in Sources */,
@@ -499,6 +506,7 @@
 				4FD82EEF1BBB6ED700A06E0A /* Parent.swift in Sources */,
 				4FB801BC1BEED623007AA09B /* BabySyncConstant.swift in Sources */,
 				4F23A8BF1BBBD7C7001FBCFF /* UIApplicationExtensions.swift in Sources */,
+				4FB636F41BF071CB00D7EC43 /* ErrorView.swift in Sources */,
 				4F08A3991BDFF45E000DE4EF /* AuthUser.swift in Sources */,
 				4FD82EF11BBB6EDF00A06E0A /* Family.swift in Sources */,
 				4F08A3941BDFF45E000DE4EF /* AuthFacebook.swift in Sources */,

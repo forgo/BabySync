@@ -9,7 +9,14 @@
 import Google
 import UIKit
 
-struct GoogleInfo {
+// MARK: - AuthGoogle Delegate Protocol
+protocol AuthGoogleDelegate {
+    func didLogin(jwt: String, email: String)
+    func didEncounterLogin(errors: [Error])
+}
+
+// MARK: - Google Info Struct
+struct AuthGoogleInfo {
     var userId: String = ""
     var accessToken: String = ""
     var name: String = ""
@@ -26,23 +33,25 @@ struct GoogleInfo {
 }
 
 // MARK: - AuthGoogle
-class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSignInUIDelegate, BabySyncLoginDelegate {
+class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSignInUIDelegate, AuthGoogleDelegate {
     
     // Singleton
     static let sharedInstance = AuthGoogle()
     private override init() {
         self.signIn = GIDSignIn.sharedInstance()
         self.signIn.shouldFetchBasicProfile = true
-        self.info = GoogleInfo()
+        self.info = AuthGoogleInfo()
     }
     
     // Auth method classes invokes AuthDelegate methods to align SDK differences
     var delegate: AuthDelegate?
     
+    // Google provided managers
     var signIn: GIDSignIn
     private var signInButton: GIDSignInButton!
     
-    private var info: GoogleInfo
+    // To keep track of internally until login process resolves
+    private var info: AuthGoogleInfo
     
     // MARK: - AuthAppMethod Protocol
     func configure(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
@@ -111,7 +120,6 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
             }
             
             // We got some Google data, now let's validate on our own server!
-            BabySync.service.delegateLogin = Auth.sharedInstance.google // necessary to switch for each auth method!
             BabySync.service.login(.Google, email: nil, password: nil, accessToken: self.info.accessToken)
 
         } else {
@@ -155,10 +163,10 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
         Auth.sharedInstance.loginViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    // MARK: - BabySyncLoginDelegate
-    func didLogin(method: AuthMethodType, jwt: String, email: String, accessToken: String) {
-        let authUser = AuthUser(service: method, userId: self.info.userId, accessToken: accessToken, name: self.info.name, email: email, pic: self.info.pic, jwt: jwt)
-        self.delegate?.loginSuccess(method, user: authUser)
+    // MARK: - AuthGoogleDelegate
+    func didLogin(jwt: String, email: String) {
+        let authUser = AuthUser(service: .Google, userId: self.info.userId, accessToken: self.info.accessToken, name: self.info.name, email: self.info.email, pic: self.info.pic, jwt: jwt)
+        self.delegate?.loginSuccess(.Google, user: authUser)
     }
     
     func didEncounterLogin(errors: [Error]) {

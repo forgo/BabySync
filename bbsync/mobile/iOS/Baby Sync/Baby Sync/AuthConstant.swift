@@ -19,6 +19,11 @@ struct AuthConstant {
     }
     struct Error {
         static let Domain = NSBundle.mainBundle().bundleIdentifier
-        static let CodeClientBadEmailOrPassword = 701
+        struct Client {
+            struct BadEmailOrPassword {
+                static let code = 701
+                static let message = "Bad email or password."
+            }
+        }
     }
 }

@@ -10,7 +10,14 @@ import FBSDKCoreKit
 import FBSDKLoginKit
 import UIKit
 
-struct FacebookInfo {
+// MARK: - AuthFacebook Delegate Protocol
+protocol AuthFacebookDelegate {
+    func didLogin(jwt: String, email: String)
+    func didEncounterLogin(errors: [Error])
+}
+
+// MARK: - Facebook Info Struct
+struct AuthFacebookInfo {
     var userId: String = ""
     var accessToken: String = ""
     var name: String = ""
@@ -27,21 +34,23 @@ struct FacebookInfo {
 }
 
 // MARK: - AuthFacebook
-class AuthFacebook: NSObject, AuthAppMethod, AuthMethod, BabySyncLoginDelegate {
+class AuthFacebook: NSObject, AuthAppMethod, AuthMethod, AuthFacebookDelegate {
     
     // Singleton
     static let sharedInstance = AuthFacebook()
     private override init() {
         self.loginManager.loginBehavior = .Native
-        self.info = FacebookInfo()
+        self.info = AuthFacebookInfo()
     }
     
     // Auth method classes invokes AuthDelegate methods to align SDK differences
     var delegate: AuthDelegate?
     
+    // Facebook provided managers
     private let loginManager: FBSDKLoginManager = FBSDKLoginManager()
     
-    private var info: FacebookInfo
+    // To keep track of internally until login process resolves
+    private var info: AuthFacebookInfo
     
     // MARK: - AuthAppMethod Protocol
     func configure(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
@@ -107,15 +116,14 @@ class AuthFacebook: NSObject, AuthAppMethod, AuthMethod, BabySyncLoginDelegate {
             self.info.pic = UIImage(data: picData)!
             
             // We got some Facebook data, now let's validate on our own server!
-            BabySync.service.delegateLogin = Auth.sharedInstance.facebook // necessary to switch for each auth method!
             BabySync.service.login(.Facebook, email: nil, password: nil, accessToken: self.info.accessToken)
         }
     }
     
-    // MARK: - BabySyncLoginDelegate
-    func didLogin(method: AuthMethodType, jwt: String, email: String, accessToken: String) {
-        let authUser = AuthUser(service: method, userId: self.info.userId, accessToken: accessToken, name: self.info.name, email: email, pic: self.info.pic, jwt: jwt)
-        self.delegate?.loginSuccess(method, user: authUser)
+    // MARK: - AuthFacebookDelegate
+    func didLogin(jwt: String, email: String) {
+        let authUser = AuthUser(service: .Facebook, userId: self.info.userId, accessToken: self.info.accessToken, name: self.info.name, email: email, pic: self.info.pic, jwt: jwt)
+        self.delegate?.loginSuccess(.Facebook, user: authUser)
     }
     
     func didEncounterLogin(errors: [Error]) {

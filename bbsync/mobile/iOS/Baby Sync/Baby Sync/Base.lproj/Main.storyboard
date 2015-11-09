@@ -19,6 +19,8 @@
             <string>ADAM.CGPRO</string>
             <string>ADAM.CGPRO</string>
             <string>ADAM.CGPRO</string>
+            <string>ADAM.CGPRO</string>
+            <string>ADAM.CGPRO</string>
         </mutableArray>
         <mutableArray key="FACEBOLF.OTF">
             <string>FacebookLetterFaces</string>
@@ -251,6 +253,40 @@
                                 <color key="shadowColor" red="0.78431372549019607" green="0.77254901960784317" blue="0.75294117647058822" alpha="1" colorSpace="calibratedRGB"/>
                                 <size key="shadowOffset" width="2" height="1"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="laV-rZ-Imv" customClass="ErrorView" customModule="Baby_Sync" customModuleProvider="target">
+                                <rect key="frame" x="20" y="200" width="560" height="200"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oPh-Er-x44">
+                                        <rect key="frame" x="8" y="8" width="544" height="42"/>
+                                        <animations/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="42" id="sQ4-8H-TLF"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="ADAM.CGPRO" family="ADAM.CG PRO" pointSize="20"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N6P-wM-Ovh">
+                                        <rect key="frame" x="8" y="58" width="544" height="134"/>
+                                        <animations/>
+                                        <fontDescription key="fontDescription" name="ADAM.CGPRO" family="ADAM.CG PRO" pointSize="15"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <animations/>
+                                <color key="backgroundColor" red="0.74509803921568629" green="0.86274509803921573" blue="0.90588235294117647" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="oPh-Er-x44" firstAttribute="leading" secondItem="laV-rZ-Imv" secondAttribute="leading" constant="8" id="3cA-BZ-qCh"/>
+                                    <constraint firstItem="N6P-wM-Ovh" firstAttribute="top" secondItem="oPh-Er-x44" secondAttribute="bottom" constant="8" id="S26-Ml-bjV"/>
+                                    <constraint firstAttribute="bottom" secondItem="N6P-wM-Ovh" secondAttribute="bottom" constant="8" id="ZaA-hU-nBA"/>
+                                    <constraint firstItem="oPh-Er-x44" firstAttribute="top" secondItem="laV-rZ-Imv" secondAttribute="top" constant="8" id="chU-lM-3rn"/>
+                                    <constraint firstAttribute="height" constant="200" id="dfn-ao-abT"/>
+                                    <constraint firstAttribute="trailing" secondItem="N6P-wM-Ovh" secondAttribute="trailing" constant="8" id="hlo-Mp-Jyd"/>
+                                    <constraint firstItem="N6P-wM-Ovh" firstAttribute="leading" secondItem="laV-rZ-Imv" secondAttribute="leading" constant="8" id="uQM-vK-C5g"/>
+                                    <constraint firstAttribute="trailing" secondItem="oPh-Er-x44" secondAttribute="trailing" constant="8" id="ufS-8W-lI7"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" red="0.49411764705882355" green="0.62352941176470589" blue="0.71764705882352942" alpha="1" colorSpace="calibratedRGB"/>
@@ -258,7 +294,10 @@
                             <constraint firstItem="u9a-ea-85Y" firstAttribute="trailing" secondItem="g1A-H9-0nT" secondAttribute="trailingMargin" id="8zV-RW-N1z"/>
                             <constraint firstItem="Qq0-md-TA5" firstAttribute="top" secondItem="5QK-Kn-1xh" secondAttribute="bottom" constant="20" id="JNG-rx-Yka"/>
                             <constraint firstItem="5QK-Kn-1xh" firstAttribute="trailing" secondItem="g1A-H9-0nT" secondAttribute="trailingMargin" id="PGP-Rb-RQK"/>
+                            <constraint firstItem="laV-rZ-Imv" firstAttribute="centerY" secondItem="g1A-H9-0nT" secondAttribute="centerY" id="e11-fg-bj3"/>
+                            <constraint firstItem="laV-rZ-Imv" firstAttribute="leading" secondItem="g1A-H9-0nT" secondAttribute="leadingMargin" id="ebv-Qy-jQ0"/>
                             <constraint firstItem="u9a-ea-85Y" firstAttribute="top" secondItem="Dlw-97-vcs" secondAttribute="bottom" constant="8" id="g79-lV-sdg"/>
+                            <constraint firstItem="laV-rZ-Imv" firstAttribute="trailing" secondItem="g1A-H9-0nT" secondAttribute="trailingMargin" id="hAN-ej-wcM"/>
                             <constraint firstItem="5QK-Kn-1xh" firstAttribute="leading" secondItem="g1A-H9-0nT" secondAttribute="leadingMargin" id="tK5-xA-hRK"/>
                             <constraint firstItem="u9a-ea-85Y" firstAttribute="leading" secondItem="g1A-H9-0nT" secondAttribute="leadingMargin" id="xL7-9a-TQC"/>
                         </constraints>
