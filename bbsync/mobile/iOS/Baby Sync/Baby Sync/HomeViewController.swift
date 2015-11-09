@@ -166,8 +166,9 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     }
     
-    // UIPopoverPresentationControllerDelegate
+    // MARK: - UIPopoverPresentationControllerDelegate
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+        // This allows the popover to not take over the whole screen
         return UIModalPresentationStyle.None
     }
     

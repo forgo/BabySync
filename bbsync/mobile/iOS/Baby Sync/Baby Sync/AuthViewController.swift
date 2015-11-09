@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate {
+class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate, UIPopoverPresentationControllerDelegate, ErrorViewDelegate {
 
     var currentTextFieldOffset: CGFloat = 0.0
     
@@ -153,6 +153,12 @@ class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate 
 //            let homeVC: HomeViewController = segue.destinationViewController as! HomeViewController
             //homeVC.isTest = self.switchBypass.on
         }
+        else if (segue.identifier == "SegueErrorPopover") {
+            let errorPopupVC: ErrorViewController = segue.destinationViewController as! ErrorViewController
+
+            errorPopupVC.popoverPresentationController!.delegate = self
+            errorPopupVC.delegate = self
+        }
     }
     
     @IBAction func prepareForUnwindToLogin(segue: UIStoryboardSegue) {
@@ -162,6 +168,17 @@ class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate 
         if (segue.identifier == "UnwindSegueHomeToLogin") {
             
         }
+    }
+    
+    // MARK: - UIPopoverPresentationControllerDelegate
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+        // This allows the popover to not take over the whole screen
+        return UIModalPresentationStyle.None
+    }
+    
+    // MARK: - ErrorViewDelegate
+    func didDismiss() {
+        print("didDismiss")
     }
     
     // MARK: - AuthUIDelegate
@@ -176,6 +193,7 @@ class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate 
     
     func authUILoginDidError() {
         print("Login was unsuccessful")
+        self.performSegueWithIdentifier("SegueErrorPopover", sender: self)
     }
     
     // MARK: Touch Interactions
