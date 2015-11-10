@@ -79,38 +79,43 @@ class Auth: NSObject, AuthDelegate {
     var custom: AuthCustom = AuthCustom.sharedInstance
     
     // MARK: - AuthDelegate
-    
-    func loginSuccess(method: AuthMethodType, user: AuthUser) {
-        switch method {
-        case .Google:
-            print("Google login success.")
-            self.currentAuthMethod = .Google
-        case .Facebook:
-            print("Facebook login success.")
-            self.currentAuthMethod = .Facebook
-        case .Custom:
-            print("Custom login success.")
-            self.currentAuthMethod = .Custom
+    func loginSuccess(method: AuthMethodType, user: AuthUser, wasAlreadyLoggedIn: Bool = false) {
+        
+        if(wasAlreadyLoggedIn) {
+            self.authUIDelegate?.authUILoginDidSucceed()
         }
-        
-        self.securedUser = user;
-        print(self.securedUser.description)
-
-        do {
-            try self.securedUser.deleteFromSecureStore()
-        } catch {
-            print("Something went wrong trying to delete existing secure store user. Perhaps this is your first login, and there's nothing to delete.")
+        else {
+            switch method {
+            case .Google:
+                print("Google login success.")
+                self.currentAuthMethod = .Google
+            case .Facebook:
+                print("Facebook login success.")
+                self.currentAuthMethod = .Facebook
+            case .Custom:
+                print("Custom login success.")
+                self.currentAuthMethod = .Custom
+            }
+            
+            self.securedUser = user;
+            print(self.securedUser.description)
+            
+            do {
+                try self.securedUser.deleteFromSecureStore()
+            } catch {
+                print("Something went wrong trying to delete existing secure store user. Perhaps this is your first login, and there's nothing to delete.")
+            }
+            
+            do {
+                try self.securedUser.createInSecureStore()
+            } catch {
+                print("Something went wrong trying to create secure store user")
+            }
+            
+            // TODO: something
+            
+            self.authUIDelegate?.authUILoginDidSucceed()
         }
-        
-        do {
-            try self.securedUser.createInSecureStore()
-        } catch {
-            print("Something went wrong trying to create secure store user")
-        }
-        
-        // TODO: something
-        
-        self.authUIDelegate?.authUILoginDidSucceed()
     }
     
     func loginCancel(method: AuthMethodType) {
@@ -135,6 +140,16 @@ class Auth: NSObject, AuthDelegate {
         case .Custom:
             print("Custom login error.")
         }
+        
+        // To prevent bypass of login screen after error
+        self.logout()
+        do {
+            try self.securedUser.deleteFromSecureStore()
+        } catch {
+            print("Something went wrong trying to delete existing secure store user. Perhaps this is your first login, and there's nothing to delete.")
+        }
+        
+        
         self.authUIDelegate?.authUILoginDidError(error)
     }
     
@@ -173,7 +188,7 @@ class Auth: NSObject, AuthDelegate {
             print("Attempting Google login.")
             if(self.google.isLoggedIn()) {
                 print("Already logged in to Google.")
-                self.authUIDelegate?.authUILoginDidSucceed()
+                self.loginSuccess(method, user: self.securedUser, wasAlreadyLoggedIn: true)
             }
             else {
                 self.google.login()
@@ -182,7 +197,7 @@ class Auth: NSObject, AuthDelegate {
             print("Attempting Facebook login.")
             if(self.facebook.isLoggedIn()) {
                 print("Already logged in to Facebook.")
-                self.authUIDelegate?.authUILoginDidSucceed()
+                self.loginSuccess(method, user: self.securedUser, wasAlreadyLoggedIn: true)
             }
             else {
                 self.facebook.login()
@@ -191,7 +206,7 @@ class Auth: NSObject, AuthDelegate {
             print("Attempting Custom login.")
             if(self.custom.isLoggedIn()) {
                 print("Already logged in to Custom.")
-                self.authUIDelegate?.authUILoginDidSucceed()
+                self.loginSuccess(method, user: self.securedUser, wasAlreadyLoggedIn: true)
             }
             else {
                 if let e = email, p = password {

@@ -58,7 +58,7 @@ class TimerView: UIView {
     func setupGradient() {
         self.layerGradient = self.createLayerGradient()
         if let gradient = self.layerGradient {
-            print("setting up gradient layer")
+//            print("setting up gradient layer")
             gradient.removeFromSuperlayer()
             self.layer.addSublayer(gradient)
         }
@@ -67,7 +67,7 @@ class TimerView: UIView {
     func setupOverlay() {
         self.layerGradientOverlay = self.createLayerGradientOverlay()
         if let overlay = self.layerGradientOverlay {
-            print("setting up overlay layer")
+//            print("setting up overlay layer")
             overlay.removeFromSuperlayer()
             self.layer.addSublayer(overlay)
         }
@@ -80,7 +80,7 @@ class TimerView: UIView {
         if let maskActive = self.layerMeterMaskActive,
            let maskInactive = self.layerMeterMaskInactive {
             
-            print("setting up active/inactive mask layer")
+//            print("setting up active/inactive mask layer")
             maskActive.removeFromSuperlayer()
             maskInactive.removeFromSuperlayer()
             
@@ -90,7 +90,7 @@ class TimerView: UIView {
 
             }
             else {
-                print("no gradient overlay layer to mask")
+//                print("no gradient overlay layer to mask")
             }
             
         }
@@ -99,7 +99,7 @@ class TimerView: UIView {
     func setupCenter() {
         self.layerMeterCenter = self.createLayerMeterCenter()
         if let center = self.layerMeterCenter {
-            print("setting up center layer")
+//            print("setting up center layer")
             center.removeFromSuperlayer()
             self.layer.addSublayer(center)
         }
@@ -254,7 +254,7 @@ class TimerView: UIView {
     }
     
     override func drawRect(rect: CGRect) {
-        let startTime: CFAbsoluteTime = CFAbsoluteTimeGetCurrent()
+//        let startTime: CFAbsoluteTime = CFAbsoluteTimeGetCurrent()
         
         let nTicksActiveChanged: Bool = self.nTicksActiveChanged()
         
@@ -268,8 +268,8 @@ class TimerView: UIView {
             self.setupMasks()
         }
         
-        let ms = 1000.0 * (CFAbsoluteTimeGetCurrent() - startTime)
-        print("drawRect takes: \(ms)ms")
+//        let ms = 1000.0 * (CFAbsoluteTimeGetCurrent() - startTime)
+//        print("drawRect takes: \(ms)ms")
     }
     
 

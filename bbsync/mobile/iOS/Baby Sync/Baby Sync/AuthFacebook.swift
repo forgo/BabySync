@@ -123,7 +123,7 @@ class AuthFacebook: NSObject, AuthAppMethod, AuthMethod, AuthFacebookDelegate {
     // MARK: - AuthFacebookDelegate
     func didLogin(jwt: String, email: String) {
         let authUser = AuthUser(service: .Facebook, userId: self.info.userId, accessToken: self.info.accessToken, name: self.info.name, email: email, pic: self.info.pic, jwt: jwt)
-        self.delegate?.loginSuccess(.Facebook, user: authUser)
+        self.delegate?.loginSuccess(.Facebook, user: authUser, wasAlreadyLoggedIn: false)
     }
     
     func didEncounterLogin(errors: [Error]) {

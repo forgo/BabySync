@@ -166,7 +166,7 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
     // MARK: - AuthGoogleDelegate
     func didLogin(jwt: String, email: String) {
         let authUser = AuthUser(service: .Google, userId: self.info.userId, accessToken: self.info.accessToken, name: self.info.name, email: self.info.email, pic: self.info.pic, jwt: jwt)
-        self.delegate?.loginSuccess(.Google, user: authUser)
+        self.delegate?.loginSuccess(.Google, user: authUser, wasAlreadyLoggedIn: false)
     }
     
     func didEncounterLogin(errors: [Error]) {

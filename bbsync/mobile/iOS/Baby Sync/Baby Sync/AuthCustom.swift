@@ -82,7 +82,7 @@ class AuthCustom: NSObject, AuthAppMethod, AuthMethod, AuthCustomDelegate {
     // MARK: - AuthCustomDelegate
     func didLogin(jwt: String, email: String) {
         let authUser = AuthUser(service: .Custom, userId: "", accessToken: "", name: "Some Person", email: email, pic: AuthConstant.Default.ProfilePic, jwt: jwt)
-        self.delegate?.loginSuccess(.Custom, user: authUser)
+        self.delegate?.loginSuccess(.Custom, user: authUser, wasAlreadyLoggedIn: false)
     }
     
     func didEncounterLogin(errors: [Error]) {

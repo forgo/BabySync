@@ -41,7 +41,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     func tick() {
         self.tableTimers.reloadData()
-        print(self.tic ? "tic" : "toc")
+//        print(self.tic ? "tic" : "toc")
         self.tic = !self.tic
         let secondsUntilRefresh: UInt = UInt(abs(round(self.refreshTimer.fireDate.timeIntervalSinceNow)))
         self.labelRefreshCountdown.text = "\(secondsUntilRefresh) sec"

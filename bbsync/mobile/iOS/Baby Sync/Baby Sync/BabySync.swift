@@ -14,6 +14,9 @@ import Foundation
 struct BabySyncErrors {
     struct Client {
         static let Parse = Error(code: 9999, message: "Client failed to parse response data.")
+        static let ParseUnknown = Error(code: 9998, message: "Critical unknown.")
+        static let ParseGeneric = Error(code: 9997, message: "Generic unknown.")
+        static let ParseServiceUnavailable = Error(code: 9998, message: "Service is unavailable.")
         static let ParseLoginToken = Error(code: 9998, message: "Client failed to parse BabySync login token.")
         static let ParseLoginEmail = Error(code: 9997, message: "Client failed to parse BabySync login email.")
         static let ParseFamily = Error(code: 9998, message: "Client received unexpected Family data.")
@@ -121,15 +124,33 @@ class BabySync {
     
     // Parse the high level response from the HTTP request
     private func parse(response: Response<AnyObject, NSError>) -> (JSON, JSON) {
+        
         var jsonData: JSON = nil
         var jsonErrors: JSON = nil
-        if let res = response.result.value {
-            let json: JSON = JSON(res)
-            jsonData = json["data"]
-            jsonErrors = json["errors"]
+        
+        if(response.result.isSuccess) {
+
+            if let res = response.result.value {
+                let json: JSON = JSON(res)
+                jsonData = json["data"]
+                jsonErrors = json["errors"]
+            }
+            else {
+                jsonErrors = JSON([self.jsonError(BabySyncErrors.Client.Parse)])
+            }
         }
         else {
-            jsonErrors = JSON([self.jsonError(BabySyncErrors.Client.Parse)])
+            if let error = response.result.error {
+                if(error.code == NSURLErrorCannotConnectToHost) {
+                    jsonErrors = JSON([self.jsonError(BabySyncErrors.Client.ParseServiceUnavailable)])
+                }
+                else {
+                    jsonErrors = JSON([self.jsonError(BabySyncErrors.Client.ParseGeneric)])
+                }
+            }
+            else {
+                jsonErrors = JSON([self.jsonError(BabySyncErrors.Client.ParseUnknown)])
+            }
         }
         return (jsonData, jsonErrors)
     }

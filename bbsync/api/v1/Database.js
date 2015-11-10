@@ -298,6 +298,21 @@ module.exports = function Database(config, errors) {
             return this.cypher(query)
                 .then(this.successOneOrNone, this.error);
         },
+        user_by_google_id: function(id, label, alias, returnSchema) {
+            var query = "MATCH (" + alias + ":" + label + ")";
+            query += " WHERE " + alias + ".googleID = \"" + id + "\"";
+            query += " RETURN " + this.user_return(alias, returnSchema);
+            return this.cypher(query)
+                .then(this.successOneOrNone, this.error);
+        },
+        user_by_facebook_id: function(id, label, alias, returnSchema) {
+            var query = "MATCH (" + alias + ":" + label + ")";
+            query += " WHERE " + alias + ".facebookID = \"" + id + "\"";
+            query += " RETURN " + this.user_return(alias, returnSchema);
+            console.log("QUERY = ", query);
+            return this.cypher(query)
+                .then(this.successOneOrNone, this.error);
+        },
         user_by_filter: function(filter, label, alias, returnSchema) {
             var query = "MATCH (" + alias + ":" + label + ")";
             var queryFilter = this.object_query_filter(filter, alias);

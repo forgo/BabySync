@@ -264,7 +264,12 @@ module.exports = function Validate(errors) {
                 return s.attribute == att;
             });
             var attributeScheme = attributeSchemes[0];
+
+            console.log("ATTRIBUTE SCHEME = ", attributeScheme);
+
             if (typeof(attributeScheme.test) == "function" && attributeScheme.test.length == 2) {
+                console.log("att = ", att);
+                console.log("pre = ", pre);
                 return attributeScheme.test(att, pre ? pre : "");
             }
             return {
@@ -294,6 +299,49 @@ module.exports = function Validate(errors) {
             }
             return null;
         },
+        // OAuth Validation Helpers
+        googleID: function() {
+            return function(attribute, value) {
+                var valid = true // TODO: can we actually test value validity of googleID?
+                if(!valid) {
+                    return {
+                        valid: false,
+                        errors: [errors.ATTRIBUTE_INVALID(attribute)]
+                    };
+                } else {
+                    return {
+                        valid: true,
+                        data: value
+                    };
+                }
+            };
+        },
+        facebookID: function() {
+            return function(attribute, value) {
+                var valid = true // TODO: can we actually test value validity of facebookID?
+                if(!valid) {
+                    return {
+                        valid: false,
+                        errors: [errors.ATTRIBUTE_INVALID(attribute)]
+                    };
+                } else {
+                    return {
+                        valid: true,
+                        data: value
+                    };
+                }
+            };
+        },
+        googleResponseBody: function(body) {
+            var response = {}
+            console.log("googleResponseBody = ", body);
+            if(body.error || !body.name || !body.id) {
+                
+            }
+
+            response.valid = true;
+            return response;
+        },
         facebookResponseBody: function(body) {
             var response = {}
             console.log("facebookResponseBody = ", body);
@@ -304,16 +352,6 @@ module.exports = function Validate(errors) {
                 response.valid = true;
                 response.data = body
             }
-            return response;
-        },
-        googleResponseBody: function(body) {
-            var response = {}
-            console.log("googleResponseBody = ", body);
-            if(body.error || !body.name || !body.id) {
-                
-            }
-
-            response.valid = true;
             return response;
         },
         ////////////////////////////////////////////////////////////////////////
@@ -363,7 +401,9 @@ module.exports = function Validate(errors) {
                         // ensure email is clean before moving on
                         // (a valid oAuth token will try to create a user with this email 
                         //  if they don't already exist)
-                        var oauth_email_test = validate.attribute(sch, pre, "email");
+                        console.log("THE PRE = ", pre);
+                        var oauth_email_test = validate.attribute(sch, pre.email, "email");
+                        console.log("oauth_email_test = ", oauth_email_test);
                         if(oauth_email_test.valid) {
 
                             authMethod = pre.authMethod;
