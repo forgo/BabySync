@@ -250,7 +250,7 @@ class BabySync {
     
     
     func findParent(parentEmail: String) {
-        let endpointFindParent = "parent/" + parentEmail
+        let endpointFindParent = "parent/find/" + parentEmail
         Alamofire.request(.GET, BabySyncConstant.baseURL+endpointFindParent).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
@@ -266,8 +266,6 @@ class BabySync {
             }
         }
     }
-    
-
     
     func createFamily(parentEmail: String) {
         

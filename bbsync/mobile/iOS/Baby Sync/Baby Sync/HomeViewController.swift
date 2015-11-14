@@ -102,8 +102,17 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         self.updateBabiesView()
         
         // let's get dummy data for now
-        BabySync.service.createFamily(Auth.sharedInstance.securedUser.email)
+//        BabySync.service.createFamily(Auth.sharedInstance.securedUser.email)
+        // let's try to get the real stuff
+        // 1) See if Family/Parent exists for the logged in user's email
+        // Show activity indicator
+        BabySync.service.findParent(Auth.sharedInstance.securedUser.email)
         
+        // 1a) if exists, return Family
+        // 1b) if doesn't exist, provide some options for 1st login
+        //   - create new (boilerplate family) / join new (just create :RESPONSIBLE_FOR w/out boilerplate family)
+        
+        // TODO place this after findParent returns.
         self.startTimers()
         
         self.imageUser.layer.masksToBounds = true

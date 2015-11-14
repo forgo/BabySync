@@ -56,15 +56,15 @@ module.exports = function DatabaseBabySync(db) {
          * this query.
          */
         family_return_by_email: function(email) {
-            return this.family_return("u.email = '" + email + "'");
+            return this.family_return("p.email = '" + email + "'");
         },
-        // family_return_by_id: function(id) {
-        //     return this.family_return("id(f) = " + id);
-        // },
+        family_return_by_id: function(id) {
+            return this.family_return("id(f) = " + id);
+        },
         family_return: function(uniqueCondition) {
             var familyReturnQuery = " MATCH"+
-            " (u:User)<-[pAV:AUTHENTICATES_VIA]-(p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family)"+
-            " WHERE " + uniqueCondition + " AND NOT pRF.pendingApproval"+
+            " (p:Parent)-[:RESPONSIBLE_FOR]->(f:Family)"+
+            " WHERE " + uniqueCondition +
             " WITH f"+
             " MATCH (p:Parent)-[:RESPONSIBLE_FOR]->(f)"+
             " WITH f, { id: id(f), name: f.name, created_on: f.created_on, updated_on: f.updated_on } AS family,"+
@@ -117,8 +117,6 @@ module.exports = function DatabaseBabySync(db) {
             var createDate = now;
             var updateDate = now;
 
-            //TODO: parent should initially just borrow email for parent name for now
-
             var parentBind = parentAlias;
             var unique = isUnique ? " UNIQUE " : "";
             if (parent != null) {
@@ -126,10 +124,6 @@ module.exports = function DatabaseBabySync(db) {
                 updateDate = now;
                 parentBind = parentAlias + ":Parent {parm_parent}";
             }
-
-            var responsible = {
-                pendingApproval: false
-            };
 
             var family = {
                 name: "My Family"
@@ -195,7 +189,6 @@ module.exports = function DatabaseBabySync(db) {
             timer3.updated_on = updateDate;
 
             var params = {
-                parm_responsible: responsible,
                 parm_family: family,
                 parm_activity1: activity1,
                 parm_activity2: activity2,
@@ -211,7 +204,7 @@ module.exports = function DatabaseBabySync(db) {
 
             }
 
-            var create = " CREATE " + unique + " (u:User)<-[pAV:AUTHENTICATES_VIA]-(" + parentBind + ")-[pRF:RESPONSIBLE_FOR {parm_responsible}]->(f:Family {parm_family}),"+
+            var create = " CREATE " + unique + " (" + parentBind + ")-[:RESPONSIBLE_FOR]->(f:Family {parm_family}),"+
                 " (a1:Activity {parm_activity1})-[:MANAGED_BY]->(f),"+
                 " (a2:Activity {parm_activity2})-[:MANAGED_BY]->(f),"+
                 " (a3:Activity {parm_activity3})-[:MANAGED_BY]->(f),"+
@@ -222,25 +215,6 @@ module.exports = function DatabaseBabySync(db) {
                 " WITH " + parentAlias + " AS pcreate, f AS fcreate";
 
             return {query:create,params:params};
-        },
-
-        family_find: function(email) {
-            var query = "MATCH"+
-            " (u:User)<-[pAV:AUTHENTICATES_VIA]-(p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family)"+
-            " WHERE u.email = '"+email+"' AND NOT pRF.pendingApproval"+
-            query += this.family_return_by_id(familyID);
-        },
-
-        family_join_new: function(familyID, parentEmail) {
-            var responsible = {
-                pendingApproval: true
-            };
-
-            var params = {
-                parm_responsible: responsible
-            };
-
-            var joinNew = " CREATE UNIQUE (p:Parent)-[pRF:RESPONSIBLE_FOR {parm_responsible}]->(f:Family)";
         },
 
         // (b)-[:TRACKED_BY]->(t1:Timer {parm_timer1})-[:ADHERES_TO]->(a1:Activity {parm_activity1})-[:MANAGED_BY]->(f)
@@ -257,7 +231,6 @@ module.exports = function DatabaseBabySync(db) {
          * @return {external:Q.Promise} on success, the promise resolves to an 
          * auxiliary promise defined by {@link module:Database.successOneOrNone}
          */
-         //TODO: parent param should be replaced with user, then refactor on that...
         family_create: function(parent) {
             var create = this.family_create_query_object(parent,"p",false);
             var query = create.query;
@@ -283,15 +256,15 @@ module.exports = function DatabaseBabySync(db) {
          * @return {external:Q.Promise} on success, the promise resolves to an 
          * auxiliary promise defined by {@link module:Database.successOneOrNone}
          */
-        family_join: function(familyToJoinWithID, joiningParentEmail) {
+        family_join: function(familyID, parentEmail) {
             var query = "MATCH"+
             " (p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family),"+
             " (fnew:Family)"+
-            " WHERE p.email = '" + joiningParentEmail + "' AND id(fnew) = " + familyToJoinWithID + " AND id(f) <> " + familyToJoinWithID +
+            " WHERE p.email = '" + parentEmail + "' AND id(fnew) = " + familyID + " AND id(f) <> " + familyID +
             " WITH p, pRF, f, fnew"+
             " OPTIONAL MATCH"+
             " (pO:Parent)-[pORF:RESPONSIBLE_FOR]->(f)"+
-            " WHERE pO.email <> '" + joiningParentEmail + "'"+
+            " WHERE pO.email <> '" + parentEmail + "'"+
             " WITH p, pRF, f, fnew, COUNT(pO) AS nOtherParents"+
             " OPTIONAL MATCH"+
             " (t:Timer)-[tAT:ADHERES_TO]->(a:Activity)-[aMB:MANAGED_BY]->(f)<-[bRO:RESPONSIBILITY_OF]-(b:Baby)-[bTB:TRACKED_BY]->(t)"+
@@ -316,30 +289,21 @@ module.exports = function DatabaseBabySync(db) {
             " FOREACH(n in deletable.nods | DELETE n)"+
             " CREATE UNIQUE (p)-[:RESPONSIBLE_FOR]->(fnew)"+
             " WITH DISTINCT(p) AS pjoin, fnew AS fjoin";
-            query += this.family_return_by_id(familyToJoinWithID);
+            query += this.family_return_by_id(familyID);
             return db.cypher(query)
             .then(db.successOneOrNone, db.error);
         },
         // Merges existing activities/timers/babies with another family
         // if multiple parents, preserves for old family -- otherwise delete old family stuff
-        family_merge: function(familyToMergeWithID, mergingParentEmail) {
-
-            var responsible = {
-                pendingApproval: true
-            };
-
-            var params = {
-                parm_responsible: responsible
-            };
-
+        family_merge: function(familyID, parentEmail) {
             var query = " MATCH"+
             " (p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family),"+
             " (fnew:Family)"+
-            " WHERE p.email = '" + mergingParentEmail + "' AND id(fnew) = " + familyToMergeWithID + " AND id(f) <> " + familyToMergeWithID +
+            " WHERE p.email = '" + parentEmail + "' AND id(fnew) = " + familyID + " AND id(f) <> " + familyID +
             " WITH p, pRF, f, fnew"+
             " OPTIONAL MATCH"+
             " (pO:Parent)-[pORF:RESPONSIBLE_FOR]->(f)"+
-            " WHERE pO.email <> '" + mergingParentEmail + "'"+
+            " WHERE pO.email <> '" + parentEmail + "'"+
             " WITH p, pRF, f, fnew, COUNT(pO) AS nOtherParents"+
             // Copy parent's activities into new family, 
             // parent name appended to activity name property to distinguish those merged
@@ -402,14 +366,10 @@ module.exports = function DatabaseBabySync(db) {
             " END AS deletable"+
             " FOREACH(r in deletable.rels | DELETE r)"+
             " FOREACH(n in deletable.nods | DELETE n)"+
-            " CREATE UNIQUE (p)-[pRF:RESPONSIBLE_FOR {parm_responsible}]->(fnew)"+
+            " CREATE UNIQUE (p)-[:RESPONSIBLE_FOR]->(fnew)"+
             " WITH DISTINCT(p) AS pmerge, fnew AS fmerge";
-            query += this.family_return_by_id(familyToMergeWithID);
-
-            return db.cypher({
-                query: query,
-                params: params
-            })
+            query += this.family_return_by_id(familyID);
+            return db.cypher(query)
             .then(db.successOneOrNone, db.error);
         },
         /*
@@ -427,14 +387,14 @@ module.exports = function DatabaseBabySync(db) {
          * @return {external:Q.Promise} on success, the promise resolves to an 
          * auxiliary promise defined by {@link module:Database.successOneOrNone}
          */
-        family_detach: function(parentToDetachEmail) {
+        family_detach: function(parentEmail) {
             var query = "MATCH"+
-            " (u:User)<-[pAV:AUTHENTICATES_VIA]-(p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family)"+
-            " WHERE u.email = '" + parentToDetachEmail + "'"+
+            " (p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family)"+
+            " WHERE p.email = '" + parentEmail + "'"+
             " WITH p, pRF, f"+
             " OPTIONAL MATCH"+
             " (pO:Parent)-[pORF:RESPONSIBLE_FOR]->(f)"+
-            " WHERE pO.email <> '" + parentToDetachEmail + "'"+
+            " WHERE pO.email <> '" + parentEmail + "'"+
             " WITH p, pRF, f, COUNT(pO) AS nOtherParents"+
             " OPTIONAL MATCH"+
             " (t:Timer)-[tAT:ADHERES_TO]->(a:Activity)-[aMB:MANAGED_BY]->(f)<-[bRO:RESPONSIBILITY_OF]-(b:Baby)-[bTB:TRACKED_BY]->(t)"+
@@ -460,7 +420,7 @@ module.exports = function DatabaseBabySync(db) {
             " WITH p AS pdetach";
             var create = this.family_create_query_object(null, "pdetach", true);
             query += create.query;
-            query += this.family_return_by_email(parentToDetachEmail);
+            query += this.family_return_by_email(parentEmail);
             return db.cypher({
                 query: query,
                 params: create.params

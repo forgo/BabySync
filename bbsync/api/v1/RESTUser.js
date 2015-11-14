@@ -128,7 +128,6 @@ login: function * (next) {
                     facebookReturnSchema = facebookReturnSchema.filter(function(s) {
                         return (s.attribute != "password");
                     });
-                    console.log("FACEBOOK RETURN SCHEMA SHOULD NOT HAVE PASSWORD = ", facebookReturnSchema);
 
                     // Check for existence of User with this valid Facebook ID
                     var userByFacebookID = yield db.user_by_facebook_id(oAuth.id, label, alias, facebookReturnSchema);

@@ -301,36 +301,10 @@ module.exports = function Validate(errors) {
         },
         // OAuth Validation Helpers
         googleID: function() {
-            return function(attribute, value) {
-                var valid = true // TODO: can we actually test value validity of googleID?
-                if(!valid) {
-                    return {
-                        valid: false,
-                        errors: [errors.ATTRIBUTE_INVALID(attribute)]
-                    };
-                } else {
-                    return {
-                        valid: true,
-                        data: value
-                    };
-                }
-            };
+            return validate.regex(/^([\d]{1,20})$/);
         },
         facebookID: function() {
-            return function(attribute, value) {
-                var valid = true // TODO: can we actually test value validity of facebookID?
-                if(!valid) {
-                    return {
-                        valid: false,
-                        errors: [errors.ATTRIBUTE_INVALID(attribute)]
-                    };
-                } else {
-                    return {
-                        valid: true,
-                        data: value
-                    };
-                }
-            };
+            return validate.regex(/^([\d]{1,20})$/);
         },
         googleResponseBody: function(body) {
             var response = {}

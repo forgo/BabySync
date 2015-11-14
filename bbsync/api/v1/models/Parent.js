@@ -28,15 +28,6 @@ module.exports = function Parent(REST, db, validate, errors, response) {
     var parentValidate = {
         name: function() {
             return validate.regex(/^([a-zA-Z]{2,29})([\s]{1})([a-zA-Z]{2,29})$/);
-        },
-        email: function() {
-            return validate.regex(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)\b/);
-        },
-        facebookID: function() {
-            return validate.regex(/^([\d]{1,20})$/);
-        },
-        googleID: function() {
-            return validate.regex(/^([\d]{1,20})$/);
         }
     };
     
@@ -48,21 +39,6 @@ module.exports = function Parent(REST, db, validate, errors, response) {
         type: "String",
         required: true,
         test: parentValidate.name()
-    }, {
-        attribute: "email",
-        type: "String",
-        required: true,
-        test: parentValidate.email()
-    }, {
-        attribute: "facebookID",
-        type: "String",
-        required: false,
-        test: parentValidate.facebookID()
-    }, {
-        attribute: "googleID",
-        type: "String",
-        required: false,
-        test: parentValidate.googleID()
     }];
 
     var parent = new REST("Parent", "p", parentSchema, db, validate, errors, response);
