@@ -110,21 +110,26 @@ module.exports = function DatabaseBabySync(db) {
             " RETURN family, parents, activities, babies";
             return familyReturnQuery;
         },
-        family_create_query_object: function(parent, parentAlias, isUnique) {
+        family_create_query_object: function(userEmail, parentAlias, isUnique) {
 
             // Add date fields
             var now = new Date();
             var createDate = now;
             var updateDate = now;
 
-            //TODO: parent should initially just borrow email for parent name for now
-
+            var parent = null;
             var parentBind = parentAlias;
+            var userCondition = " ";
             var unique = isUnique ? " UNIQUE " : "";
-            if (parent != null) {
-                createDate = now;
-                updateDate = now;
+            if (userEmail != null) {
+                userCondition = " WHERE u.email = '" + userEmail + "'";
                 parentBind = parentAlias + ":Parent {parm_parent}";
+                // TODO: parent just borrow email from user as name for now
+                parent = {
+                    name: userEmail
+                };
+                parent.created_on = createDate;
+                parent.updated_on = updateDate;
             }
 
             var responsible = {
@@ -206,9 +211,8 @@ module.exports = function DatabaseBabySync(db) {
                 parm_timer3: timer3
             };
 
-            if (params != null) {
+            if (parent != null) {
                 params["parm_parent"] = parent;
-
             }
 
             var create = " CREATE " + unique + " (u:User)<-[pAV:AUTHENTICATES_VIA]-(" + parentBind + ")-[pRF:RESPONSIBLE_FOR {parm_responsible}]->(f:Family {parm_family}),"+
@@ -219,16 +223,16 @@ module.exports = function DatabaseBabySync(db) {
                 " (b)-[:TRACKED_BY]->(t1:Timer {parm_timer1})-[:ADHERES_TO]->(a1),"+
                 " (b)-[:TRACKED_BY]->(t2:Timer {parm_timer2})-[:ADHERES_TO]->(a2),"+
                 " (b)-[:TRACKED_BY]->(t3:Timer {parm_timer3})-[:ADHERES_TO]->(a3)"+
+                userCondition+
                 " WITH " + parentAlias + " AS pcreate, f AS fcreate";
 
             return {query:create,params:params};
         },
 
-        family_find: function(email) {
-            var query = "MATCH"+
-            " (u:User)<-[pAV:AUTHENTICATES_VIA]-(p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family)"+
-            " WHERE u.email = '"+email+"' AND NOT pRF.pendingApproval"+
-            query += this.family_return_by_id(familyID);
+        family_find: function(parentEmail) {
+           var query = this.family_return_by_email(parentEmail);
+           return db.cypher(query)
+            .then(db.successOneOrNone, db.error);
         },
 
         family_join_new: function(familyID, parentEmail) {
@@ -258,8 +262,8 @@ module.exports = function DatabaseBabySync(db) {
          * auxiliary promise defined by {@link module:Database.successOneOrNone}
          */
          //TODO: parent param should be replaced with user, then refactor on that...
-        family_create: function(parent) {
-            var create = this.family_create_query_object(parent,"p",false);
+        family_create: function(userEmail) {
+            var create = this.family_create_query_object(userEmail,"p",false);
             var query = create.query;
             query += this.family_return_by_email(parent.email);
             return db.cypher({
