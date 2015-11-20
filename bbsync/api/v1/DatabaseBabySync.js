@@ -58,9 +58,9 @@ module.exports = function DatabaseBabySync(db) {
         family_return_by_email: function(email) {
             return this.family_return("u.email = '" + email + "'");
         },
-        // family_return_by_id: function(id) {
-        //     return this.family_return("id(f) = " + id);
-        // },
+        family_return_by_id: function(id) {
+            return this.family_return("id(f) = " + id);
+        },
         family_return: function(uniqueCondition) {
             var familyReturnQuery = " MATCH"+
             " (u:User)<-[pAV:AUTHENTICATES_VIA]-(p:Parent)-[pRF:RESPONSIBLE_FOR]->(f:Family)"+

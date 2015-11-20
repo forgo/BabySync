@@ -45,7 +45,7 @@ module.exports = function BabySync(db, validate, errors, response) {
     var geocache = new Geocache(REST, db, validate, errors, response);
 
     var CreateFamily = require('./operations/CreateFamily.js');
-    var FindParent = require('./operations/FindParent.js');
+    var FindFamily = require('./operations/FindFamily.js');
     var JoinFamily = require('./operations/JoinFamily.js');
     var MergeFamily = require('./operations/MergeFamily.js');
     var DetachFamily = require('./operations/DetachFamily.js');
@@ -57,7 +57,7 @@ module.exports = function BabySync(db, validate, errors, response) {
     var DeleteTimer = require('./operations/DeleteTimer.js');
 
     var createFamily = new CreateFamily(db, validate, errors, response, parent.schema);
-    var findParent = new FindParent(db, validate, errors, response, parent.schema);
+    var findFamily = new FindFamily(db, validate, errors, response, user.schema);
     var joinFamily = new JoinFamily(db, validate, errors, response, parent.schema, family.schema);
     var mergeFamily = new MergeFamily(db, validate, errors, response, parent.schema, family.schema);
     var detachFamily = new DetachFamily(db, validate, errors, response, parent.schema, family.schema);
@@ -78,7 +78,7 @@ module.exports = function BabySync(db, validate, errors, response) {
         timer: timer,
         // Derived Operations
         createFamily: createFamily,
-        findParent: findParent,
+        findFamily: findFamily,
         joinFamily: joinFamily,
         mergeFamily: mergeFamily,
         detachFamily: detachFamily,

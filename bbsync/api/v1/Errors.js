@@ -267,10 +267,10 @@ module.exports = function Errors() {
                 message: "email invalid to find parent"
             };
         },
-        PARENT_NOT_FOUND: function(email) {
+        FAMILY_NOT_FOUND: function(email) {
             return {
                 code: 5003,
-                message: "no parent found for email: " + email
+                message: "no family found for email: " + email
             };
         },
         FAMILY_ID_REQUIRED: function() {

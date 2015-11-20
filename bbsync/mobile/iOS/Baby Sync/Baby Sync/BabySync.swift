@@ -249,20 +249,26 @@ class BabySync {
     }
     
     
-    func findParent(parentEmail: String) {
-        let endpointFindParent = "parent/find/" + parentEmail
-        Alamofire.request(.GET, BabySyncConstant.baseURL+endpointFindParent).responseJSON { response in
+    func findFamily(parentEmail: String) {
+        let endpointFindFamily = "family/find/" + parentEmail
+        Alamofire.request(.GET, BabySyncConstant.baseURL+endpointFindFamily).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
                 self.handle(self.errors(jsonErrors))
                 return
             }
             else {
-                guard let parent: Parent = Parent(parent: jsonData) else {
-                    self.handle([BabySyncErrors.Client.ParseParent])
-                    return
+                // If the data came back empty, then we don't have a family yet, handle appropriately
+                if(jsonData.isEmpty) {
+                    
                 }
-                self.delegate?.didFind(parent)
+                else {
+                    guard let parent: Parent = Parent(parent: jsonData) else {
+                        self.handle([BabySyncErrors.Client.ParseParent])
+                        return
+                    }
+                    self.delegate?.didFind(parent)
+                }
             }
         }
     }
@@ -285,7 +291,7 @@ class BabySync {
         
         
         
-        let endpointCreateFamily = "parent/"
+        let endpointCreateFamily = "family/"
         Alamofire.request(.POST, BabySyncConstant.baseURL+endpointCreateFamily, parameters: ["email":parentEmail]).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
@@ -299,7 +305,7 @@ class BabySync {
     }
     
     func joinFamily(familyID: Int, parentEmail: String) {
-        let endpointJoinFamily = "parent/join/" + String(familyID)
+        let endpointJoinFamily = "family/join/" + String(familyID)
         Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointJoinFamily, parameters: ["email":parentEmail]).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
@@ -313,7 +319,7 @@ class BabySync {
     }
     
     func mergeFamily(familyID: Int, parentEmail: String) {
-        let endpointMergeFamily = "parent/merge/" + String(familyID)
+        let endpointMergeFamily = "family/merge/" + String(familyID)
         Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointMergeFamily, parameters: ["email":parentEmail]).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {
@@ -327,7 +333,7 @@ class BabySync {
     }
     
     func detachFamily(familyID: Int, parentEmail: String) {
-        let endpointDetachFamily = "parent/detach"
+        let endpointDetachFamily = "family/detach"
         Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointDetachFamily, parameters: ["email":parentEmail]).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
             if (jsonErrors != nil) {

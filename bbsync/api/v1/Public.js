@@ -38,15 +38,15 @@ module.exports = function Public(babySync) {
 	// BabySync Service Operations
     // ---------------------------
     Public.post('/user/auth', babySync.user.login);
-    Public.post('/parent', babySync.createFamily);
+    Public.post('/family', babySync.createFamily);
 
     // After this point should expect token
     // TODO: move these operations to the private section
-    Public.get('/parent/find/:id', babySync.findParent);
+    Public.get('/family/find/:email', babySync.findFamily);
 
-    Public.put('/parent/join/:id', babySync.joinFamily);
-    Public.put('/parent/merge/:id', babySync.mergeFamily);
-    Public.put('/parent/detach', babySync.detachFamily);
+    Public.put('/family/join/:id', babySync.joinFamily);
+    Public.put('/family/merge/:id', babySync.mergeFamily);
+    Public.put('/family/detach', babySync.detachFamily);
 
     Public.post('/activity', babySync.createActivity);
     Public.del('/activity/:id', babySync.deleteActivity);

@@ -92,7 +92,6 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         BabySync.service.delegate = self;
         
-        
         self.viewBabies = self.tableTimers.tableHeaderView
         self.tableTimers.tableHeaderView = nil
         self.tableTimers.addSubview(self.viewBabies)
@@ -106,7 +105,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         // let's try to get the real stuff
         // 1) See if Family/Parent exists for the logged in user's email
         // Show activity indicator
-        BabySync.service.findParent(Auth.sharedInstance.securedUser.email)
+        BabySync.service.findFamily(Auth.sharedInstance.securedUser.email)
         
         // 1a) if exists, return Family
         // 1b) if doesn't exist, provide some options for 1st login

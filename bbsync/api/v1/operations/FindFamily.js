@@ -20,33 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function FindParent(db, validate, errors, response, parentSchema) {
-    var findParent = function * (next) {
+module.exports = function FindFamily(db, validate, errors, response, userSchema) {
+
+    // Database Extensions for Complex App Queries
+    var dbBabySync = require('../DatabaseBabySync.js')(db);
+
+    var findFamily = function * (next) {
 	    try {
             // TODO: Be sure this is being requested by authenticated user w/proper privileges
 
             // No parameter provided in URL
-            if ((this.params.id == undefined || this.params.id == null) && _.isEmpty(this.query)) {
+            if ((this.params.email == undefined || this.params.email == null) && _.isEmpty(this.query)) {
                 return yield response.invalid([errors.PARENT_EMAIL_REQUIRED()]);
             }
             // Parameter exists in URL
             else {
                 // Validate the email provided
-                var email_test = validate.attribute(parentSchema, this.params.id, "email");
+                var email_test = validate.attribute(userSchema, this.params.email, "email");
 				if (email_test.valid) {
-                    var parentByEmail = yield db.object_by_filter({email:email_test.data}, "Parent", "p", parentSchema);
-                    if (parentByEmail.success) {
-                    	if (parentByEmail.data.length == 1) {
-                    		return yield response.success(parentByEmail.data[0]);
-                    	}
-                    	else {
-                    		return yield response.invalid([errors.PARENT_NOT_FOUND(email_test.data)]);
-                    	}
+
+                    //
+                    var familyByEmail = yield dbBabySync.family_find(email_test.data);
+                    console.log("FAMILY BY EMAIL = ", familyByEmail);
+                    if (familyByEmail.success) {
+                        return yield response.success(familyByEmail.data);
                     } else {
-                    	return yield response.invalid([errors.PARENT_NOT_FOUND(email_test.data)]);
+                        return yield response.invalid([errors.FAMILY_NOT_FOUND(email_test.data)]);
                     }
                 } else {
-                	return yield response.invalid([errors.PARENT_EMAIL_INVALID()]);
+                	return yield response.invalid(email_test.errors);
                 }
             }
         } catch (e) {
@@ -54,5 +56,5 @@ module.exports = function FindParent(db, validate, errors, response, parentSchem
             return yield response.catchErrors(e, null);
         }
     }
-    return findParent;
+    return findFamily;
 };
