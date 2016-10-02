@@ -12,7 +12,7 @@ import UIKit
 // MARK: - AuthCustomDelegate Protocol
 protocol AuthCustomDelegate {
     func didLogin(_ jwt: String, email: String)
-    func didEncounterLogin(_ errors: [Error])
+    func didEncounterLogin(_ errorsAPI: [ErrorAPI])
 }
 
 // MARK: - Custom Info Struct
@@ -67,8 +67,8 @@ class AuthCustom: NSObject, AuthAppMethod, AuthMethod, AuthCustomDelegate {
         }
         else {
             let errorRef = AuthConstant.Error.Client.BadEmailOrPassword.self
-            let error: Error = Error(code: errorRef.code, message: errorRef.message)
-            let nsError: NSError? = BabySync.nsErrorFrom(error)
+            let error: ErrorAPI = ErrorAPI(code: errorRef.code, message: errorRef.message)
+            let nsError: Error? = BabySync.errorFrom(error)
             self.delegate?.loginError(.Custom, error: nsError)
         }
     }
@@ -85,10 +85,10 @@ class AuthCustom: NSObject, AuthAppMethod, AuthMethod, AuthCustomDelegate {
         self.delegate?.loginSuccess(.Custom, user: authUser, wasAlreadyLoggedIn: false)
     }
     
-    func didEncounterLogin(_ errors: [Error]) {
+    func didEncounterLogin(_ errorsAPI: [ErrorAPI]) {
         // TODO: Do we need to take into account errors past one if they exist?
-        if(errors.count > 0) {
-            let e: NSError? = BabySync.nsErrorFrom(errors[0])
+        if(errorsAPI.count > 0) {
+            let e: Error? = BabySync.errorFrom(errorsAPI[0])
             self.delegate?.loginError(.Custom, error: e)
         }
     }

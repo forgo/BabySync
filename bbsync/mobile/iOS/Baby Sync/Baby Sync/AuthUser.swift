@@ -27,7 +27,7 @@ struct AuthUser: CreateableSecureStorable,
     var account: String { return email }
     
     // Required by CreateableSecureStorable
-    var data: [String: AnyObject] {
+    var data: [String: Any] {
         return [
             "userId": userId as AnyObject,
             "accessToken": accessToken as AnyObject,

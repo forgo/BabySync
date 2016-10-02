@@ -13,17 +13,17 @@ import Foundation
 // MARK: - BabySyncError Struct
 struct BabySyncErrors {
     struct Client {
-        static let Parse = Error(code: 9999, message: "Client failed to parse response data.")
-        static let ParseUnknown = Error(code: 9998, message: "Critical unknown.")
-        static let ParseGeneric = Error(code: 9997, message: "Generic unknown.")
-        static let ParseServiceUnavailable = Error(code: 9998, message: "Service is unavailable.")
-        static let ParseLoginToken = Error(code: 9998, message: "Client failed to parse BabySync login token.")
-        static let ParseLoginEmail = Error(code: 9997, message: "Client failed to parse BabySync login email.")
-        static let ParseFamily = Error(code: 9998, message: "Client received unexpected Family data.")
-        static let ParseParent = Error(code: 9997, message: "Client received unexpected Parent data.")
-        static let ParseParents = Error(code: 9996, message: "Client received unexpected [Parent] data.")
-        static let ParseActivities = Error(code: 9995, message: "Client received unexpected [Activity] data.")
-        static let ParseBabies = Error(code: 9994, message: "Client received unexpected [Baby] data.")
+        static let Parse = ErrorAPI(code: 9999, message: "Client failed to parse response data.")
+        static let ParseUnknown = ErrorAPI(code: 9998, message: "Critical unknown.")
+        static let ParseGeneric = ErrorAPI(code: 9997, message: "Generic unknown.")
+        static let ParseServiceUnavailable = ErrorAPI(code: 9998, message: "Service is unavailable.")
+        static let ParseLoginToken = ErrorAPI(code: 9998, message: "Client failed to parse BabySync login token.")
+        static let ParseLoginEmail = ErrorAPI(code: 9997, message: "Client failed to parse BabySync login email.")
+        static let ParseFamily = ErrorAPI(code: 9998, message: "Client received unexpected Family data.")
+        static let ParseParent = ErrorAPI(code: 9997, message: "Client received unexpected Parent data.")
+        static let ParseParents = ErrorAPI(code: 9996, message: "Client received unexpected [Parent] data.")
+        static let ParseActivities = ErrorAPI(code: 9995, message: "Client received unexpected [Activity] data.")
+        static let ParseBabies = ErrorAPI(code: 9994, message: "Client received unexpected [Baby] data.")
     }
 }
 
@@ -34,7 +34,7 @@ protocol BabySyncDelegate {
     func didJoin(_ family: Family)
     func didMerge(_ family: Family)
     func didRetrieve(_ family: Family)
-    func didEncounter(_ errors: [Error])
+    func didEncounter(_ errorsAPI: [ErrorAPI])
 }
 
 // MARK: - BabySync Service
@@ -51,14 +51,14 @@ class BabySync {
     fileprivate var email: String?
     
     // MARK: - Synced data arrays!
-    var family: Family = Family()
+    var family: Family = Family()!
     var parents: [Parent] = []
     var activities: [Activity] = []
     var babies: [Baby] = []
     
     // MARK: - Conveneience Methods
     fileprivate func clearData() {
-        self.family = Family()
+        self.family = Family()!
         self.parents.removeAll()
         self.activities.removeAll()
         self.babies.removeAll()
@@ -67,26 +67,26 @@ class BabySync {
     // MARK: - Parsing and error handling
     
     // Convert Error object to JSON dictionary
-    fileprivate func jsonError(_ error: Error) -> JSON {
-        return JSON(["code":error.code, "message": error.message])
+    fileprivate func jsonError(_ errorAPI: ErrorAPI) -> JSON {
+        return JSON(["code":errorAPI.code, "message": errorAPI.message])
     }
     
     // Convert errors from JSON response to array of Error objects
-    fileprivate func errors(_ jsonErrors: JSON) -> [Error] {
-        var errors: [Error] = []
+    fileprivate func errors(_ jsonErrors: JSON) -> [ErrorAPI] {
+        var errorsAPI: [ErrorAPI] = []
         for jsonError in jsonErrors.arrayValue {
-            errors.append(Error(code: jsonError["code"].intValue, message: jsonError["message"].stringValue))
+            errorsAPI.append(ErrorAPI(code: jsonError["code"].intValue, message: jsonError["message"].stringValue))
         }
-        return errors
+        return errorsAPI
     }
     
     fileprivate func parseLogin(_ method: AuthMethodType, jsonData: JSON) -> Bool {
-        guard let token: String = jsonData["token"].stringValue else {
-            self.handleLogin(method, errors: [BabySyncErrors.Client.ParseLoginToken])
+        guard let token: String = jsonData["token"].string else {
+            self.handleLogin(method, errorsAPI: [BabySyncErrors.Client.ParseLoginToken])
             return false
         }
-        guard let email: String = jsonData["email"].stringValue else {
-            self.handleLogin(method, errors: [BabySyncErrors.Client.ParseLoginEmail])
+        guard let email: String = jsonData["email"].string else {
+            self.handleLogin(method, errorsAPI: [BabySyncErrors.Client.ParseLoginEmail])
             return false
         }
         self.jwt = token
@@ -123,7 +123,8 @@ class BabySync {
     }
     
     // Parse the high level response from the HTTP request
-    fileprivate func parse(_ response: Response<AnyObject, NSError>) -> (JSON, JSON) {
+    //DataResponse<Any>
+    fileprivate func parse(response: DataResponse<Any>) -> (JSON, JSON) {
         
         var jsonData: JSON = nil
         var jsonErrors: JSON = nil
@@ -141,7 +142,8 @@ class BabySync {
         }
         else {
             if let error = response.result.error {
-                if(error.code == NSURLErrorCannotConnectToHost) {
+                let errorCode = (error as NSError).code
+                if(errorCode == NSURLErrorCannotConnectToHost) {
                     jsonErrors = JSON([self.jsonError(BabySyncErrors.Client.ParseServiceUnavailable)])
                 }
                 else {
@@ -165,19 +167,19 @@ class BabySync {
     }
     
     // For errors encountered, delegate out to whom it may concern
-    fileprivate func handle(_ errors: [Error]) {
-        self.delegate?.didEncounter(errors)
+    fileprivate func handle(_ errorsAPI: [ErrorAPI]) {
+        self.delegate?.didEncounter(errorsAPI)
     }
     
     // For errors encountered during login, delegate out to appropriate auth method
-    fileprivate func handleLogin(_ method: AuthMethodType, errors: [Error]) {
+    fileprivate func handleLogin(_ method: AuthMethodType, errorsAPI: [ErrorAPI]) {
         switch method {
         case .Google:
-            self.delegateLoginGoogle?.didEncounterLogin(errors)
+            self.delegateLoginGoogle?.didEncounterLogin(errorsAPI)
         case .Facebook:
-            self.delegateLoginFacebook?.didEncounterLogin(errors)
+            self.delegateLoginFacebook?.didEncounterLogin(errorsAPI)
         case .Custom:
-            self.delegateLoginCustom?.didEncounterLogin(errors)
+            self.delegateLoginCustom?.didEncounterLogin(errorsAPI)
         }
     }
     
@@ -211,12 +213,12 @@ class BabySync {
         }
         
         let endpointLogin = "user/auth"
-        
-        Alamofire.request(.POST, BabySyncConstant.baseURL+endpointLogin, parameters: loginParams).responseJSON { response in
+        Alamofire.request(BabySyncConstant.baseURL+endpointLogin, method: .post, parameters: loginParams).responseJSON { response in
+//        Alamofire.request(.POST, BabySyncConstant.baseURL+endpointLogin, parameters: loginParams).responseJSON { response in
             
-            let (jsonData, jsonErrors) = self.parse(response)
+            let (jsonData, jsonErrors) = self.parse(response: response)
             if (jsonErrors != nil) {
-                self.handleLogin(method, errors: self.errors(jsonErrors))
+                self.handleLogin(method, errorsAPI: self.errors(jsonErrors))
                 return
             }
             
@@ -234,14 +236,14 @@ class BabySync {
                 }
                 else {
                     let errorRef = AuthConstant.Error.Client.BadEmailOrPassword.self
-                    let error: Error = Error(code: errorRef.code, message: errorRef.message)
+                    let errorAPI: ErrorAPI = ErrorAPI(code: errorRef.code, message: errorRef.message)
                     switch method {
                     case .Google:
-                        self.delegateLoginGoogle?.didEncounterLogin([error])
+                        self.delegateLoginGoogle?.didEncounterLogin([errorAPI])
                     case .Facebook:
-                        self.delegateLoginFacebook?.didEncounterLogin([error])
+                        self.delegateLoginFacebook?.didEncounterLogin([errorAPI])
                     case .Custom:
-                        self.delegateLoginCustom?.didEncounterLogin([error])
+                        self.delegateLoginCustom?.didEncounterLogin([errorAPI])
                     }
                 }
             }
@@ -250,8 +252,9 @@ class BabySync {
     
     func findFamily(_ parentEmail: String) {
         let endpointFindFamily = "family/find/" + parentEmail
-        Alamofire.request(.GET, BabySyncConstant.baseURL+endpointFindFamily).responseJSON { response in
-            let (jsonData, jsonErrors) = self.parse(response)
+        Alamofire.request(BabySyncConstant.baseURL+endpointFindFamily).responseJSON { response in
+//        Alamofire.request(.GET, BabySyncConstant.baseURL+endpointFindFamily).responseJSON { response in
+            let (jsonData, jsonErrors) = self.parse(response: response)
             if (jsonErrors != nil) {
                 self.handle(self.errors(jsonErrors))
                 return
@@ -289,8 +292,10 @@ class BabySync {
         
         
         let endpointCreateFamily = "family/"
-        Alamofire.request(.POST, BabySyncConstant.baseURL+endpointCreateFamily, parameters: ["email":parentEmail]).responseJSON { response in
-            let (jsonData, jsonErrors) = self.parse(response)
+        
+        Alamofire.request(BabySyncConstant.baseURL+endpointCreateFamily, method: .post, parameters: ["email": parentEmail]).responseJSON { response in
+//        Alamofire.request(.POST, BabySyncConstant.baseURL+endpointCreateFamily, parameters: ["email":parentEmail]).responseJSON { response in
+            let (jsonData, jsonErrors) = self.parse(response: response)
             if (jsonErrors != nil) {
                 self.handle(self.errors(jsonErrors))
                 return
@@ -303,8 +308,9 @@ class BabySync {
     
     func joinFamily(_ familyID: Int, parentEmail: String) {
         let endpointJoinFamily = "family/join/" + String(familyID)
-        Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointJoinFamily, parameters: ["email":parentEmail]).responseJSON { response in
-            let (jsonData, jsonErrors) = self.parse(response)
+        Alamofire.request(BabySyncConstant.baseURL+endpointJoinFamily, method: .put, parameters: ["email": parentEmail]).responseJSON { reponse in
+//        Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointJoinFamily, parameters: ["email":parentEmail]).responseJSON { response in
+            let (jsonData, jsonErrors) = self.parse(response: reponse)
             if (jsonErrors != nil) {
                 self.handle(self.errors(jsonErrors))
                 return
@@ -317,8 +323,9 @@ class BabySync {
     
     func mergeFamily(_ familyID: Int, parentEmail: String) {
         let endpointMergeFamily = "family/merge/" + String(familyID)
-        Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointMergeFamily, parameters: ["email":parentEmail]).responseJSON { response in
-            let (jsonData, jsonErrors) = self.parse(response)
+        Alamofire.request(BabySyncConstant.baseURL+endpointMergeFamily, method: .put, parameters: ["email": parentEmail]).responseJSON { response in
+//        Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointMergeFamily, parameters: ["email":parentEmail]).responseJSON { response in
+            let (jsonData, jsonErrors) = self.parse(response: response)
             if (jsonErrors != nil) {
                 self.handle(self.errors(jsonErrors))
                 return
@@ -331,8 +338,9 @@ class BabySync {
     
     func detachFamily(_ familyID: Int, parentEmail: String) {
         let endpointDetachFamily = "family/detach"
-        Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointDetachFamily, parameters: ["email":parentEmail]).responseJSON { response in
-            let (jsonData, jsonErrors) = self.parse(response)
+        Alamofire.request(BabySyncConstant.baseURL+endpointDetachFamily, method: .put, parameters: ["email": parentEmail]).responseJSON { response in
+//        Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointDetachFamily, parameters: ["email":parentEmail]).responseJSON { response in
+            let (jsonData, jsonErrors) = self.parse(response: response)
             if (jsonErrors != nil) {
                 self.handle(self.errors(jsonErrors))
                 return
@@ -344,7 +352,7 @@ class BabySync {
     }
     
     // MARK: - Populate and sort data arrays
-    fileprivate func parentsFrom(_ jsonData: JSON) -> [Parent] {
+    fileprivate func parentsFrom(_ jsonData: JSON) -> [Parent]? {
         var parents: [Parent] = []
         for jsonParent in jsonData["parents"].arrayValue {
             parents.append(Parent(parent: jsonParent))
@@ -355,7 +363,7 @@ class BabySync {
         return parents
     }
     
-    fileprivate func activitiesFrom(_ jsonData: JSON) -> [Activity] {
+    fileprivate func activitiesFrom(_ jsonData: JSON) -> [Activity]? {
         var activities: [Activity] = []
         for jsonActivity in jsonData["activities"].arrayValue {
             activities.append(Activity(activity: jsonActivity))
@@ -366,7 +374,7 @@ class BabySync {
         return activities
     }
     
-    fileprivate func babiesFrom(_ jsonData: JSON) -> [Baby] {
+    fileprivate func babiesFrom(_ jsonData: JSON) -> [Baby]? {
         var babies: [Baby] = []
         for jsonBaby in jsonData["babies"].arrayValue {
             babies.append(Baby(baby: jsonBaby))
@@ -380,13 +388,13 @@ class BabySync {
     static let service = BabySync()
     
     // MARK: - Helper Methods
-    static func nsErrorFrom(_ error: Error) -> NSError? {
-        var nsError: NSError?
+    static func errorFrom(_ errorAPI: ErrorAPI) -> Error? {
+        var error: Error?
         if let domain = AuthConstant.Error.Domain {
-            let errorInfo: [AnyHashable: Any]? = ["message": error.message]
-            nsError = NSError(domain: domain, code: error.code, userInfo: errorInfo)
+            let errorInfo: [AnyHashable: Any]? = ["message": errorAPI.message]
+            error = NSError(domain: domain, code: errorAPI.code, userInfo: errorInfo)
         }
-        return nsError
+        return error
     }
     
     static func babyByID(_ babyID: Int) -> Baby? {

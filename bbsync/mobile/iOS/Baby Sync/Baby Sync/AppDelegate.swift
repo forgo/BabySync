@@ -48,14 +48,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             application,
             openURL: url,
             sourceApplication: sourceApplication,
-            annotation: annotation)
+            annotation: annotation as AnyObject)
         
         // URL intended for Facebook SDK
         let isFacebookURL: Bool = Auth.sharedInstance.facebook.openURL(
             application,
             openURL: url,
             sourceApplication: sourceApplication,
-            annotation: annotation)
+            annotation: annotation as AnyObject)
         
         // Open URL if any service recognizes it
         return isGoogleURL || isFacebookURL

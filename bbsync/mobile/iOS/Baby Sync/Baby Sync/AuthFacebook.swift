@@ -13,7 +13,7 @@ import UIKit
 // MARK: - AuthFacebook Delegate Protocol
 protocol AuthFacebookDelegate {
     func didLogin(_ jwt: String, email: String)
-    func didEncounterLogin(_ errors: [Error])
+    func didEncounterLogin(_ errorsAPI: [ErrorAPI])
 }
 
 // MARK: - Facebook Info Struct
@@ -82,10 +82,10 @@ class AuthFacebook: NSObject, AuthAppMethod, AuthMethod, AuthFacebookDelegate {
     }
     
     // MARK: - Login Handler
-    func loginHandler(_ result: FBSDKLoginManagerLoginResult!, error: NSError!) {
+    func loginHandler(result: FBSDKLoginManagerLoginResult?, error: Error?) {
         if (error != nil) {
             self.delegate?.loginError(.Facebook, error: error)
-        } else if (result.isCancelled) {
+        } else if (result!.isCancelled) {
             self.delegate?.loginCancel(.Facebook)
         } else {
             self.requestUserData()
@@ -97,20 +97,25 @@ class AuthFacebook: NSObject, AuthAppMethod, AuthMethod, AuthFacebookDelegate {
         graphRequest.start(completionHandler: self.requestUserDataHandler)
     }
     
-    func requestUserDataHandler(_ connection: FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) {
+    func requestUserDataHandler(connection: FBSDKGraphRequestConnection?, result: Any?, error: Error?) {
         if (error != nil) {
             // Logout and delegate error if we can't get user data
             // because Auth login helper expects user data on success
             self.loginManager.logOut()
             self.delegate?.loginError(.Facebook, error: error)
         } else {
-            self.info.userId = result.value(forKey: "id") as! String
+            
+            let data:[String:Any] = result as! [String:Any]
+            
+            self.info.userId = (data["id"]! as? String)!
             self.info.accessToken = FBSDKAccessToken.current().tokenString
-            self.info.name = result.value(forKey: "name") as! String
-            self.info.email = result.value(forKey: "email") as! String
+            self.info.name = (data["name"]! as? String)!
+            self.info.email = (data["email"]! as? String)!
             
             // TODO: Profile pic retrieval is synchronous, do we care for login?
-            let picURLString = result.value(forKeyPath: "picture.data.url") as! String
+            let picture:[String:Any] = (data["picture"]! as? [String:Any])!
+            let pictureData:[String:Any] = (picture["data"]! as? [String:Any])!
+            let picURLString = (pictureData["url"]! as? String)!
             let picURL: URL = URL(string: picURLString)!
             let picData: Data = try! Data(contentsOf: picURL)
             self.info.pic = UIImage(data: picData)!
@@ -126,10 +131,10 @@ class AuthFacebook: NSObject, AuthAppMethod, AuthMethod, AuthFacebookDelegate {
         self.delegate?.loginSuccess(.Facebook, user: authUser, wasAlreadyLoggedIn: false)
     }
     
-    func didEncounterLogin(_ errors: [Error]) {
+    func didEncounterLogin(_ errorsAPI: [ErrorAPI]) {
         // TODO: Do we need to take into account errors past one if they exist?
-        if(errors.count > 0) {
-            let e: NSError? = BabySync.nsErrorFrom(errors[0])
+        if(errorsAPI.count > 0) {
+            let e: Error? = BabySync.errorFrom(errorsAPI[0])
             self.delegate?.loginError(.Facebook, error: e)
         }
     }

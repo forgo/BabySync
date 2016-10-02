@@ -14,21 +14,21 @@ struct Family {
     var createdOn: Date = Date()
     var updatedOn: Date = Date()
     
-    init() {
+    init?() {
         self.id = 0
         self.name = ""
         self.createdOn = Date()
         self.updatedOn = Date()
     }
     
-    init(family: JSON) {
+    init?(family: JSON) {
         self.id = family["id"].intValue
         self.name = family["name"].stringValue
         self.createdOn = ISO8601DateFormatter.sharedInstance.date(from: family["created_on"].stringValue)!
         self.updatedOn = ISO8601DateFormatter.sharedInstance.date(from: family["updated_on"].stringValue)!
     }
     
-    init(family: Family) {
+    init?(family: Family) {
         self.id = family.id
         self.name = family.name
         self.createdOn = family.createdOn

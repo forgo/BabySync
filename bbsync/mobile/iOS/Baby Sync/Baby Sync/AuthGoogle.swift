@@ -6,13 +6,14 @@
 //  Copyright © 2015 Elliott Richerson. All rights reserved.
 //
 
-import Google
 import UIKit
+import Google
+import GoogleSignIn
 
 // MARK: - AuthGoogle Delegate Protocol
 protocol AuthGoogleDelegate {
     func didLogin(_ jwt: String, email: String)
-    func didEncounterLogin(_ errors: [Error])
+    func didEncounterLogin(_ errorsAPI: [ErrorAPI])
 }
 
 // MARK: - Google Info Struct
@@ -55,7 +56,7 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
     
     // MARK: - AuthAppMethod Protocol
     func configure(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable: Any]?) -> Bool {
-        var configureError: NSError?
+        var configureError: Error?
         GGLContext.sharedInstance().configureWithError(&configureError)
         assert(configureError == nil, "Error configuring Google services: \(configureError)")
         self.signIn.delegate = self
@@ -101,7 +102,7 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
     token on the server.
     */
     
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: NSError!) {
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if (error == nil) {
             // TODO: Can we leverage user.serverAuthCode for token validation?
             self.info.userId = user.userID                        // For client-side use only!
@@ -127,7 +128,7 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
         }
     }
     
-    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: NSError!) {
+    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
         // Perform any operations when the user disconnects from app here.
         if (error == nil) {
             self.delegate?.didLogout(.Google)
@@ -142,7 +143,7 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
     
     // The sign-in flow has finished selecting how to proceed, and the UI should no longer display
     // a spinner or other "please wait" element.
-    func sign(inWillDispatch signIn: GIDSignIn!, error: NSError!) {
+    func sign(inWillDispatch signIn: GIDSignIn!, error: Error!) {
         print("signInWillDispatch (Google)")
         // stop animating spinner
     }
@@ -169,10 +170,10 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
         self.delegate?.loginSuccess(.Google, user: authUser, wasAlreadyLoggedIn: false)
     }
     
-    func didEncounterLogin(_ errors: [Error]) {
+    func didEncounterLogin(_ errorsAPI: [ErrorAPI]) {
         // TODO: Do we need to take into account errors past one if they exist?
-        if(errors.count > 0) {
-            let e: NSError? = BabySync.nsErrorFrom(errors[0])
+        if(errorsAPI.count > 0) {
+            let e: Error? = BabySync.errorFrom(errorsAPI[0])
             self.delegate?.loginError(.Google, error: e)
         }
     }

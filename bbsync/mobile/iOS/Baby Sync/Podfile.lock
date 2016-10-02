@@ -37,7 +37,17 @@ DEPENDENCIES:
   - AngleGradientLayer (~> 1.2.3)
   - Google/SignIn
   - Locksmith (~> 3.0)
-  - SwiftyJSON
+  - SwiftyJSON (from `https://github.com/SwiftyJSON/SwiftyJSON.git`, branch `master`)
+
+EXTERNAL SOURCES:
+  SwiftyJSON:
+    :branch: master
+    :git: https://github.com/SwiftyJSON/SwiftyJSON.git
+
+CHECKOUT OPTIONS:
+  SwiftyJSON:
+    :commit: ff43c8e31b4a74e9f98ead17d9b83fa9caf6c486
+    :git: https://github.com/SwiftyJSON/SwiftyJSON.git
 
 SPEC CHECKSUMS:
   Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
@@ -55,6 +65,6 @@ SPEC CHECKSUMS:
   Locksmith: 310b4cc5031af5728bf4db5d4de547a5100c6a3b
   SwiftyJSON: 29b9f2a64f118c07e691667c2ba1efe536acfe0b
 
-PODFILE CHECKSUM: 234bca0a37db28756b5fb033a9b9eb639179046e
+PODFILE CHECKSUM: 71f1678363348a823b4350a73d388304ec5e79ef
 
 COCOAPODS: 1.1.0.rc.2

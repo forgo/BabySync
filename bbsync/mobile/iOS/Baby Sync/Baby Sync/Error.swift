@@ -1,5 +1,5 @@
 //
-//  Error.swift
+//  ErrorAPI.swift
 //  Baby Sync
 //
 //  Created by Elliott Richerson on 10/13/15.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Error {
+struct ErrorAPI {
     var code: Int = 0
     var message: String = ""
     
@@ -27,7 +27,7 @@ struct Error {
         self.message = error["message"].stringValue
     }
     
-    init(error: Error) {
+    init(error: ErrorAPI) {
         self.code = error.code
         self.message = error.message
     }

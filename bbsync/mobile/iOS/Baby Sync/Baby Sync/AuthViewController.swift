@@ -219,7 +219,7 @@ class AuthViewController: UIViewController, AuthUIDelegate, UITextFieldDelegate,
         print("Login was cancelled")
     }
     
-    func authUILoginDidError(_ error: NSError?) {
+    func authUILoginDidError(_ error: Error?) {
         print("Login was unsuccessful")
         self.performSegue(withIdentifier: "SegueErrorPopover", sender: error)
     }

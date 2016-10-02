@@ -13,7 +13,7 @@ import UIKit
 protocol AuthUIDelegate {
     func authUILoginDidSucceed()
     func authUILoginDidCancel()
-    func authUILoginDidError(_ error: NSError?)
+    func authUILoginDidError(_ error: Error?)
 }
 
 class Auth: NSObject, AuthDelegate {
@@ -46,7 +46,7 @@ class Auth: NSObject, AuthDelegate {
         }
         else {
             // Try to load secure data for default auth data
-            let secureData = Locksmith.loadDataForUserAccount(defaultEmail, inService: defaultAuthMethod)
+            let secureData = Locksmith.loadDataForUserAccount(userAccount: defaultEmail, inService: defaultAuthMethod)
             let authMethod: AuthMethodType = AuthMethodType(rawValue: defaultAuthMethod)!
             let userId: String = secureData?["userId"] as! String
             let accessToken: String = secureData?["accessToken"] as! String
@@ -131,7 +131,7 @@ class Auth: NSObject, AuthDelegate {
         self.authUIDelegate?.authUILoginDidCancel()
     }
 
-    func loginError(_ method: AuthMethodType, error: NSError?) {
+    func loginError(_ method: AuthMethodType, error: Error?) {
         switch method {
         case .Google:
             print("Google login error.")
@@ -164,7 +164,7 @@ class Auth: NSObject, AuthDelegate {
         }
     }
     
-    func didFailToLogout(_ method: AuthMethodType, error: NSError?) {
+    func didFailToLogout(_ method: AuthMethodType, error: Error?) {
         switch method {
         case .Google:
             print("Google logout failure.")
@@ -214,9 +214,9 @@ class Auth: NSObject, AuthDelegate {
                 }
                 else {
                     let errorRef = AuthConstant.Error.Client.BadEmailOrPassword.self
-                    let error: Error = Error(code: errorRef.code, message: errorRef.message)
-                    let nsError: NSError? = BabySync.nsErrorFrom(error)
-                    self.authUIDelegate?.authUILoginDidError(nsError)
+                    let errorAPI: ErrorAPI = ErrorAPI(code: errorRef.code, message: errorRef.message)
+                    let error: Error? = BabySync.errorFrom(errorAPI)
+                    self.authUIDelegate?.authUILoginDidError(error)
                 }
             }
         }
