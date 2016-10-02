@@ -20,7 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function DeleteBaby(db, validate, errors, response) {
+module.exports = function DeleteBaby(utility) {
+
+	var errors = utility.errors;
+    var validate = utility.validate;
+    var response = utility.response;
+    var db = utility.db;
+    
     var dbDeleteBaby = function(parent) {
 
     };

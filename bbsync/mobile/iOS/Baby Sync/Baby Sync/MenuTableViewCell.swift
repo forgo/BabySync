@@ -13,7 +13,7 @@ class MenuTableViewCell: UITableViewCell {
     @IBOutlet weak var labelMenuItem: UILabel!
     
     override var layoutMargins: UIEdgeInsets {
-        get { return UIEdgeInsetsZero }
+        get { return UIEdgeInsets.zero }
         set(newVal) {}
     }
     

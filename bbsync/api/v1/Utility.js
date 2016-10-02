@@ -20,55 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Utility(errors) {
+module.exports = function Utility() {
+
+    var Security    = require('./Security.js');
+    var Errors      = require('./Errors.js');
+    var Validate    = require('./Validate.js');
+    var Response    = require('./Response.js');
+    var Database    = require('./Database.js');
+    
+    var security = new Security();
+    var errors = new Errors();
+    var validate = new Validate(errors);
+    var response = new Response(errors);
+    var db = new Database('http://neo4j:Tddktlzv@localhost:7474', errors);
 
     var utility = {
-        json_response: function(data, errorsArray) {
-            var obj = {};
-            if (data) {
-                obj.data = data;
-            }
-            if (errorsArray) {
-                obj.errors = errorsArray;
-            }
-            return JSON.stringify(obj, null, 4);
-        },
-        object_response: function(data, errorsArray) {
-            var obj = {};
-            if (data) {
-                obj.data = data;
-            }
-            if (errors) {
-                obj.errors = errorsArray;
-            }
-            return obj;
-        },
-        middleware: {
-            custom401: function * (next) {
-                try {
-                    yield next;
-                } catch (err) {
-                    if (401 == err.status) {
-                        yield utility.middleware.unauthorized;
-                    } else {
-                        throw err;
-                    }
-                }
-            },
-            unauthorized: function * (next) {
-                var json = utility.json_response(null, [errors.UNAUTHORIZED()]);
-                this.type = "application/json";
-                this.status = 401;
-                this.body = json;
-            },
-            unprivileged: function * (next) {
-            	console.log("GOT HEREEEEEEEE");
-                var json = utility.json_response(null, [errors.UNPRIVILEGED()]);
-                this.type = "application/json";
-                this.status = 401;
-                this.body = json;
-            }
-        }
+        security: security,
+        errors: errors,
+        validate: validate,
+        response: response,
+        db: db
     };
     return utility;
 };

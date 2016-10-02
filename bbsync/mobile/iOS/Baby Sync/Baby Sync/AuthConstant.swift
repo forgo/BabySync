@@ -18,7 +18,7 @@ struct AuthConstant {
         static let ProfilePic = UIImage(named: "defaultProfilePic")!
     }
     struct Error {
-        static let Domain = NSBundle.mainBundle().bundleIdentifier
+        static let Domain = Bundle.main.bundleIdentifier
         struct Client {
             struct BadEmailOrPassword {
                 static let code = 701

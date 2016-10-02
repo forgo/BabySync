@@ -18,8 +18,8 @@ class BabyCollectionViewCell: UICollectionViewCell {
                 self.imageBaby.layer.masksToBounds = true
                 self.imageBaby.image = UIImage(named: "Boy")
                 self.labelBaby.text = b.name
-                if(self.selected) {
-                    self.labelBaby.backgroundColor = UIColor.orangeColor()
+                if(self.isSelected) {
+                    self.labelBaby.backgroundColor = UIColor.orange
                 }
             }
         }

@@ -29,12 +29,12 @@ struct BabySyncErrors {
 
 // MARK: - BabySyncDelegate Protocol
 protocol BabySyncDelegate {
-    func didFind(parent: Parent)
-    func didCreate(family: Family)
-    func didJoin(family: Family)
-    func didMerge(family: Family)
-    func didRetrieve(family: Family)
-    func didEncounter(errors: [Error])
+    func didFind(_ family: Family)
+    func didCreate(_ family: Family)
+    func didJoin(_ family: Family)
+    func didMerge(_ family: Family)
+    func didRetrieve(_ family: Family)
+    func didEncounter(_ errors: [Error])
 }
 
 // MARK: - BabySync Service
@@ -47,8 +47,8 @@ class BabySync {
     
     // MARK: - JWT to use for authenticated requests
     // TODO: store the encrypted or some other way?
-    private var jwt: String?
-    private var email: String?
+    fileprivate var jwt: String?
+    fileprivate var email: String?
     
     // MARK: - Synced data arrays!
     var family: Family = Family()
@@ -57,7 +57,7 @@ class BabySync {
     var babies: [Baby] = []
     
     // MARK: - Conveneience Methods
-    private func clearData() {
+    fileprivate func clearData() {
         self.family = Family()
         self.parents.removeAll()
         self.activities.removeAll()
@@ -67,12 +67,12 @@ class BabySync {
     // MARK: - Parsing and error handling
     
     // Convert Error object to JSON dictionary
-    private func jsonError(error: Error) -> JSON {
+    fileprivate func jsonError(_ error: Error) -> JSON {
         return JSON(["code":error.code, "message": error.message])
     }
     
     // Convert errors from JSON response to array of Error objects
-    private func errors(jsonErrors: JSON) -> [Error] {
+    fileprivate func errors(_ jsonErrors: JSON) -> [Error] {
         var errors: [Error] = []
         for jsonError in jsonErrors.arrayValue {
             errors.append(Error(code: jsonError["code"].intValue, message: jsonError["message"].stringValue))
@@ -80,7 +80,7 @@ class BabySync {
         return errors
     }
     
-    private func parseLogin(method: AuthMethodType, jsonData: JSON) -> Bool {
+    fileprivate func parseLogin(_ method: AuthMethodType, jsonData: JSON) -> Bool {
         guard let token: String = jsonData["token"].stringValue else {
             self.handleLogin(method, errors: [BabySyncErrors.Client.ParseLoginToken])
             return false
@@ -94,7 +94,7 @@ class BabySync {
         return true
     }
     
-    private func parseFamily(jsonData: JSON) -> Bool {
+    fileprivate func parseFamily(_ jsonData: JSON) -> Bool {
         guard let family: Family = Family(family: jsonData["family"]) else {
             self.handle([BabySyncErrors.Client.ParseFamily])
             return false
@@ -123,7 +123,7 @@ class BabySync {
     }
     
     // Parse the high level response from the HTTP request
-    private func parse(response: Response<AnyObject, NSError>) -> (JSON, JSON) {
+    fileprivate func parse(_ response: Response<AnyObject, NSError>) -> (JSON, JSON) {
         
         var jsonData: JSON = nil
         var jsonErrors: JSON = nil
@@ -156,7 +156,7 @@ class BabySync {
     }
     
     // Parse the high level response from static test JSON file
-    private func parseTest(jsonTest: JSON) -> (JSON, JSON) {
+    fileprivate func parseTest(_ jsonTest: JSON) -> (JSON, JSON) {
         var jsonTestData: JSON = nil
         var jsonTestErrors: JSON = nil
         jsonTestData = jsonTest["data"]
@@ -165,12 +165,12 @@ class BabySync {
     }
     
     // For errors encountered, delegate out to whom it may concern
-    private func handle(errors: [Error]) {
+    fileprivate func handle(_ errors: [Error]) {
         self.delegate?.didEncounter(errors)
     }
     
     // For errors encountered during login, delegate out to appropriate auth method
-    private func handleLogin(method: AuthMethodType, errors: [Error]) {
+    fileprivate func handleLogin(_ method: AuthMethodType, errors: [Error]) {
         switch method {
         case .Google:
             self.delegateLoginGoogle?.didEncounterLogin(errors)
@@ -182,32 +182,32 @@ class BabySync {
     }
     
     // MARK: - Primary Service Operations
-    func login(method: AuthMethodType, email: String? = nil, password: String? = nil, accessToken: String? = nil) {
+    func login(_ method: AuthMethodType, email: String? = nil, password: String? = nil, accessToken: String? = nil) {
         
         var loginParams: [String : AnyObject]?
         
         switch method {
         case .Google:
             print("About to login to BabySync using Google token...")
-            guard let token = accessToken, e = email else {
+            guard let token = accessToken, let e = email else {
                 print("Aborting Google oAuth due to lack of accessToken or email")
                 return
             }
-            loginParams = ["authMethod":AuthMethodType.Google.rawValue,"accessToken":token,"email":e]
+            loginParams = ["authMethod":AuthMethodType.Google.rawValue as AnyObject,"accessToken":token as AnyObject,"email":e as AnyObject]
         case .Facebook:
             print("About to login to BabySync using Facebook token...")
-            guard let token = accessToken, e = email else {
+            guard let token = accessToken, let e = email else {
                 print("Aborting Facebook oAuth due to lack of accessToken or email")
                 return
             }
-            loginParams = ["authMethod":AuthMethodType.Facebook.rawValue,"accessToken":token,"email":e]
+            loginParams = ["authMethod":AuthMethodType.Facebook.rawValue as AnyObject,"accessToken":token as AnyObject,"email":e as AnyObject]
         case .Custom:
             print("About to login to BabySync using Custom credentials...")
-            guard let e = email, p = password else {
+            guard let e = email, let p = password else {
                 print("Aborting Custom login due to lack of credentials")
                 return
             }
-            loginParams = ["authMethod":AuthMethodType.Custom.rawValue,"email":e,"password":p]
+            loginParams = ["authMethod":AuthMethodType.Custom.rawValue as AnyObject,"email":e as AnyObject,"password":p as AnyObject]
         }
         
         let endpointLogin = "user/auth"
@@ -222,7 +222,7 @@ class BabySync {
             
             if (self.parseLogin(method, jsonData: jsonData)) {
                 
-                if let j = self.jwt, e = self.email {
+                if let j = self.jwt, let e = self.email {
                     switch method {
                     case .Google:
                         self.delegateLoginGoogle?.didLogin(j, email: e)
@@ -248,8 +248,7 @@ class BabySync {
         }
     }
     
-    
-    func findFamily(parentEmail: String) {
+    func findFamily(_ parentEmail: String) {
         let endpointFindFamily = "family/find/" + parentEmail
         Alamofire.request(.GET, BabySyncConstant.baseURL+endpointFindFamily).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
@@ -260,20 +259,18 @@ class BabySync {
             else {
                 // If the data came back empty, then we don't have a family yet, handle appropriately
                 if(jsonData.isEmpty) {
-                    
+                    // TODO: prompt user create new family or request to join existing?
                 }
                 else {
-                    guard let parent: Parent = Parent(parent: jsonData) else {
-                        self.handle([BabySyncErrors.Client.ParseParent])
-                        return
+                    if (self.parseFamily(jsonData)) {
+                        self.delegate?.didFind(self.family)
                     }
-                    self.delegate?.didFind(parent)
                 }
             }
         }
     }
     
-    func createFamily(parentEmail: String) {
+    func createFamily(_ parentEmail: String) {
         
         let dummy: Bool = true
         if (dummy) {
@@ -304,7 +301,7 @@ class BabySync {
         }
     }
     
-    func joinFamily(familyID: Int, parentEmail: String) {
+    func joinFamily(_ familyID: Int, parentEmail: String) {
         let endpointJoinFamily = "family/join/" + String(familyID)
         Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointJoinFamily, parameters: ["email":parentEmail]).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
@@ -318,7 +315,7 @@ class BabySync {
         }
     }
     
-    func mergeFamily(familyID: Int, parentEmail: String) {
+    func mergeFamily(_ familyID: Int, parentEmail: String) {
         let endpointMergeFamily = "family/merge/" + String(familyID)
         Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointMergeFamily, parameters: ["email":parentEmail]).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
@@ -332,7 +329,7 @@ class BabySync {
         }
     }
     
-    func detachFamily(familyID: Int, parentEmail: String) {
+    func detachFamily(_ familyID: Int, parentEmail: String) {
         let endpointDetachFamily = "family/detach"
         Alamofire.request(.PUT, BabySyncConstant.baseURL+endpointDetachFamily, parameters: ["email":parentEmail]).responseJSON { response in
             let (jsonData, jsonErrors) = self.parse(response)
@@ -347,34 +344,34 @@ class BabySync {
     }
     
     // MARK: - Populate and sort data arrays
-    private func parentsFrom(jsonData: JSON) -> [Parent] {
+    fileprivate func parentsFrom(_ jsonData: JSON) -> [Parent] {
         var parents: [Parent] = []
         for jsonParent in jsonData["parents"].arrayValue {
             parents.append(Parent(parent: jsonParent))
         }
-        parents.sortInPlace {
+        parents.sort {
             return $0.id < $1.id
         }
         return parents
     }
     
-    private func activitiesFrom(jsonData: JSON) -> [Activity] {
+    fileprivate func activitiesFrom(_ jsonData: JSON) -> [Activity] {
         var activities: [Activity] = []
         for jsonActivity in jsonData["activities"].arrayValue {
             activities.append(Activity(activity: jsonActivity))
         }
-        activities.sortInPlace {
+        activities.sort {
             return $0.id < $1.id
         }
         return activities
     }
     
-    private func babiesFrom(jsonData: JSON) -> [Baby] {
+    fileprivate func babiesFrom(_ jsonData: JSON) -> [Baby] {
         var babies: [Baby] = []
         for jsonBaby in jsonData["babies"].arrayValue {
             babies.append(Baby(baby: jsonBaby))
         }
-        babies.sortInPlace {
+        babies.sort {
             return $0.id < $1.id
         }
         return babies
@@ -383,16 +380,16 @@ class BabySync {
     static let service = BabySync()
     
     // MARK: - Helper Methods
-    static func nsErrorFrom(error: Error) -> NSError? {
+    static func nsErrorFrom(_ error: Error) -> NSError? {
         var nsError: NSError?
         if let domain = AuthConstant.Error.Domain {
-            let errorInfo: [NSObject : AnyObject]? = ["message": error.message]
+            let errorInfo: [AnyHashable: Any]? = ["message": error.message]
             nsError = NSError(domain: domain, code: error.code, userInfo: errorInfo)
         }
         return nsError
     }
     
-    static func babyByID(babyID: Int) -> Baby? {
+    static func babyByID(_ babyID: Int) -> Baby? {
         let babies: [Baby] = BabySync.service.babies.filter {$0.id == babyID}
         if (babies.count == 1) {
             return babies[0]
@@ -400,17 +397,17 @@ class BabySync {
         return nil
     }
     
-    static func timersForBabyID(babyID: Int) -> [Timer] {
+    static func timersForBabyID(_ babyID: Int) -> [Timer] {
         if let baby = BabySync.babyByID(babyID) {
             var timers: [Timer] = baby.timers
             // always get timers in id sorted order
-            timers.sortInPlace { return $0.id < $1.id }
+            timers.sort { return $0.id < $1.id }
             return timers
         }
         return []
     }
     
-    static func activityForTimer(timer: Timer) -> Activity? {
+    static func activityForTimer(_ timer: Timer) -> Activity? {
         let activities: [Activity] = BabySync.service.activities.filter {$0.id == timer.activityID}
         if (activities.count == 1) {
             return activities[0]

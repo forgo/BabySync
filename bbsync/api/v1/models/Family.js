@@ -20,14 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Family(REST, db, validate, errors, response) {
+module.exports = function Family(REST, utility) {
 
     // ---------------------------------------------------------------------
     // Family Validations
     // ---------------------------------------------------------------------
     var familyValidate = {
         name: function() {
-            return validate.regex(/^[a-zA-Z][a-zA-Z0-9' _]{2,29}$/);
+            return utility.validate.regex(/^[a-zA-Z][a-zA-Z0-9' _]{2,29}$/);
         }
     };
     
@@ -41,7 +41,7 @@ module.exports = function Family(REST, db, validate, errors, response) {
         test: familyValidate.name()
     }];
 
-    var family = new REST("Family", "f", familySchema, db, validate, errors, response);
+    var family = new REST("Family", "f", familySchema, utility);
     family["schema"] = familySchema;
     family["validate"] = familyValidate;
     return family;

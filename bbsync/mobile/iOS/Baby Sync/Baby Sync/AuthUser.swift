@@ -29,12 +29,12 @@ struct AuthUser: CreateableSecureStorable,
     // Required by CreateableSecureStorable
     var data: [String: AnyObject] {
         return [
-            "userId": userId,
-            "accessToken": accessToken,
-            "name": name,
-            "email": email,
+            "userId": userId as AnyObject,
+            "accessToken": accessToken as AnyObject,
+            "name": name as AnyObject,
+            "email": email as AnyObject,
             "pic": pic,
-            "jwt": jwt
+            "jwt": jwt as AnyObject
         ]
     }
     
@@ -60,8 +60,8 @@ struct AuthUser: CreateableSecureStorable,
     
     var description: String {
         
-        let tokenAbbreviation: String = self.accessToken.substringWithRange(Range<String.Index>(start: self.accessToken.startIndex, end: self.accessToken.startIndex.advancedBy(min(self.accessToken.characters.count, 10)))) + "..."
-        let jwtAbbreviation: String = self.jwt.substringWithRange(Range<String.Index>(start: self.jwt.startIndex, end: self.jwt.startIndex.advancedBy(min(self.jwt.characters.count, 10)))) + "..."
+        let tokenAbbreviation: String = self.accessToken.substring(with: (self.accessToken.startIndex ..< self.accessToken.characters.index(self.accessToken.startIndex, offsetBy: min(self.accessToken.characters.count, 10)))) + "..."
+        let jwtAbbreviation: String = self.jwt.substring(with: (self.jwt.startIndex ..< self.jwt.characters.index(self.jwt.startIndex, offsetBy: min(self.jwt.characters.count, 10)))) + "..."
         return "AuthUser(\n\tservice: \(self.service)\n\tuserId: \(self.userId)\n\taccessToken: \(tokenAbbreviation)\n\tname: \(self.name)\n\temail: \(self.email)\n\tpic: \(self.pic)\n\tjwt: \(jwtAbbreviation)\n)"
     }
 }

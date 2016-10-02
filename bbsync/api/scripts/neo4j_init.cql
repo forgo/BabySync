@@ -1,14 +1,15 @@
 // Create User Indices and Constraints
-CREATE CONSTRAINT ON (u:User) ASSERT u.username IS UNIQUE;
 CREATE CONSTRAINT ON (u:User) ASSERT u.email IS UNIQUE;
-CREATE INDEX ON :User(username);
+CREATE CONSTRAINT ON (u:User) ASSERT u.username IS UNIQUE;
+
+CREATE CONSTRAINT ON (u:User) ASSERT u.facebookID IS UNIQUE;
+CREATE CONSTRAINT ON (u:User) ASSERT u.googleID IS UNIQUE;
+
 CREATE INDEX ON :User(email);
+CREATE INDEX ON :User(username);
 
 // Create Parent Indices and Constraints
-CREATE CONSTRAINT ON (p:Parent) ASSERT p.email IS UNIQUE;
-CREATE INDEX ON :Parent(email);
-CREATE INDEX ON :Parent(facebookID);
-CREATE INDEX ON :Parent(googleID);
+CREATE CONSTRAINT ON (p:Parent)-[r:RESPONSIBLE_FOR]-(f:Family) ASSERT exists(r.pendingApproval)
 
 // Create Geocache Indices for Better Location Search Performance
 CREATE INDEX ON :Geocache(lat);

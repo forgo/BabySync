@@ -13,12 +13,12 @@ struct Parent {
     var facebookID: Int = 0
     var name: String = ""
     var email: String = ""
-    var createdOn: NSDate = NSDate()
-    var updatedOn: NSDate = NSDate()
+    var createdOn: Date = Date()
+    var updatedOn: Date = Date()
     
     internal var paramValue: Dictionary<String,AnyObject> {
         get {
-            return ["facebookID":String(self.facebookID),"name":self.name,"email":self.email]
+            return ["facebookID":String(self.facebookID) as AnyObject,"name":self.name as AnyObject,"email":self.email as AnyObject]
         }
     }
     
@@ -27,8 +27,8 @@ struct Parent {
         self.facebookID = 0
         self.name = ""
         self.email = ""
-        self.createdOn = NSDate()
-        self.updatedOn = NSDate()
+        self.createdOn = Date()
+        self.updatedOn = Date()
     }
     
     init(parent: JSON) {
@@ -36,8 +36,8 @@ struct Parent {
         self.facebookID = parent["facebookID"].intValue
         self.name = parent["name"].stringValue
         self.email = parent["email"].stringValue
-        self.createdOn = ISO8601DateFormatter.sharedInstance.dateFromString(parent["created_on"].stringValue)!
-        self.updatedOn = ISO8601DateFormatter.sharedInstance.dateFromString(parent["updated_on"].stringValue)!
+        self.createdOn = ISO8601DateFormatter.sharedInstance.date(from: parent["created_on"].stringValue)!
+        self.updatedOn = ISO8601DateFormatter.sharedInstance.date(from: parent["updated_on"].stringValue)!
     }
     
     init(parent: Parent) {

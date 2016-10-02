@@ -11,21 +11,21 @@ import Foundation
 struct Family {
     var id: Int = 0
     var name: String = ""
-    var createdOn: NSDate = NSDate()
-    var updatedOn: NSDate = NSDate()
+    var createdOn: Date = Date()
+    var updatedOn: Date = Date()
     
     init() {
         self.id = 0
         self.name = ""
-        self.createdOn = NSDate()
-        self.updatedOn = NSDate()
+        self.createdOn = Date()
+        self.updatedOn = Date()
     }
     
     init(family: JSON) {
         self.id = family["id"].intValue
         self.name = family["name"].stringValue
-        self.createdOn = ISO8601DateFormatter.sharedInstance.dateFromString(family["created_on"].stringValue)!
-        self.updatedOn = ISO8601DateFormatter.sharedInstance.dateFromString(family["updated_on"].stringValue)!
+        self.createdOn = ISO8601DateFormatter.sharedInstance.date(from: family["created_on"].stringValue)!
+        self.updatedOn = ISO8601DateFormatter.sharedInstance.date(from: family["updated_on"].stringValue)!
     }
     
     init(family: Family) {

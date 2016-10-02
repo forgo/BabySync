@@ -17,10 +17,10 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     var isTest: Bool = false
     var isEditingTimer: Bool = false
     
-    private var ticker: NSTimer = NSTimer()
-    private var refreshTimer: NSTimer = NSTimer()
+    fileprivate var ticker: Foundation.Timer = Foundation.Timer()
+    fileprivate var refreshTimer: Foundation.Timer = Foundation.Timer()
     
-    private var tic: Bool = true
+    fileprivate var tic: Bool = true
     @IBOutlet weak var labelRefreshCountdown: UILabel!
     
     @IBOutlet weak var imageUser: UIImageView!
@@ -28,11 +28,11 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     @IBOutlet weak var labelEmail: UILabel!
     
     var viewBabies: UIView!
-    private var viewBabiesHeight: CGFloat = 0
+    fileprivate var viewBabiesHeight: CGFloat = 0
     @IBOutlet weak var collectionBabies: UICollectionView!
     @IBOutlet weak var tableTimers: UITableView!
 
-    var selectedBabyIndexPath: NSIndexPath = NSIndexPath(forItem: 0, inSection: 0)
+    var selectedBabyIndexPath: IndexPath = IndexPath(item: 0, section: 0)
     var selectedBabyID: Int?
     var selectedTimerID: Int?
     
@@ -54,8 +54,8 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     func startTimers() {
-        self.ticker = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "tick", userInfo: nil, repeats: true)
-        self.refreshTimer = NSTimer.scheduledTimerWithTimeInterval(60.0, target: self, selector: "refresh", userInfo: nil, repeats: true)
+        self.ticker = Foundation.Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(HomeViewController.tick), userInfo: nil, repeats: true)
+        self.refreshTimer = Foundation.Timer.scheduledTimer(timeInterval: 60.0, target: self, selector: #selector(HomeViewController.refresh), userInfo: nil, repeats: true)
     }
     
     func stopTimers() {
@@ -76,7 +76,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         self.collectionBabies.collectionViewLayout.invalidateLayout()
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if(scrollView == self.tableTimers) {
             updateBabiesView()
         }
@@ -121,7 +121,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         // do something to get data
     }
     
@@ -130,8 +130,8 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         // Dispose of any resources that can be recreated.
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return UIStatusBarStyle.lightContent
     }
     
     // Convenience
@@ -141,27 +141,27 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     // Segues
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "SegueMenuPopover") {
-            let menuPopupVC: MenuViewController = segue.destinationViewController as! MenuViewController            
+            let menuPopupVC: MenuViewController = segue.destination as! MenuViewController            
             menuPopupVC.popoverPresentationController!.delegate = self
             menuPopupVC.delegate = self
         }
         else if (segue.identifier == "SegueHomeToBaby") {
-            let babyVC: BabyViewController = segue.destinationViewController as! BabyViewController
-            babyVC.babyState = .Viewing
-            let babySelectedIndexPaths: [NSIndexPath] = self.collectionBabies.indexPathsForSelectedItems()!
-            let babySelectedIndexPath: NSIndexPath = babySelectedIndexPaths.first!
-            babyVC.baby = Baby(baby: BabySync.service.babies[babySelectedIndexPath.row])
+            let babyVC: BabyViewController = segue.destination as! BabyViewController
+            babyVC.babyState = .viewing
+            let babySelectedIndexPaths: [IndexPath] = self.collectionBabies.indexPathsForSelectedItems!
+            let babySelectedIndexPath: IndexPath = babySelectedIndexPaths.first!
+            babyVC.baby = Baby(baby: BabySync.service.babies[(babySelectedIndexPath as NSIndexPath).row])
         }
         else if (segue.identifier == "SegueHomeToNewBaby") {
-            let babyVC: BabyViewController = segue.destinationViewController as! BabyViewController
-            babyVC.babyState = .Creating
+            let babyVC: BabyViewController = segue.destination as! BabyViewController
+            babyVC.babyState = .creating
             babyVC.baby = Baby()
         }
     }
     
-    @IBAction func prepareForUnwindToHome(segue: UIStoryboardSegue) {
+    @IBAction func prepareForUnwindToHome(_ segue: UIStoryboardSegue) {
         // Clear user data and log off if unwinded here
         if (segue.identifier == "UnwindSegueBabyToHome") {
             
@@ -175,26 +175,26 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     // MARK: - UIPopoverPresentationControllerDelegate
-    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         // This allows the popover to not take over the whole screen
-        return UIModalPresentationStyle.None
+        return UIModalPresentationStyle.none
     }
     
-    func popoverPresentationControllerShouldDismissPopover(popoverPresentationController: UIPopoverPresentationController) -> Bool {
+    func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
         // Handle this ourselves to turn off automatic animation when clicking outside of popover
         // and to have a handle for other potential actions
-        self.dismissViewControllerAnimated(false) { () -> Void in
+        self.dismiss(animated: false) { () -> Void in
             //
         }
         return false
     }
     
     // MARK: - UICollectionViewDataSource
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if(collectionView == self.collectionBabies) {
-            let cell: BabyCollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("BabyCell", forIndexPath: indexPath) as! BabyCollectionViewCell
-            let baby: Baby = BabySync.service.babies[indexPath.row]
+            let cell: BabyCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "BabyCell", for: indexPath) as! BabyCollectionViewCell
+            let baby: Baby = BabySync.service.babies[(indexPath as NSIndexPath).row]
             cell.baby = baby
             return cell
         }
@@ -203,14 +203,14 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     }
     
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         if (collectionView == self.collectionBabies) {
             return 1
         }
         return 0
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if (collectionView == self.collectionBabies) {
             return BabySync.service.babies.count
         }
@@ -218,57 +218,57 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     // MARK: - UICollectionViewDelegate
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if (collectionView == self.collectionBabies) {
             
-            let baby: Baby = BabySync.service.babies[indexPath.row]
+            let baby: Baby = BabySync.service.babies[(indexPath as NSIndexPath).row]
             self.selectedBabyID = baby.id
             
-            self.collectionBabies.cellForItemAtIndexPath(indexPath)?.selected = true
-            self.collectionBabies.reloadItemsAtIndexPaths([indexPath])
+            self.collectionBabies.cellForItem(at: indexPath)?.isSelected = true
+            self.collectionBabies.reloadItems(at: [indexPath])
         }
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         // Center the babies in their horizontal collection view
         if (collectionView == self.collectionBabies) {
             let edgeInsets = (collectionView.frame.size.width - (CGFloat(BabySync.service.babies.count) * 50) - (CGFloat(BabySync.service.babies.count) * 10)) / 2
             return UIEdgeInsetsMake(0, edgeInsets, 0, 0)
         }
         else {
-            return UIEdgeInsetsZero
+            return UIEdgeInsets.zero
         }
     }
     
     
-    override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
+    override func willRotate(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
         self.updateBabiesView()
     }
 
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if (collectionView == self.collectionBabies) {
-            return CGSizeMake(60, 80)
+            return CGSize(width: 60, height: 80)
         }
         else {
-            return CGSizeMake(0,0)
+            return CGSize(width: 0,height: 0)
         }
     }
     
     // MARK: - UITableViewDataSource
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (tableView == self.tableTimers) {
-            let cell: TimerTableViewCell = tableView.dequeueReusableCellWithIdentifier("TimerCell", forIndexPath: indexPath) as! TimerTableViewCell
+            let cell: TimerTableViewCell = tableView.dequeueReusableCell(withIdentifier: "TimerCell", for: indexPath) as! TimerTableViewCell
                         
             // TimerTableViewCell will handle updates on didSet of timer property
             if let selectedBabyID = self.selectedBabyID {
                 var timers: [Timer] = BabySync.timersForBabyID(selectedBabyID)
-                cell.timer = timers[indexPath.row]
+                cell.timer = timers[(indexPath as NSIndexPath).row]
             }
             
             // Bug in storyboard, have to programatically set cell background to clear
             // otherwise it shows up white
-            cell.backgroundColor = UIColor.clearColor()
+            cell.backgroundColor = UIColor.clear
             
             return cell
         }
@@ -277,14 +277,14 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         if(tableView == self.tableTimers) {
             return 1
         }
         return 0
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (tableView == self.tableTimers && BabySync.service.babies.count > 0) {
             // Find the number of timers associated with this baby
             if let selectedBabyID = self.selectedBabyID {
@@ -296,8 +296,8 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         return 0
     }
     
-    func visibleTimerCellsExcept(indexPath: NSIndexPath, action: (TimerTableViewCell)->(), exceptAction: (TimerTableViewCell)->()) {
-        let timerException: TimerTableViewCell = self.tableTimers.cellForRowAtIndexPath(indexPath) as! TimerTableViewCell
+    func visibleTimerCellsExcept(_ indexPath: IndexPath, action: (TimerTableViewCell)->(), exceptAction: (TimerTableViewCell)->()) {
+        let timerException: TimerTableViewCell = self.tableTimers.cellForRow(at: indexPath) as! TimerTableViewCell
         for visibleCell in self.tableTimers.visibleCells {
             let timerCell: TimerTableViewCell = visibleCell as! TimerTableViewCell
             if (timerCell != timerException) {
@@ -309,13 +309,13 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     }
     
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         if (tableView == self.tableTimers) {
-            let editAction = UITableViewRowAction(style: .Destructive, title: "EDIT") { (action, indexPath) -> Void in
+            let editAction = UITableViewRowAction(style: UITableViewRowActionStyle(), title: "EDIT") { (action, indexPath) -> Void in
                 // TODO: Edit timer handler
             }
             editAction.backgroundColor = BabySyncConstant.Color.Secondary
-            let deleteAction = UITableViewRowAction(style: .Normal, title: "DELETE") { (action, indexPath) -> Void in
+            let deleteAction = UITableViewRowAction(style: .normal, title: "DELETE") { (action, indexPath) -> Void in
                 // TODO: Delete timer handler
             }
             deleteAction.backgroundColor = BabySyncConstant.Color.Dark
@@ -325,7 +325,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         return []
     }
     
-    func tableView(tableView: UITableView, willBeginEditingRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
         
         if(tableView == self.tableTimers) {            
             self.isEditingTimer = true
@@ -338,14 +338,14 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     }
     
-    func tableView(tableView: UITableView, didEndEditingRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
         if(tableView == self.tableTimers) {
             // Apple bug calls this method twice, so this avoid that
             if (self.isEditingTimer) {
                 self.isEditingTimer = false
                 self.startTimers()
                 
-                self.visibleTimerCellsExcept(indexPath, action: { (nonEditCell) -> () in
+                self.visibleTimerCellsExcept(indexPath!, action: { (nonEditCell) -> () in
                     nonEditCell.blur(false)
                     }, exceptAction: { (editCell) -> () in
                         editCell.layoutForEdit(false)
@@ -355,10 +355,10 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
 
     // MARK: - UITableViewDelegate
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (tableView == self.tableTimers) {
-            print("selected timer at index \(indexPath.row)")
-            let cell: TimerTableViewCell = tableView.cellForRowAtIndexPath(indexPath) as! TimerTableViewCell
+            print("selected timer at index \((indexPath as NSIndexPath).row)")
+            let cell: TimerTableViewCell = tableView.cellForRow(at: indexPath) as! TimerTableViewCell
             if let timer = cell.timer {
                 self.selectedTimerID = timer.id
             }
@@ -369,22 +369,22 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     // MARK: - MenuViewDelegate
-    func menu(menuController: MenuViewController, didSelectItemWithSegueIdentifier segueID: String) {
-        menuController.dismissViewControllerAnimated(false) { () -> Void in
-            self.performSegueWithIdentifier(segueID, sender: self)
+    func menu(_ menuController: MenuViewController, didSelectItemWithSegueIdentifier segueID: String) {
+        menuController.dismiss(animated: false) { () -> Void in
+            self.performSegue(withIdentifier: segueID, sender: self)
         }
     }
     
     // MARK: - BabySyncDelegate
-    func didFind(parent: Parent) {
+    func didFind(_ family: Family) {
         
     }
     
-    func didLogin(parent: Parent) {
+    func didLogin(_ parent: Parent) {
         
     }
 
-    func didCreate(family: Family) {
+    func didCreate(_ family: Family) {
         print("didCreate family: ", family)
         
         // Default to selecting the first baby (if existing) on new family creation
@@ -394,19 +394,19 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         self.reloadCollections()
     }
     
-    func didJoin(family: Family) {
+    func didJoin(_ family: Family) {
         
     }
     
-    func didMerge(family: Family){
+    func didMerge(_ family: Family){
         
     }
     
-    func didRetrieve(family: Family) {
+    func didRetrieve(_ family: Family) {
         
     }
     
-    func didEncounter(errors: [Error]) {
+    func didEncounter(_ errors: [Error]) {
         //        print("DID ENCOUNTER")
         //        let alertController: UIAlertController = UIAlertController(title: "Error code: "+String(error.code), message: error.message, preferredStyle: .Alert);
         //

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function CreateFamily(db, validate, errors, response, parentSchema) {
+module.exports = function CreateFamily(utility, parentSchema) {
     
     // Database Extensions for Complex App Queries
     var dbBabySync = require('../DatabaseBabySync.js')(db);
@@ -28,8 +28,14 @@ module.exports = function CreateFamily(db, validate, errors, response, parentSch
     var parse = require('co-body');
     var _ = require('lodash');
 
+    var errors = utility.errors;
+    var validate = utility.validate;
+    var response = utility.response;
+    var db = utility.db;
+
     var createFamily = function * (next) {
         try {
+            console.log("CREATE FAMILY");
             // TODO: Be sure this is being requested by authenticated user w/proper privileges
             var parent_pre = yield parse(this);
             var parent_test = validate.schema(parentSchema, parent_pre);

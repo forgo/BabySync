@@ -32,6 +32,16 @@ module.exports = function Response(errors) {
             }
             return JSON.stringify(obj, null, 4);
         },
+        object_response: function(data, errorsArray) {
+            var obj = {};
+            if (data) {
+                obj.data = data;
+            }
+            if (errorsArray) {
+                obj.errors = errorsArray;
+            }
+            return obj;
+        },
         success: function(data) {
             return function * (next) {
                 var json = response.json_response(data, null);
@@ -52,6 +62,29 @@ module.exports = function Response(errors) {
                 this.type = "application/json";
                 this.body = json;
             };
+        },
+        unauthorized: function * (next) {
+            var json = response.json_response(null, [errors.UNAUTHORIZED()]);
+            this.type = "application/json";
+            this.status = 401;
+            this.body = json;
+        },
+        unprivileged: function * (next) {
+            var json = response.json_response(null, [errors.UNPRIVILEGED()]);
+            this.type = "application/json";
+            this.status = 401;
+            this.body = json;
+        },
+        custom401: function * (next) {
+            try {
+                yield next;
+            } catch (err) {
+                if (401 == err.status) {
+                    yield response.unauthorized;
+                } else {
+                    throw err;
+                }
+            }
         },
         catchErrors: function(err, pre, context) {
             return function * (next) {

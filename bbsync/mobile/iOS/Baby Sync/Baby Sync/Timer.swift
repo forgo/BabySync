@@ -11,30 +11,30 @@ import Foundation
 struct Timer {
     var id: Int = 0
     var activityID: Int = 0
-    var resetDate: NSDate = NSDate()
+    var resetDate: Date = Date()
     var enabled: Bool = true
     var push: Bool = false
-    var createdOn: NSDate = NSDate()
-    var updatedOn: NSDate = NSDate()
+    var createdOn: Date = Date()
+    var updatedOn: Date = Date()
     
     init() {
         self.id = 0
         self.activityID = 0
-        self.resetDate = NSDate()
+        self.resetDate = Date()
         self.enabled = true
         self.push = false
-        self.createdOn = NSDate()
-        self.updatedOn = NSDate()
+        self.createdOn = Date()
+        self.updatedOn = Date()
     }
     
     init(timer: JSON) {
         self.id = timer["id"].intValue
         self.activityID = timer["activityID"].intValue
-        self.resetDate = ISO8601DateFormatter.sharedInstance.dateFromString(timer["resetDate"].stringValue)!
+        self.resetDate = ISO8601DateFormatter.sharedInstance.date(from: timer["resetDate"].stringValue)!
         self.enabled = timer["enabled"].boolValue
         self.push = timer["push"].boolValue
-        self.createdOn = ISO8601DateFormatter.sharedInstance.dateFromString(timer["created_on"].stringValue)!
-        self.updatedOn = ISO8601DateFormatter.sharedInstance.dateFromString(timer["updated_on"].stringValue)!
+        self.createdOn = ISO8601DateFormatter.sharedInstance.date(from: timer["created_on"].stringValue)!
+        self.updatedOn = ISO8601DateFormatter.sharedInstance.date(from: timer["updated_on"].stringValue)!
     }
     
     init(timer: Timer) {

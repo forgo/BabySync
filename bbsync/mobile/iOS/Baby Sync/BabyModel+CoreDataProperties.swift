@@ -15,6 +15,6 @@ import CoreData
 extension BabyModel {
 
     @NSManaged var id: NSNumber?
-    @NSManaged var image: NSData?
+    @NSManaged var image: Data?
 
 }

@@ -29,7 +29,7 @@ class SelectIconViewController: UIViewController, UICollectionViewDataSource, UI
     }
     
     // UICollectionViewDataSource
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if (collectionView == self.collectionIcons) {
             return self.iconAssets.count
         }
@@ -38,17 +38,17 @@ class SelectIconViewController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if(collectionView == self.collectionIcons) {
-            let cell: IconCollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("IconCell", forIndexPath: indexPath) as! IconCollectionViewCell
+            let cell: IconCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "IconCell", for: indexPath) as! IconCollectionViewCell
 
-            cell.asset = self.iconAssets[indexPath.row]
+            cell.asset = self.iconAssets[(indexPath as NSIndexPath).row]
             cell.imageIcon.layer.masksToBounds = true
-            cell.imageIcon.image = UIImage(named: self.iconAssets[indexPath.row])
+            cell.imageIcon.image = UIImage(named: self.iconAssets[(indexPath as NSIndexPath).row])
             
-            if(cell.selected) {
-                cell.backgroundColor = UIColor.orangeColor()
+            if(cell.isSelected) {
+                cell.backgroundColor = UIColor.orange
             }
             
             return cell
@@ -60,7 +60,7 @@ class SelectIconViewController: UIViewController, UICollectionViewDataSource, UI
         
     }
     
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         if (collectionView == self.collectionIcons) {
             return 1
         }
@@ -78,9 +78,9 @@ class SelectIconViewController: UIViewController, UICollectionViewDataSource, UI
 //    }
     
     // Segues
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "UnwindSegueSelectIconToBaby") {
-            let babyVC: BabyViewController = segue.destinationViewController as! BabyViewController
+            let babyVC: BabyViewController = segue.destination as! BabyViewController
             let selectedCell: IconCollectionViewCell = sender as! IconCollectionViewCell
             babyVC.imageView.image = selectedCell.imageIcon.image
         }

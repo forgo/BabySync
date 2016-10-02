@@ -20,7 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function CreateBaby(db, validate, errors, response) {
+module.exports = function CreateBaby(utility) {
+	
+	var errors = utility.errors;
+    var validate = utility.validate;
+    var response = utility.response;
+    var db = utility.db;
+
     var dbCreateBaby = function(parent) {
 
     };

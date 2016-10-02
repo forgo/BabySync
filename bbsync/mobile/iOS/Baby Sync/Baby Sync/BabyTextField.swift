@@ -18,7 +18,7 @@ class BabyTextField: UITextField {
     @IBInspectable var insetBottom: CGFloat = 0
     @IBInspectable var insetRight: CGFloat = 0
     @IBInspectable var underlineThickness: CGFloat = 1.0
-    @IBInspectable var underlineColor: UIColor = UIColor.whiteColor()
+    @IBInspectable var underlineColor: UIColor = UIColor.white
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -31,15 +31,15 @@ class BabyTextField: UITextField {
     }
     
     func setup() {
-        self.contentVerticalAlignment = .Bottom
+        self.contentVerticalAlignment = .bottom
         
-        self.attributedText = self.formatString(self.text, withColor: UIColor.whiteColor())
+        self.attributedText = self.formatString(self.text, withColor: UIColor.white)
         
         let placeholderColor: UIColor = UIColor(red:0.75, green:0.86, blue:0.91, alpha:1.0)
         self.attributedPlaceholder = self.formatString(self.placeholder, withColor: placeholderColor)
     }
     
-    func formatString(plainString: String?, withColor: UIColor) -> NSAttributedString {
+    func formatString(_ plainString: String?, withColor: UIColor) -> NSAttributedString {
         var plainText = ""
         if let fieldText = plainString {
             plainText = fieldText
@@ -56,25 +56,25 @@ class BabyTextField: UITextField {
         self.isInterfaceBuilder = true
     }
     
-    override func textRectForBounds(bounds: CGRect) -> CGRect {
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
         let deltaX: CGFloat = self.insetLeft + self.insetRight
         let deltaY: CGFloat = self.insetTop + self.insetBottom
-        let textRect: CGRect = CGRectMake(bounds.origin.x + self.insetLeft, bounds.origin.y + self.insetTop, bounds.size.width - deltaX, bounds.size.height - deltaY)
+        let textRect: CGRect = CGRect(x: bounds.origin.x + self.insetLeft, y: bounds.origin.y + self.insetTop, width: bounds.size.width - deltaX, height: bounds.size.height - deltaY)
         return textRect
     }
     
-    override func editingRectForBounds(bounds: CGRect) -> CGRect {
-        return textRectForBounds(bounds)
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        return textRect(forBounds: bounds)
     }
     
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         // Underline to indicate text field
         let context = UIGraphicsGetCurrentContext()
-        let underlineBounds: CGRect = CGRectMake(0, self.frame.height - self.underlineThickness, self.frame.width, self.underlineThickness)
-        CGContextSaveGState(context)
-        CGContextSetFillColorWithColor(context, self.underlineColor.CGColor)
-        CGContextFillRect(context, underlineBounds)
-        CGContextRestoreGState(context)
+        let underlineBounds: CGRect = CGRect(x: 0, y: self.frame.height - self.underlineThickness, width: self.frame.width, height: self.underlineThickness)
+        context?.saveGState()
+        context?.setFillColor(self.underlineColor.cgColor)
+        context?.fill(underlineBounds)
+        context?.restoreGState()
         
         if (!self.isInterfaceBuilder) {
             // Code for runtime

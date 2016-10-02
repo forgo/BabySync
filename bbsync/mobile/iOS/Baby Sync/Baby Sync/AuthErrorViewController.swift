@@ -31,15 +31,15 @@ class AuthErrorViewController: UIViewController {
             parent.view.constraints
             let popoverWidth: CGFloat = parent.view.frame.width - 40
             let popoverHeight: CGFloat = 100
-            self.preferredContentSize = CGSizeMake(popoverWidth, popoverHeight)
+            self.preferredContentSize = CGSize(width: popoverWidth, height: popoverHeight)
         }
         else {
             // Best guesstimate?
-            self.preferredContentSize = CGSizeMake(200, 200)
+            self.preferredContentSize = CGSize(width: 200, height: 200)
         }
 
         // Force popover array to point up
-        self.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.Up
+        self.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.up
         
         // If a message was provided, show it
         if let msg = self.message {

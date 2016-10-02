@@ -10,10 +10,10 @@ import UIKit
 
 extension UIFont {
     public static func printInstalledFonts() {
-        for fontFamily in UIFont.familyNames() {
+        for fontFamily in UIFont.familyNames {
             let familyName = fontFamily as String
             print("Font Family: \(familyName)");
-            for fontName in UIFont.fontNamesForFamilyName(familyName) {
+            for fontName in UIFont.fontNames(forFamilyName: familyName) {
                 print("\t- \(fontName)");
             }
             print("\n");

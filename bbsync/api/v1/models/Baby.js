@@ -20,14 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Baby(REST, db, validate, errors, response) {
+module.exports = function Baby(REST, utility) {
 
     // ---------------------------------------------------------------------
     // Baby Validations
     // ---------------------------------------------------------------------
     var babyValidate = {
         name: function() {
-            return validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
+            return utility.validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
         }
     };
 
@@ -41,7 +41,7 @@ module.exports = function Baby(REST, db, validate, errors, response) {
         test: babyValidate.name()
     }];
 
-    var baby = new REST("Baby", "b", babySchema, db, validate, errors, response);
+    var baby = new REST("Baby", "b", babySchema, utility);
     baby["schema"] = babySchema;
     baby["validate"] = babyValidate;
     return baby;

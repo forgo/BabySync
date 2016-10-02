@@ -66,8 +66,8 @@ module.exports = function Validate(errors) {
             var fields = Object.keys(pre);
 
             // Ensure Fields Provided are Unique
-            var repeatedFields = _.uniq(_.filter(fields, function(x,i,fields) {
-                return _.contains(fields,x,i+1);
+            var repeatedFields = _.uniqBy(_.filter(fields, function(x,i,fields) {
+                return _.includes(fields,x,i+1);
             }));
 
             for (var repeatedField in repeatedFields) {
@@ -75,7 +75,7 @@ module.exports = function Validate(errors) {
                 errorArray.push(errors.ATTRIBUTE_NOT_UNIQUE(repeatedField));
             }
 
-            var uniqueFields = _.uniq(fields);
+            var uniqueFields = _.uniqBy(fields);
 
             // Required or not, if a field provided is not in the schema, error
             // This also does a sanity check on your schema for multiple definitions
@@ -193,8 +193,8 @@ module.exports = function Validate(errors) {
                 });
             }
             // Ensure Fields Provided are Unique
-            var repeatedAttributes = _.uniq(_.filter(atts, function(x,i,atts) {
-                return _.contains(atts,x,i+1);
+            var repeatedAttributes = _.uniqBy(_.filter(atts, function(x,i,atts) {
+                return _.includes(atts,x,i+1);
             }));
             if (repeatedAttributes.length != 0) {
                 return {

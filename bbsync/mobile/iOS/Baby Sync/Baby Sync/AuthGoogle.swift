@@ -11,8 +11,8 @@ import UIKit
 
 // MARK: - AuthGoogle Delegate Protocol
 protocol AuthGoogleDelegate {
-    func didLogin(jwt: String, email: String)
-    func didEncounterLogin(errors: [Error])
+    func didLogin(_ jwt: String, email: String)
+    func didEncounterLogin(_ errors: [Error])
 }
 
 // MARK: - Google Info Struct
@@ -37,7 +37,7 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
     
     // Singleton
     static let sharedInstance = AuthGoogle()
-    private override init() {
+    fileprivate override init() {
         self.signIn = GIDSignIn.sharedInstance()
         self.signIn.shouldFetchBasicProfile = true
         self.info = AuthGoogleInfo()
@@ -48,13 +48,13 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
     
     // Google provided managers
     var signIn: GIDSignIn
-    private var signInButton: GIDSignInButton!
+    fileprivate var signInButton: GIDSignInButton!
     
     // To keep track of internally until login process resolves
-    private var info: AuthGoogleInfo
+    fileprivate var info: AuthGoogleInfo
     
     // MARK: - AuthAppMethod Protocol
-    func configure(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+    func configure(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable: Any]?) -> Bool {
         var configureError: NSError?
         GGLContext.sharedInstance().configureWithError(&configureError)
         assert(configureError == nil, "Error configuring Google services: \(configureError)")
@@ -63,8 +63,8 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
         return true
     }
     
-    func openURL(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        return self.signIn.handleURL(url, sourceApplication: sourceApplication, annotation: annotation)
+    func openURL(_ application: UIApplication, openURL url: URL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        return self.signIn.handle(url, sourceApplication: sourceApplication, annotation: annotation)
     }
     
     // MARK: - AuthMethod Protocol
@@ -77,7 +77,7 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
         }
     }
     
-    func login(email: String? = nil, password: String? = nil) {
+    func login(_ email: String? = nil, password: String? = nil) {
         self.signIn.signIn();
     }
 
@@ -101,7 +101,7 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
     token on the server.
     */
     
-    func signIn(signIn: GIDSignIn!, didSignInForUser user: GIDGoogleUser!, withError error: NSError!) {
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: NSError!) {
         if (error == nil) {
             // TODO: Can we leverage user.serverAuthCode for token validation?
             self.info.userId = user.userID                        // For client-side use only!
@@ -111,8 +111,8 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
             
             if(user.profile.hasImage) {
                 // TODO: Profile pic retrieval is synchronous, do we care for login?
-                let picURL: NSURL = user.profile.imageURLWithDimension(256)
-                let picData: NSData = NSData(contentsOfURL: picURL)!
+                let picURL: URL = user.profile.imageURL(withDimension: 256)
+                let picData: Data = try! Data(contentsOf: picURL)
                 self.info.pic = UIImage(data: picData)!
             }
             else {
@@ -127,7 +127,7 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
         }
     }
     
-    func signIn(signIn: GIDSignIn!, didDisconnectWithUser user: GIDGoogleUser!, withError error: NSError!) {
+    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: NSError!) {
         // Perform any operations when the user disconnects from app here.
         if (error == nil) {
             self.delegate?.didLogout(.Google)
@@ -142,7 +142,7 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
     
     // The sign-in flow has finished selecting how to proceed, and the UI should no longer display
     // a spinner or other "please wait" element.
-    func signInWillDispatch(signIn: GIDSignIn!, error: NSError!) {
+    func sign(inWillDispatch signIn: GIDSignIn!, error: NSError!) {
         print("signInWillDispatch (Google)")
         // stop animating spinner
     }
@@ -150,26 +150,26 @@ class AuthGoogle: NSObject, AuthAppMethod, AuthMethod, GIDSignInDelegate, GIDSig
     // If implemented, this method will be invoked when sign in needs to display a view controller.
     // The view controller should be displayed modally (via UIViewController's |presentViewController|
     // method, and not pushed unto a navigation controller's stack.
-    func signIn(signIn: GIDSignIn!, presentViewController viewController: UIViewController!) {
+    func sign(_ signIn: GIDSignIn!, present viewController: UIViewController!) {
         print("signIn presentViewController (Google)")
-        Auth.sharedInstance.loginViewController?.presentViewController(viewController, animated: true, completion: nil)
+        Auth.sharedInstance.loginViewController?.present(viewController, animated: true, completion: nil)
     }
     
     // If implemented, this method will be invoked when sign in needs to dismiss a view controller.
     // Typically, this should be implemented by calling |dismissViewController| on the passed
     // view controller.
-    func signIn(signIn: GIDSignIn!, dismissViewController viewController: UIViewController!) {
+    func sign(_ signIn: GIDSignIn!, dismiss viewController: UIViewController!) {
         print("signIn dismissViewController (Google)")
-        Auth.sharedInstance.loginViewController?.dismissViewControllerAnimated(true, completion: nil)
+        Auth.sharedInstance.loginViewController?.dismiss(animated: true, completion: nil)
     }
     
     // MARK: - AuthGoogleDelegate
-    func didLogin(jwt: String, email: String) {
+    func didLogin(_ jwt: String, email: String) {
         let authUser = AuthUser(service: .Google, userId: self.info.userId, accessToken: self.info.accessToken, name: self.info.name, email: self.info.email, pic: self.info.pic, jwt: jwt)
         self.delegate?.loginSuccess(.Google, user: authUser, wasAlreadyLoggedIn: false)
     }
     
-    func didEncounterLogin(errors: [Error]) {
+    func didEncounterLogin(_ errors: [Error]) {
         // TODO: Do we need to take into account errors past one if they exist?
         if(errors.count > 0) {
             let e: NSError? = BabySync.nsErrorFrom(errors[0])

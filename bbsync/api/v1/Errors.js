@@ -178,7 +178,7 @@ module.exports = function Errors() {
         ATTRIBUTE_UNEXPECTED: function(attribute) {
             return {
                 code: 3007,
-                message: attribute + " unexpected"  
+                message: attribute + " unexpected attribute"  
             };
         },
         ATTRIBUTE_NOT_UNIQUE: function(attribute) {

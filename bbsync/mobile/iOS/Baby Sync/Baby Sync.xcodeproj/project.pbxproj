@@ -39,6 +39,7 @@
 		4F446ABF1BCE159B00D0AD64 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABE1BCE159B00D0AD64 /* Error.swift */; };
 		4F508D751BE8A8E900EE9D1A /* NBUIKitMainThreadGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F508D741BE8A8E900EE9D1A /* NBUIKitMainThreadGuard.swift */; };
 		4F53D9371BBBC15100EB598F /* SourceCodePro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F53D9351BBBBEB800EB598F /* SourceCodePro-Regular.ttf */; };
+		4F7F209F1BFFBB46008B2590 /* NewFamilyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7F209E1BFFBB46008B2590 /* NewFamilyViewController.swift */; };
 		4FA4BE8A1BE5009700580FD3 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA4BE891BE5009700580FD3 /* TimerView.swift */; };
 		4FB1B71A1BE460D2007CA316 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB1B7191BE460D2007CA316 /* StringExtension.swift */; };
 		4FB636F41BF071CB00D7EC43 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB636F31BF071CB00D7EC43 /* ErrorView.swift */; };
@@ -132,6 +133,7 @@
 		4F508D711BE8A84A00EE9D1A /* Baby Sync-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Baby Sync-Bridging-Header.h"; sourceTree = "<group>"; };
 		4F508D741BE8A8E900EE9D1A /* NBUIKitMainThreadGuard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NBUIKitMainThreadGuard.swift; sourceTree = "<group>"; };
 		4F53D9351BBBBEB800EB598F /* SourceCodePro-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceCodePro-Regular.ttf"; sourceTree = "<group>"; };
+		4F7F209E1BFFBB46008B2590 /* NewFamilyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewFamilyViewController.swift; sourceTree = "<group>"; };
 		4FA4BE891BE5009700580FD3 /* TimerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		4FB1B7191BE460D2007CA316 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		4FB636F31BF071CB00D7EC43 /* ErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 				4F23A8CA1BBC55DB001FBCFF /* NewTimerViewController.swift */,
 				4F23A8CC1BBC55F0001FBCFF /* NewActivityViewController.swift */,
 				4F23A8CE1BBC562E001FBCFF /* SyncFamilyViewController.swift */,
+				4F7F209E1BFFBB46008B2590 /* NewFamilyViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -375,13 +378,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4FD82EBA1BBB086900A06E0A /* Build configuration list for PBXNativeTarget "Baby Sync" */;
 			buildPhases = (
-				4C4805EE06E198FD0FF5F4C8 /* Check Pods Manifest.lock */,
+				4C4805EE06E198FD0FF5F4C8 /* [CP] Check Pods Manifest.lock */,
 				4FD82E8E1BBB086900A06E0A /* Sources */,
 				4FD82E8F1BBB086900A06E0A /* Frameworks */,
 				4FD82E901BBB086900A06E0A /* Resources */,
 				4FD82EE61BBB46AF00A06E0A /* Embed Frameworks */,
-				441F789F44A06D8B0CEF5B1E /* Embed Pods Frameworks */,
-				20FCF0591B9DB2F724594880 /* Copy Pods Resources */,
+				441F789F44A06D8B0CEF5B1E /* [CP] Embed Pods Frameworks */,
+				20FCF0591B9DB2F724594880 /* [CP] Copy Pods Resources */,
 				4FE9D2761BE0499400E1214A /* Embed PlugIns */,
 			);
 			buildRules = (
@@ -405,6 +408,8 @@
 				TargetAttributes = {
 					4FD82E911BBB086900A06E0A = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = M9J358TQ9K;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -445,14 +450,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		20FCF0591B9DB2F724594880 /* Copy Pods Resources */ = {
+		20FCF0591B9DB2F724594880 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -460,14 +465,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Baby Sync/Pods-Baby Sync-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		441F789F44A06D8B0CEF5B1E /* Embed Pods Frameworks */ = {
+		441F789F44A06D8B0CEF5B1E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -475,19 +480,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Baby Sync/Pods-Baby Sync-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4C4805EE06E198FD0FF5F4C8 /* Check Pods Manifest.lock */ = {
+		4C4805EE06E198FD0FF5F4C8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -525,6 +530,7 @@
 				4F508D751BE8A8E900EE9D1A /* NBUIKitMainThreadGuard.swift in Sources */,
 				4F08A3981BDFF45E000DE4EF /* AuthState.swift in Sources */,
 				4FE939601BE3337700EA421C /* AuthLoginWithButton.swift in Sources */,
+				4F7F209F1BFFBB46008B2590 /* NewFamilyViewController.swift in Sources */,
 				4FD82EEB1BBB6EC700A06E0A /* Baby.swift in Sources */,
 				4FFAE2401BC269E600FB2B73 /* BabyModel.swift in Sources */,
 				4FFAE1E71BC1C5F600FB2B73 /* SelectIconViewController.swift in Sources */,
@@ -667,7 +673,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -678,8 +685,10 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.beyondaphelion.Baby-Sync";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Baby Sync/Baby Sync-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -689,7 +698,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -700,7 +710,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.beyondaphelion.Baby-Sync";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Baby Sync/Baby Sync-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

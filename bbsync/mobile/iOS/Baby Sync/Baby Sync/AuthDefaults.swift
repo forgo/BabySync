@@ -12,13 +12,13 @@ class AuthDefaults {
     
     // Singleton
     static let sharedInstance = AuthDefaults()
-    private init() {}
+    fileprivate init() {}
     
-    private var defaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+    fileprivate var defaults: UserDefaults = UserDefaults.standard
     
     var email: String {
         get {
-            if let email = self.defaults.stringForKey(AuthConstant.Default.KeyEmail) {
+            if let email = self.defaults.string(forKey: AuthConstant.Default.KeyEmail) {
                 return email
             }
             else {
@@ -32,7 +32,7 @@ class AuthDefaults {
     
     var authMethod: String {
         get {
-            if let authMethod = self.defaults.stringForKey(AuthConstant.Default.KeyAuthMethod) {
+            if let authMethod = self.defaults.string(forKey: AuthConstant.Default.KeyAuthMethod) {
                 return authMethod
             }
             else {

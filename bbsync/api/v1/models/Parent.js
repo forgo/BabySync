@@ -20,14 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Parent(REST, db, validate, errors, response) {
+module.exports = function Parent(REST, utility) {
 
     // ---------------------------------------------------------------------
     // Parent Validations
     // ---------------------------------------------------------------------
     var parentValidate = {
         name: function() {
-            return validate.regex(/^([a-zA-Z]{2,29})([\s]{1})([a-zA-Z]{2,29})$/);
+            return utility.validate.regex(/^([a-zA-Z]{2,29})([\s]{1})([a-zA-Z]{2,29})$/);
         }
     };
     
@@ -41,7 +41,7 @@ module.exports = function Parent(REST, db, validate, errors, response) {
         test: parentValidate.name()
     }];
 
-    var parent = new REST("Parent", "p", parentSchema, db, validate, errors, response);
+    var parent = new REST("Parent", "p", parentSchema, utility);
     parent["schema"] = parentSchema;
     parent["validate"] = parentValidate;
     return parent;

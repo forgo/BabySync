@@ -8,36 +8,56 @@
 
 import AngleGradientLayer
 import UIKit
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func <= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l <= r
+  default:
+    return !(rhs < lhs)
+  }
+}
+
 
 
 @IBDesignable
 class TimerView: UIView {
 
-    private static let TAU: Double = 2.0 * M_PI
-    private static let MIN_TICKS: UInt = 1
-    private static let MAX_TICKS: UInt = 144
+    fileprivate static let TAU: Double = 2.0 * M_PI
+    fileprivate static let MIN_TICKS: UInt = 1
+    fileprivate static let MAX_TICKS: UInt = 144
     
-    private var firstDraw: Bool = true
+    fileprivate var firstDraw: Bool = true
     
-    private var layerGradient: AngleGradientLayer?
-    private var layerGradientOverlay: CAShapeLayer?
-    private var layerMeterMaskActive: CAShapeLayer?
-    private var layerMeterMaskInactive: CAShapeLayer?
-    private var layerMeterCenter: CAShapeLayer?
+    fileprivate var layerGradient: AngleGradientLayer?
+    fileprivate var layerGradientOverlay: CAShapeLayer?
+    fileprivate var layerMeterMaskActive: CAShapeLayer?
+    fileprivate var layerMeterMaskInactive: CAShapeLayer?
+    fileprivate var layerMeterCenter: CAShapeLayer?
     
     @IBInspectable var actualElapsed: Double = 52.0
     @IBInspectable var warnElapsed: Double = 45.0
     @IBInspectable var criticalElapsed: Double = 60.0
     
-    @IBInspectable var color: UIColor = UIColor.blackColor()
+    @IBInspectable var color: UIColor = UIColor.black
     @IBInspectable var innerMargin: CGFloat = 0.3
     @IBInspectable var outerMargin: CGFloat = 0.1
-    @IBInspectable var offColor: UIColor = UIColor.darkGrayColor()
-    @IBInspectable var okColor: UIColor = UIColor.greenColor()
-    @IBInspectable var warnColor: UIColor = UIColor.yellowColor()
-    @IBInspectable var criticalColor: UIColor = UIColor.redColor()
+    @IBInspectable var offColor: UIColor = UIColor.darkGray
+    @IBInspectable var okColor: UIColor = UIColor.green
+    @IBInspectable var warnColor: UIColor = UIColor.yellow
+    @IBInspectable var criticalColor: UIColor = UIColor.red
     @IBInspectable var nTicks: UInt = 36
-    private var nTicksActive: UInt?
+    fileprivate var nTicksActive: UInt?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -108,7 +128,7 @@ class TimerView: UIView {
     func createLayerGradient() -> AngleGradientLayer {
         let gradient: AngleGradientLayer = AngleGradientLayer()
 
-        gradient.colors = [self.criticalColor.CGColor, self.criticalColor.CGColor, self.warnColor.CGColor, self.warnColor.CGColor, self.okColor.CGColor]
+        gradient.colors = [self.criticalColor.cgColor, self.criticalColor.cgColor, self.warnColor.cgColor, self.warnColor.cgColor, self.okColor.cgColor]
         
         gradient.frame = self.bounds
 
@@ -125,73 +145,73 @@ class TimerView: UIView {
         gradient.transform = CATransform3DRotate(gradient.transform, CGFloat(-M_PI_2), 0.0, 0.0, 1.0)
         
         gradient.masksToBounds = true
-        gradient.backgroundColor = UIColor.clearColor().CGColor
+        gradient.backgroundColor = UIColor.clear.cgColor
         return gradient
     }
 
     func createLayerGradientOverlay() -> CAShapeLayer {
-        let origin: CGPoint = CGPointMake(self.frame.width/2.0, self.frame.height/2.0)
+        let origin: CGPoint = CGPoint(x: self.frame.width/2.0, y: self.frame.height/2.0)
         let radius = self.frame.width/2.0
         let overlay = CAShapeLayer()
         overlay.lineWidth = 0.0
-        overlay.path = UIBezierPath(arcCenter: origin, radius: radius, startAngle: 0.0, endAngle: CGFloat(M_PI * 2.0), clockwise: true).CGPath
-        overlay.fillColor = self.color.CGColor
+        overlay.path = UIBezierPath(arcCenter: origin, radius: radius, startAngle: 0.0, endAngle: CGFloat(M_PI * 2.0), clockwise: true).cgPath
+        overlay.fillColor = self.color.cgColor
         overlay.opacity = 1.0
-        overlay.backgroundColor = UIColor.clearColor().CGColor
+        overlay.backgroundColor = UIColor.clear.cgColor
         return overlay
     }
     
     func createLayerMeterCenter() -> CAShapeLayer {
-        let origin: CGPoint = CGPointMake(self.frame.width/2.0, self.frame.height/2.0)
+        let origin: CGPoint = CGPoint(x: self.frame.width/2.0, y: self.frame.height/2.0)
         let radius: CGFloat =  (self.frame.width/2.0) * self.innerMargin
         let center = CAShapeLayer()
         center.lineWidth = 0.0
         let circlePath: UIBezierPath = UIBezierPath(arcCenter: origin, radius: radius, startAngle: 0.0, endAngle: CGFloat(M_PI * 2.0), clockwise: true)
-        center.path = circlePath.CGPath
-        center.fillColor = self.color.CGColor
+        center.path = circlePath.cgPath
+        center.fillColor = self.color.cgColor
         center.opacity = 1.0
-        center.backgroundColor = UIColor.clearColor().CGColor
+        center.backgroundColor = UIColor.clear.cgColor
         return center
     }
     
-    func pointOnCircleWith(origin: CGPoint, radius: CGFloat, angle: Double) -> CGPoint {
+    func pointOnCircleWith(_ origin: CGPoint, radius: CGFloat, angle: Double) -> CGPoint {
         let x: CGFloat = origin.x + radius * CGFloat(cos(angle))
         let y: CGFloat = origin.y + radius * CGFloat(sin(angle))
-        return CGPointMake(x, y)
+        return CGPoint(x: x, y: y)
     }
     
     func createMaskPaths() -> (UIBezierPath, UIBezierPath) {
         let arcAngle: Double = TimerView.TAU / Double(2 * self.nTicks)
         var startAngle: Double = arcAngle - M_PI_2
         
-        let origin: CGPoint = CGPointMake(self.frame.width/2.0, self.frame.height/2.0)
+        let origin: CGPoint = CGPoint(x: self.frame.width/2.0, y: self.frame.height/2.0)
         let radius: CGFloat =  (self.frame.width/2.0) * (1.0 - self.outerMargin)
         
         let activePath: UIBezierPath = UIBezierPath()
         let inactivePath: UIBezierPath = UIBezierPath()
         
-        activePath.moveToPoint(origin)
-        inactivePath.moveToPoint(origin)
+        activePath.move(to: origin)
+        inactivePath.move(to: origin)
         
-        for var tick: UInt = 1; tick <= self.nTicks; ++tick {
+        for var tick: UInt = 1; tick <= self.nTicks; tick += 1 {
             
             let startArcPoint: CGPoint = self.pointOnCircleWith(origin, radius: radius, angle: startAngle)
 
             if(tick <= self.nTicksActive) {
-                activePath.addLineToPoint(startArcPoint)
-                activePath.addArcWithCenter(origin, radius: radius, startAngle: CGFloat(startAngle), endAngle: CGFloat(startAngle+arcAngle), clockwise: true)
-                activePath.addLineToPoint(origin)
+                activePath.addLine(to: startArcPoint)
+                activePath.addArc(withCenter: origin, radius: radius, startAngle: CGFloat(startAngle), endAngle: CGFloat(startAngle+arcAngle), clockwise: true)
+                activePath.addLine(to: origin)
             }
             else {
-                inactivePath.addLineToPoint(startArcPoint)
-                inactivePath.addArcWithCenter(origin, radius: radius, startAngle: CGFloat(startAngle), endAngle: CGFloat(startAngle+arcAngle), clockwise: true)
-                inactivePath.addLineToPoint(origin)
+                inactivePath.addLine(to: startArcPoint)
+                inactivePath.addArc(withCenter: origin, radius: radius, startAngle: CGFloat(startAngle), endAngle: CGFloat(startAngle+arcAngle), clockwise: true)
+                inactivePath.addLine(to: origin)
             }
 
             startAngle += arcAngle * 2.0
         }
-        activePath.closePath()
-        inactivePath.closePath()
+        activePath.close()
+        inactivePath.close()
         
         return (activePath, inactivePath)
     }
@@ -202,17 +222,17 @@ class TimerView: UIView {
         let (activeMaskPath, inactiveMaskPath) = self.createMaskPaths()
         
         activePath.usesEvenOddFillRule = true
-        activePath.appendPath(activeMaskPath)
+        activePath.append(activeMaskPath)
     
         let activeMask: CAShapeLayer = CAShapeLayer()
-        activeMask.path = activePath.CGPath
+        activeMask.path = activePath.cgPath
         activeMask.fillRule = kCAFillRuleEvenOdd
-        activeMask.fillColor = UIColor.blackColor().CGColor
+        activeMask.fillColor = UIColor.black.cgColor
         activeMask.opacity = 1.0
         
         let inactiveMask: CAShapeLayer = CAShapeLayer()
-        inactiveMask.path = inactiveMaskPath.CGPath
-        inactiveMask.fillColor = self.offColor.CGColor
+        inactiveMask.path = inactiveMaskPath.cgPath
+        inactiveMask.fillColor = self.offColor.cgColor
         inactiveMask.opacity = 0.9
         
         return (activeMask, inactiveMask)
@@ -253,7 +273,7 @@ class TimerView: UIView {
         }
     }
     
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
 //        let startTime: CFAbsoluteTime = CFAbsoluteTimeGetCurrent()
         
         let nTicksActiveChanged: Bool = self.nTicksActiveChanged()

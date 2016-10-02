@@ -12,10 +12,10 @@ struct Activity {
     var id: Int = 0
     var name: String = ""
     var icon: String = ""
-    var warn: NSTimeInterval = NSTimeInterval()
-    var critical: NSTimeInterval = NSTimeInterval()
-    var createdOn: NSDate = NSDate()
-    var updatedOn: NSDate = NSDate()
+    var warn: TimeInterval = TimeInterval()
+    var critical: TimeInterval = TimeInterval()
+    var createdOn: Date = Date()
+    var updatedOn: Date = Date()
     
     init() {
         self.id = 0
@@ -23,8 +23,8 @@ struct Activity {
         self.icon = ""
         self.warn = 0.0
         self.critical = 0.0
-        self.createdOn = NSDate()
-        self.updatedOn = NSDate()
+        self.createdOn = Date()
+        self.updatedOn = Date()
     }
     
     init(activity: JSON) {
@@ -33,8 +33,8 @@ struct Activity {
         self.icon = activity["icon"].stringValue
         self.warn = activity["warn"].doubleValue
         self.critical = activity["critical"].doubleValue
-        self.createdOn = ISO8601DateFormatter.sharedInstance.dateFromString(activity["created_on"].stringValue)!
-        self.updatedOn = ISO8601DateFormatter.sharedInstance.dateFromString(activity["updated_on"].stringValue)!
+        self.createdOn = ISO8601DateFormatter.sharedInstance.date(from: activity["created_on"].stringValue)!
+        self.updatedOn = ISO8601DateFormatter.sharedInstance.date(from: activity["updated_on"].stringValue)!
     }
     
     init(activity: Activity) {

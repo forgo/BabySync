@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function RESTUser(label, alias, schema, db, validate, errors, response) {
+module.exports = function RESTUser(label, alias, schema, utility) {
 
     var parse = require('co-body');
     var _ = require('lodash');
@@ -29,24 +29,15 @@ module.exports = function RESTUser(label, alias, schema, db, validate, errors, r
     var jwt = require('koa-jwt');
     var req = require('koa-request');
 
+    var errors = utility.errors;
+    var validate = utility.validate;
+    var response = utility.response;
+    var db = utility.db;
+
     var restUser = {
 // -----------------------------------------------------------------------------
 // START USER SPECIFIC LOGIC
 // -----------------------------------------------------------------------------
-jwtSign: function(issuerClaim, emailClaim, isAdminClaim) {
-    // Set and return JWT
-    var privateKey = fs.readFileSync('v1/auth/ssl/demo.rsa');
-    var claims = {
-        iss: issuerClaim,
-        email: emailClaim,
-        admin: isAdminClaim
-    };
-    var token = jwt.sign(claims, privateKey, {
-        algorithm: 'RS256',
-        expiresInMinutes: 120
-    });
-    return token;
-},
 login: function * (next) {
     try {
         var login_pre = yield parse(this);
@@ -94,7 +85,7 @@ login: function * (next) {
                                 if (newGoogleUserCreate.success) {
                                     // Successfully created new User with Google ID
                                     // Sign a token and generate response
-                                    var token = restUser.jwtSign("Google", newGoogleUserCreate.data.email, false);
+                                    var token = utility.security.signJWT("Google", newGoogleUserCreate.data.email, false);
                                     return yield response.success({ token: token, email: newGoogleUserCreate.data.email });
                                 } else {
                                     // Failed to create new user with Google ID
@@ -106,7 +97,7 @@ login: function * (next) {
                         } else {
                             // User found with this valid Google ID
                             // Sign a token and generate response
-                            var token = restUser.jwtSign("Google", userByGoogleID.data.email, false);
+                            var token = utility.security.signJWT("Google", userByGoogleID.data.email, false);
                             return yield response.success({ token: token, email: userByGoogleID.data.email });
                         }
                     } else {
@@ -145,7 +136,7 @@ login: function * (next) {
                                 if (newFacebookUserCreate.success) {
                                     // Successfully created new User with Facebook ID
                                     // Sign a token and generate response
-                                    var token = restUser.jwtSign("Facebook", newFacebookUserCreate.data.email, false);
+                                    var token = utility.security.signJWT("Facebook", newFacebookUserCreate.data.email, false);
                                     return yield response.success({ token: token, email: newFacebookUserCreate.data.email });
                                 } else {
                                     // Failed to create new user with Facebook ID
@@ -157,7 +148,7 @@ login: function * (next) {
                         } else {
                             // User found with this valid Facebook ID
                             // Sign a token and generate response
-                            var token = restUser.jwtSign("Facebook", userByFacebookID.data.email, false);
+                            var token = utility.security.signJWT("Facebook", userByFacebookID.data.email, false);
                             return yield response.success({ token: token, email: userByFacebookID.data.email });
                         }
                     } else {
@@ -206,7 +197,7 @@ login: function * (next) {
                 var userUpdate = yield db.user_update(userToCompare.id, userLoginTimeUpdate, label, alias, schema);
                 if (userUpdate.success) {
                     // Sign the token and generate response
-                    var token = restUser.jwtSign("BabySync", userUpdate.data.email, false);
+                    var token = utility.security.signJWT("BabySync", userUpdate.data.email, false);
                     return yield response.success({ token: token, email: userUpdate.data.email });
                 } else {
                     // Failed to Update Last Login Date When Logging In
@@ -230,9 +221,10 @@ login: function * (next) {
         post: function * (next) {
             try {
                 // TODO: Be sure this is being requested by authenticated user w/proper privileges
-
                 var object_pre = yield parse(this);
+                console.log("object_pre:", object_pre);
                 var object_test = validate.schema(schema, object_pre);
+                console.log("object_test:", object_test);
                 if (object_test.valid) {
 
 // -----------------------------------------------------------------------------
@@ -241,16 +233,20 @@ login: function * (next) {
 // Check if username / email already in use
 var takenErrors = [];
 var isTaken = false;
-var checkUsername = yield db.user_username_taken(object_test.data.username, label, alias);
 
-if (checkUsername.success) {
-    if (checkUsername.taken) {
-        isTaken = true;
-        takenErrors.push(errors.USERNAME_TAKEN("username"));
+// if username is not provided in user creation, don't bother
+if(!_.isEmpty(object_test.data.username)) {
+    var checkUsername = yield db.user_username_taken(object_test.data.username, label, alias);
+    if (checkUsername.success) {
+        if (checkUsername.taken) {
+            isTaken = true;
+            takenErrors.push(errors.USERNAME_TAKEN("username"));
+        }
+    } else {
+        return yield response.invalidPost(object_pre, checkUsername.errors);
     }
-} else {
-    return yield response.invalidPost(object_pre, checkUsername.errors);
 }
+
 var checkEmail = yield db.user_email_taken(object_test.data.email, label, alias);
 if (checkEmail.success) {
     if (checkEmail.taken) {

@@ -12,8 +12,8 @@ extension String {
     func isValidEmail() -> Bool {
         do {
             let emailPattern = "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)*$"
-            let regex = try NSRegularExpression(pattern: emailPattern, options: NSRegularExpressionOptions.CaseInsensitive)
-            return regex.firstMatchInString(self, options: .ReportCompletion, range: NSMakeRange(0, self.characters.count)) != nil
+            let regex = try NSRegularExpression(pattern: emailPattern, options: NSRegularExpression.Options.caseInsensitive)
+            return regex.firstMatch(in: self, options: .reportCompletion, range: NSMakeRange(0, self.characters.count)) != nil
         }
         catch {
             return false
@@ -23,8 +23,8 @@ extension String {
     func isValidPassword() -> Bool {
         do {
             let passwordPattern = "^(?=[^\\d_].*?\\d)\\w(\\w|[!@#$%]){7,20}$"
-            let regex = try NSRegularExpression(pattern: passwordPattern, options: NSRegularExpressionOptions.CaseInsensitive)
-            return regex.firstMatchInString(self, options: .ReportCompletion, range: NSMakeRange(0, self.characters.count)) != nil
+            let regex = try NSRegularExpression(pattern: passwordPattern, options: NSRegularExpression.Options.caseInsensitive)
+            return regex.firstMatch(in: self, options: .reportCompletion, range: NSMakeRange(0, self.characters.count)) != nil
         }
         catch {
             return false

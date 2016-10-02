@@ -20,13 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function DetachFamily(db, validate, errors, response, parentSchema, familySchema) {
+module.exports = function DetachFamily(utility, parentSchema, familySchema) {
 
     // Database Extensions for Complex App Queries
     var dbBabySync = require('../DatabaseBabySync.js')(db);
 
     var parse = require('co-body');
     var _ = require('lodash');
+
+    var errors = utility.errors;
+    var validate = utility.validate;
+    var response = utility.response;
+    var db = utility.db;
     
     var detachFamily = function * (next) {
     	try {

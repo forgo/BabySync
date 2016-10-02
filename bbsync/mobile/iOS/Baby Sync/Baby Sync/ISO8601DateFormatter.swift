@@ -8,13 +8,13 @@
 
 import Foundation
 
-class ISO8601DateFormatter : NSDateFormatter {
+class ISO8601DateFormatter : DateFormatter {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     override init() {
         super.init()
-        self.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+        self.locale = Locale(identifier: "en_US_POSIX")
         self.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
     }
     static let sharedInstance = ISO8601DateFormatter()

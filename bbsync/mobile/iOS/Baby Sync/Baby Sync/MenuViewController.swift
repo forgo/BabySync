@@ -9,7 +9,7 @@
 import UIKit
 
 protocol MenuViewDelegate {
-    func menu(menuController: MenuViewController, didSelectItemWithSegueIdentifier segueID: String)
+    func menu(_ menuController: MenuViewController, didSelectItemWithSegueIdentifier segueID: String)
 }
 
 class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
@@ -28,7 +28,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.preferredContentSize = CGSizeMake(130, 132)
+        self.preferredContentSize = CGSize(width: 130, height: 132)
     }
     
     override func didReceiveMemoryWarning() {
@@ -38,21 +38,21 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     // UITableViewDataSource
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.menuItems.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell: MenuTableViewCell = tableView.dequeueReusableCellWithIdentifier("MenuCell", forIndexPath: indexPath) as! MenuTableViewCell
-        cell.labelMenuItem.text = self.menuItems[indexPath.row]["label"]
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: MenuTableViewCell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath) as! MenuTableViewCell
+        cell.labelMenuItem.text = self.menuItems[(indexPath as NSIndexPath).row]["label"]
         return cell
     }
     
     // UITablViewDelegate
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        print("Selected cell \(indexPath.row)")
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("Selected cell \((indexPath as NSIndexPath).row)")
         if let delegate = self.delegate {
-            delegate.menu(self, didSelectItemWithSegueIdentifier: self.menuItems[indexPath.row]["segueID"]!)
+            delegate.menu(self, didSelectItemWithSegueIdentifier: self.menuItems[(indexPath as NSIndexPath).row]["segueID"]!)
         }
     }
     

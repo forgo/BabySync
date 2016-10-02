@@ -10,14 +10,14 @@ import UIKit
 import CoreData
 
 enum BabyState {
-    case Creating
-    case Viewing
-    case Editing
+    case creating
+    case viewing
+    case editing
 }
 
 class BabyViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
-    let moContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+    let moContext = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
     
     var imagePicker: UIImagePickerController = UIImagePickerController()
     
@@ -31,7 +31,7 @@ class BabyViewController: UIViewController, UINavigationControllerDelegate, UIIm
     @IBOutlet weak var buttonBack: UIButton!
     @IBOutlet weak var buttonAction: UIButton!
     
-    var babyState: BabyState = .Viewing
+    var babyState: BabyState = .viewing
     var baby: Baby = Baby()
     
     override func viewDidLoad() {
@@ -47,7 +47,7 @@ class BabyViewController: UIViewController, UINavigationControllerDelegate, UIIm
         // Dispose of any resources that can be recreated.
     }
     
-    func imageForBaby(baby: Baby) -> UIImage {
+    func imageForBaby(_ baby: Baby) -> UIImage {
         if (baby.id > 0) {
             // Retrieve saved baby image from Core Data based on id
             return UIImage()
@@ -57,85 +57,85 @@ class BabyViewController: UIViewController, UINavigationControllerDelegate, UIIm
         }
     }
     
-    func toggleToState(state: BabyState) {
+    func toggleToState(_ state: BabyState) {
         self.babyState = state
         switch (self.babyState) {
-            case .Creating:
+            case .creating:
                 self.labelTitle.text = "New Baby"
-                self.viewEditImage.hidden = false
+                self.viewEditImage.isHidden = false
                 self.imageView.image = self.imageForBaby(self.baby)
                 self.textFieldName.text = ""
-                self.textFieldName.hidden = false
-                self.buttonAction.setTitle("Create", forState: .Normal)
+                self.textFieldName.isHidden = false
+                self.buttonAction.setTitle("Create", for: UIControlState())
                 break
-            case .Viewing:
+            case .viewing:
                 self.labelTitle.text = self.baby.name
-                self.viewEditImage.hidden = true
+                self.viewEditImage.isHidden = true
                 self.imageView.image = self.imageForBaby(self.baby)
                 self.textFieldName.text = ""
-                self.textFieldName.hidden = true
-                self.buttonAction.setTitle("Edit", forState: .Normal)
+                self.textFieldName.isHidden = true
+                self.buttonAction.setTitle("Edit", for: UIControlState())
                 break
-            case .Editing:
+            case .editing:
                 self.labelTitle.text = "Edit \(self.baby.name)"
-                self.viewEditImage.hidden = false
+                self.viewEditImage.isHidden = false
                 self.imageView.image = self.imageForBaby(self.baby)
-                self.textFieldName.hidden = false
-                self.buttonAction.setTitle("Save", forState: .Normal)
+                self.textFieldName.isHidden = false
+                self.buttonAction.setTitle("Save", for: UIControlState())
                 break
         }
     }
     
     func saveBabyData() {
         // Get entity description
-        let babyDescription = NSEntityDescription.entityForName("BabyModel", inManagedObjectContext: moContext)!
-        let babyModel: BabyModel = BabyModel(entity: babyDescription, insertIntoManagedObjectContext: moContext)
-        babyModel.id = self.baby.id
+        let babyDescription = NSEntityDescription.entity(forEntityName: "BabyModel", in: moContext)!
+        let babyModel: BabyModel = BabyModel(entity: babyDescription, insertInto: moContext)
+        babyModel.id = self.baby.id as NSNumber?
         babyModel.image = UIImagePNGRepresentation(self.imageView.image!)
         
     }
     
     // Take Action Based on State of View Controller
-    @IBAction func takeAction(sender: UIButton) {
+    @IBAction func takeAction(_ sender: UIButton) {
         switch (self.babyState) {
-            case .Creating:
+            case .creating:
                 // TODO server logic to POST baby and return success or failure
                 
                 
                 
                 self.saveBabyData()
-                self.toggleToState(.Viewing)
+                self.toggleToState(.viewing)
                 break
-            case .Viewing:
-                self.toggleToState(.Editing)
+            case .viewing:
+                self.toggleToState(.editing)
                 break
-            case .Editing:
+            case .editing:
                 // TODO server logic to UPDATE edited baby and return succes or failure
-                self.toggleToState(.Viewing)
+                self.toggleToState(.viewing)
                 break
         }
     }
     
     // Make a Custom Photo
-    @IBAction func takePhoto(sender: UIButton) {
-        if (UIImagePickerController.isSourceTypeAvailable(.Camera)) {
+    @IBAction func takePhoto(_ sender: UIButton) {
+        if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
             self.imagePicker.delegate = self
-            self.imagePicker.sourceType = .Camera
-            self.presentViewController(imagePicker, animated: true, completion: { () -> Void in
+            self.imagePicker.sourceType = .camera
+            self.present(imagePicker, animated: true, completion: { () -> Void in
                 //
             })
         }
         else {
-            self.alert = UIAlertController(title: "Simulator", message: "Camera not available.", preferredStyle: UIAlertControllerStyle.Alert)
-            self.alertAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
+            self.alert = UIAlertController(title: "Simulator", message: "Camera not available.", preferredStyle: UIAlertControllerStyle.alert)
+            self.alertAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action) -> Void in
             })
             self.alert.addAction(self.alertAction)
-            self.presentViewController(self.alert, animated: true, completion: nil)
+            self.present(self.alert, animated: true, completion: nil)
         }
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        self.imagePicker.dismissViewControllerAnimated(true) { () -> Void in
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        self.imagePicker.dismiss(animated: true) { () -> Void in
             //
         }
         self.imageView.image = info[UIImagePickerControllerOriginalImage] as? UIImage
@@ -143,18 +143,18 @@ class BabyViewController: UIViewController, UINavigationControllerDelegate, UIIm
     }
     
     // Select a pre-existing icon
-    @IBAction func selectIcon(sender: UIButton) {
-        self.performSegueWithIdentifier("SegueBabyToSelectIcon", sender: self)
+    @IBAction func selectIcon(_ sender: UIButton) {
+        self.performSegue(withIdentifier: "SegueBabyToSelectIcon", sender: self)
     }
     
     // Segues
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "SegueBabyToSelectIcon") {
             // Any preparation for segue to icon selection
         }
         else if (segue.identifier == "UnwindSegueNewBabyToHome") {
             // Any preparation for unwinding to home
-            let homeVC: HomeViewController = segue.destinationViewController as! HomeViewController
+            let homeVC: HomeViewController = segue.destination as! HomeViewController
             // Add babies
             // Add timers
             // Reload collections
@@ -162,7 +162,7 @@ class BabyViewController: UIViewController, UINavigationControllerDelegate, UIIm
         }
     }
     
-    @IBAction func prepareForUnwindSelectIcon(segue: UIStoryboardSegue) {
+    @IBAction func prepareForUnwindSelectIcon(_ segue: UIStoryboardSegue) {
         if (segue.identifier == "UnwindSegueSelectIconToBaby") {
             // Any preparation for unwinding from select icon
             // new image is actually set in "prepareForSegue" of select icon VC

@@ -20,15 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Web(webLogin) {
+module.exports = function Web(staticContent) {
 
     var Router = require('koa-router');
 
-    var Web = new Router();
+    var WebLogin    = require('./web/WebLogin.js');
+    var webLogin = new WebLogin(staticContent.readFilePromise);
+
+    var web = new Router();
 
     // Web Login
-    Web.get('/login', webLogin.get);
-    //Web.post('/login', webLogin.post);
+    web.get('/login', webLogin.get);
+    //web.post('/login', webLogin.post);
 
-    return Web;
+    return web.middleware();
 };

@@ -20,26 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Activity(REST, db, validate, errors, response) {
+module.exports = function Activity(REST, utility) {
 
     // ---------------------------------------------------------------------
     // Activity Validations
     // ---------------------------------------------------------------------
     var activityValidate = {
         name: function() {
-            return validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
+            return utility.validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
         },
         icon: function() {
-            return validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
+            return utility.validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
         },
         warn: function() {
-            return validate.doubleRange({
+            return utility.validate.doubleRange({
                 min: 600.0,
                 max: 604800.0
             });
         },
         critical: function() {
-            return validate.doubleRange({
+            return utility.validate.doubleRange({
                 min: 600.0,
                 max: 604800.0
             });
@@ -71,7 +71,7 @@ module.exports = function Activity(REST, db, validate, errors, response) {
         test: activityValidate.critical()
     }];
 
-    var activity = new REST("Activity", "a", activitySchema, db, validate, errors, response);
+    var activity = new REST("Activity", "a", activitySchema, utility);
     activity["schema"] = activitySchema;
     activity["validate"] = activityValidate;
     return activity;

@@ -11,7 +11,7 @@ import UIKit
 @IBDesignable
 class AuthLoginButton: UIButton {
 
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         // Drawing code
         self.layer.cornerRadius = 16.0
         self.layer.masksToBounds = true

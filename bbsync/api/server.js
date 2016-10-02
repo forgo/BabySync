@@ -22,7 +22,7 @@
 
 var http = require('http');
 var https = require('https');
-var fs = require('fs');
+var fs = require('graceful-fs');
 
 var V1 = module.exports = require('./v1/V1.js')();
 

@@ -231,6 +231,7 @@ module.exports = function DatabaseBabySync(db) {
 
         family_find: function(parentEmail) {
            var query = this.family_return_by_email(parentEmail);
+           console.log("QUERY:",query);
            return db.cypher(query)
             .then(db.successOneOrNone, db.error);
         },

@@ -20,10 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function REST(label, alias, schema, db, validate, errors, response) {
+module.exports = function REST(label, alias, schema, utility) {
 
     var parse = require('co-body');
     var _ = require('lodash');
+
+    var errors = utility.errors;
+    var validate = utility.validate;
+    var response = utility.response;
+    var db = utility.db;
 
     var rest = {
         post: function * (next) {

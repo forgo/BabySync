@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Timer(REST, db, validate, errors, response) {
+module.exports = function Timer(REST, utility) {
 
     // ---------------------------------------------------------------------
     // Timer Validations
@@ -30,16 +30,16 @@ module.exports = function Timer(REST, db, validate, errors, response) {
             // Reset date should be the moment it is reset
             // so this is a sanity check to see that the date occured
             // in a two minute window around 'now'
-            return validate.minuteWindow({
+            return utility.validate.minuteWindow({
                 past: 1,
                 future: 1
             });
         },
         enabled: function() {
-            return validate.bool();
+            return utility.validate.bool();
         },
         push: function() {
-            return validate.bool();
+            return utility.validate.bool();
         }
     };
     
@@ -63,7 +63,7 @@ module.exports = function Timer(REST, db, validate, errors, response) {
         test: timerValidate.push()
     }];
 
-    var timer = new REST("Timer", "t", timerSchema, db, validate, errors, response);
+    var timer = new REST("Timer", "t", timerSchema, utility);
     timer["schema"] = timerSchema;
     timer["validate"] = timerValidate;
     return timer;

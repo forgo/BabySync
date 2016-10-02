@@ -12,11 +12,11 @@ import UIKit
 protocol AuthAppMethod {
     
     // Configuration to be called in app's didFinishLaunchingWithOptions
-    func configure(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool
+    func configure(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable: Any]?) -> Bool
     
     // Each auth app method should validate URLs sent to the app
     // true if valid URL for implementing auth method,
     // false if invalid URL
-    func openURL(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool
+    func openURL(_ application: UIApplication, openURL url: URL, sourceApplication: String?, annotation: AnyObject) -> Bool
     
 }

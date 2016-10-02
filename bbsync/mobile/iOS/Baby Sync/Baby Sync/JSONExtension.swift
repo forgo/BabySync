@@ -10,13 +10,13 @@ import Foundation
 import SwiftyJSON
 
 extension JSON {
-    static func fromFile(name:String) -> JSON {
+    static func fromFile(_ name:String) -> JSON {
         var json: JSON = nil
-        let path: NSString = NSBundle.mainBundle().pathForResource(name, ofType: "json")!
-        let url: NSURL = NSURL(fileURLWithPath: path as String)
+        let path: NSString = Bundle.main.path(forResource: name, ofType: "json")! as NSString
+        let url: Foundation.URL = Foundation.URL(fileURLWithPath: path as String)
         do {
-            let dataRaw: NSData = try NSData(contentsOfURL: url, options: NSDataReadingOptions.DataReadingMappedIfSafe)
-            let dataSerialized: AnyObject = try NSJSONSerialization.JSONObjectWithData(dataRaw, options: NSJSONReadingOptions.MutableContainers)
+            let dataRaw: Data = try Data(contentsOf: url, options: NSData.ReadingOptions.mappedIfSafe)
+            let dataSerialized: AnyObject = try JSONSerialization.jsonObject(with: dataRaw, options: JSONSerialization.ReadingOptions.mutableContainers) as AnyObject
             json = JSON(dataSerialized)
         }
         catch {

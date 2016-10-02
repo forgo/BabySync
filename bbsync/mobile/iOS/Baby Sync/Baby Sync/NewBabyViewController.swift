@@ -29,25 +29,25 @@ class NewBabyViewController: UIViewController, UINavigationControllerDelegate, U
     }
     
     // Make a Custom Photo
-    @IBAction func takePhoto(sender: UIButton) {
-        if (UIImagePickerController.isSourceTypeAvailable(.Camera)) {
+    @IBAction func takePhoto(_ sender: UIButton) {
+        if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
             self.imagePicker.delegate = self
-            self.imagePicker.sourceType = .Camera
-            self.presentViewController(imagePicker, animated: true, completion: { () -> Void in
+            self.imagePicker.sourceType = .camera
+            self.present(imagePicker, animated: true, completion: { () -> Void in
                 //
             })
         }
         else {
-            self.alert = UIAlertController(title: "Simulator", message: "Camera not available.", preferredStyle: UIAlertControllerStyle.Alert)
-            self.alertAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
+            self.alert = UIAlertController(title: "Simulator", message: "Camera not available.", preferredStyle: UIAlertControllerStyle.alert)
+            self.alertAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action) -> Void in
             })
             self.alert.addAction(self.alertAction)
-            self.presentViewController(self.alert, animated: true, completion: nil)
+            self.present(self.alert, animated: true, completion: nil)
         }
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        self.imagePicker.dismissViewControllerAnimated(true) { () -> Void in
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        self.imagePicker.dismiss(animated: true) { () -> Void in
             //
         }
         self.imageBaby.image = info[UIImagePickerControllerOriginalImage] as? UIImage
@@ -55,18 +55,18 @@ class NewBabyViewController: UIViewController, UINavigationControllerDelegate, U
     }
     
     // Select a pre-existing icon
-    @IBAction func selectIcon(sender: UIButton) {
-        self.performSegueWithIdentifier("SegueNewBabyToSelectIcon", sender: self)
+    @IBAction func selectIcon(_ sender: UIButton) {
+        self.performSegue(withIdentifier: "SegueNewBabyToSelectIcon", sender: self)
     }
     
     // Segues
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "SegueNewBabyToSelectIcon") {
             // Any preparation for segue to icon selection
         }
         else if (segue.identifier == "UnwindSegueNewBabyToHome") {
             // Any preparation for unwinding to home
-            let homeVC: HomeViewController = segue.destinationViewController as! HomeViewController
+            let homeVC: HomeViewController = segue.destination as! HomeViewController
             // Add babies
             // Add timers
             // Reload collections
@@ -74,7 +74,7 @@ class NewBabyViewController: UIViewController, UINavigationControllerDelegate, U
         }
     }
     
-    @IBAction func prepareForUnwindSelectIcon(segue: UIStoryboardSegue) {
+    @IBAction func prepareForUnwindSelectIcon(_ segue: UIStoryboardSegue) {
         if (segue.identifier == "UnwindSegueSelectIconToNewBaby") {
             // Any preparation for unwinding from select icon
             // new image is actually set in "prepareForSegue" of select icon VC

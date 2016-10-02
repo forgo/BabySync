@@ -20,15 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function BabySync(db, validate, errors, response) {
+module.exports = function BabySync(development) {
 
-    var parse = require('co-body');
-    var _ = require('lodash');
+    // Errors/Validation/Response/Database
+    var Utility     = require('./Utility.js');
+    var utility = new Utility();
 
+    // Public/Private Routers
+    var Router = require('koa-router');
+    var public = new Router();
+    var private = new Router();
+
+    // RESTful User Operations
     var RESTUser = require('./RESTUser.js');
     var User = require('./models/User.js');
-    var user = new User(RESTUser, db, validate, errors, response);
+    var user = new User(RESTUser, utility);
 
+    // RESTful Model Operations
     var REST = require('./REST.js');
     var Family = require('./models/Family.js');
     var Parent = require('./models/Parent.js');
@@ -36,14 +44,14 @@ module.exports = function BabySync(db, validate, errors, response) {
     var Baby = require('./models/Baby.js');
     var Timer = require('./models/Timer.js');
     var Geocache = require('./models/Geocache.js');
+    var family = new Family(REST, utility);
+    var parent = new Parent(REST, utility);
+    var activity = new Activity(REST, utility);
+    var baby = new Baby(REST, utility);
+    var timer = new Timer(REST, utility);
+    var geocache = new Geocache(REST, utility);
 
-    var family = new Family(REST, db, validate, errors, response);
-    var parent = new Parent(REST, db, validate, errors, response);
-    var activity = new Activity(REST, db, validate, errors, response);
-    var baby = new Baby(REST, db, validate, errors, response);
-    var timer = new Timer(REST, db, validate, errors, response);
-    var geocache = new Geocache(REST, db, validate, errors, response);
-
+    // Complex/Derived Operations
     var CreateFamily = require('./operations/CreateFamily.js');
     var FindFamily = require('./operations/FindFamily.js');
     var JoinFamily = require('./operations/JoinFamily.js');
@@ -55,39 +63,72 @@ module.exports = function BabySync(db, validate, errors, response) {
     var DeleteBaby = require('./operations/DeleteBaby.js');
     var CreateTimer = require('./operations/CreateTimer.js');
     var DeleteTimer = require('./operations/DeleteTimer.js');
+    var createFamily = new CreateFamily(utility, parent.schema);
+    var findFamily = new FindFamily(utility, user.schema);
+    var joinFamily = new JoinFamily(utility, parent.schema, family.schema);
+    var mergeFamily = new MergeFamily(utility, parent.schema, family.schema);
+    var detachFamily = new DetachFamily(utility, parent.schema, family.schema);
+    var createActivity = new CreateActivity(utility);
+    var deleteActivity = new DeleteActivity(utility);
+    var createBaby = new CreateBaby(utility);
+    var deleteBaby = new DeleteBaby(utility);
+    var createTimer = new CreateTimer(utility);
+    var deleteTimer = new DeleteTimer(utility);
 
-    var createFamily = new CreateFamily(db, validate, errors, response, parent.schema);
-    var findFamily = new FindFamily(db, validate, errors, response, user.schema);
-    var joinFamily = new JoinFamily(db, validate, errors, response, parent.schema, family.schema);
-    var mergeFamily = new MergeFamily(db, validate, errors, response, parent.schema, family.schema);
-    var detachFamily = new DetachFamily(db, validate, errors, response, parent.schema, family.schema);
-    var createActivity = new CreateActivity(db, validate, errors, response);
-    var deleteActivity = new DeleteActivity(db, validate, errors, response);
-    var createBaby = new CreateBaby(db, validate, errors, response);
-    var deleteBaby = new DeleteBaby(db, validate, errors, response);
-    var createTimer = new CreateTimer(db, validate, errors, response);
-    var deleteTimer = new DeleteTimer(db, validate, errors, response);
+    // DEVELOPMENT
+    if(development) {
+        public.get('resetDatabase');
+    }
+
+    // PUBLIC
+    public.post('/user', user.post);
+    public.get('/user', user.get);
+    public.get('/user/:id', user.get);
+    public.put('/user', user.put);
+    public.put('/user/:id', user.put);
+    public.del('/user', user.del);
+    public.del('/user/:id', user.del);
+
+    // ---------------------------
+    // BabySync Service Operations
+    // ---------------------------
+    public.post('/user/auth', user.login);
+    public.post('/family', createFamily);
+
+    // After this point should expect token
+    // TODO: move these operations to the private section
+    public.get('/family/find/:email', findFamily);
+
+    public.put('/family/join/:id', joinFamily);
+    public.put('/family/merge/:id', mergeFamily);
+    public.put('/family/detach', detachFamily);
+
+    public.post('/activity', createActivity);
+    public.del('/activity/:id', deleteActivity);
+
+    public.post('/baby', createBaby);
+    public.del('/baby/:id', deleteBaby);
+
+    public.post('/timer/:id', createTimer);
+    public.del('/timer/:id', deleteTimer);
+
+    // PRIVATE
+    // Logout Route
+    private.get('/auth/logout', function * (next) {
+        this.body = "authController.logout";
+    });
+    // User routes
+    // Private.get('/user', babySync.user.get);
+    // Private.get('/user/:id', babySync.user.get);
+    // Private.put('/user', babySync.user.put);
+    // Private.put('/user/:id', babySync.user.put);
+    // Private.del('/user', babySync.user.del);
+    // Private.del('/user/:id', babySync.user.del);
 
     var babySync = {
-        // RESTFUL Operations
-        user: user,
-        family: family,
-        parent: parent,
-        activity: activity,
-        baby: baby,
-        timer: timer,
-        // Derived Operations
-        createFamily: createFamily,
-        findFamily: findFamily,
-        joinFamily: joinFamily,
-        mergeFamily: mergeFamily,
-        detachFamily: detachFamily,
-        createActivity: createActivity,
-        deleteActivity: deleteActivity,
-        createBaby: createBaby,
-        deleteBaby: deleteBaby,
-        createTimer: createTimer,
-        deleteTimer: deleteTimer
+        public: public.middleware(),
+        private: private.middleware(),
+        utility: utility
     }
     return babySync;
 };

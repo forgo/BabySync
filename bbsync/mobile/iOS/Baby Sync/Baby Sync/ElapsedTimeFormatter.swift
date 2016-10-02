@@ -8,18 +8,18 @@
 
 import UIKit
 
-class ElapsedTimeFormatter : NSDateComponentsFormatter {
+class ElapsedTimeFormatter : DateComponentsFormatter {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     override init() {
         super.init()
-        self.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehavior.Pad
-        self.allowedUnits = [.Day, .Hour, .Minute, .Second]
+        self.zeroFormattingBehavior = DateComponentsFormatter.ZeroFormattingBehavior.pad
+        self.allowedUnits = [.day, .hour, .minute, .second]
     }
-    func attributedString(sinceDate: NSDate) -> NSMutableAttributedString {
-        let elapsedSeconds: NSTimeInterval = NSDate().timeIntervalSinceDate(sinceDate)
-        let elapsedFormatted: String = ElapsedTimeFormatter.sharedInstance.stringFromTimeInterval(elapsedSeconds)!
+    func attributedString(_ sinceDate: Date) -> NSMutableAttributedString {
+        let elapsedSeconds: TimeInterval = Date().timeIntervalSince(sinceDate)
+        let elapsedFormatted: String = ElapsedTimeFormatter.sharedInstance.string(from: elapsedSeconds)!
         let elapsedAttributed: NSMutableAttributedString = NSMutableAttributedString(string: elapsedFormatted)
         // Kern the string (squish the letters closer together)
         elapsedAttributed.addAttribute(NSKernAttributeName, value: CGFloat(-3.0), range: NSRange(location: 0, length: elapsedFormatted.characters.count))

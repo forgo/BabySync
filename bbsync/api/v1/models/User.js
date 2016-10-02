@@ -20,35 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function User(RESTUser, db, validate, errors, response) {
+module.exports = function User(RESTUser, utility) {
     
     // ---------------------------------------------------------------------
     // User Validations
     // ---------------------------------------------------------------------
     var userValidate = {
         email: function() {
-            return validate.regex(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)\b/);
+            return utility.validate.regex(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)\b/);
         },
         username: function() {
-            return validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
+            return utility.validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
         },
         password: function() {
-            return validate.regex(/^(?=[^\d_].*?\d)\w(\w|[!@#$%]){7,20}/);
+            return utility.validate.regex(/^(?=[^\d_].*?\d)\w(\w|[!@#$%]){7,20}/);
         },
         firstname: function() {
-            return validate.regex(/^[a-zA-Z0-9]+$/);
+            return utility.validate.regex(/^[a-zA-Z0-9]+$/);
         },
         lastname: function() {
-            return validate.regex(/^[a-zA-Z0-9]+$/);
+            return utility.validate.regex(/^[a-zA-Z0-9]+$/);
         },
         birthday: function() {
-            return validate.ageInRange({
+            return utility.validate.ageInRange({
                 min: 18,
                 max: 120
             });
         },
         phone: function() {
-            return validate.regex(/^[a-zA-Z0-9]+$/);
+            return utility.validate.regex(/^[a-zA-Z0-9]+$/);
         }
     };
 
@@ -92,7 +92,7 @@ module.exports = function User(RESTUser, db, validate, errors, response) {
         test: userValidate.phone()
     }];
 
-    var user = new RESTUser("User", "u", userSchema, db, validate, errors, response);
+    var user = new RESTUser("User", "u", userSchema, utility);
     user["schema"] = userSchema;
     user["validate"] = userValidate;
     return user;

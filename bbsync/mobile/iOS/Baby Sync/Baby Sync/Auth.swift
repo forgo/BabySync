@@ -13,14 +13,14 @@ import UIKit
 protocol AuthUIDelegate {
     func authUILoginDidSucceed()
     func authUILoginDidCancel()
-    func authUILoginDidError(error: NSError?)
+    func authUILoginDidError(_ error: NSError?)
 }
 
 class Auth: NSObject, AuthDelegate {
     
     // Singleton
     static let sharedInstance = Auth()
-    private override init() {
+    fileprivate override init() {
         
         // Default Value for current auth method (until we know better)
         self.currentAuthMethod = .Custom
@@ -30,7 +30,7 @@ class Auth: NSObject, AuthDelegate {
         self.currentAuthMethod = AuthMethodType(rawValue: self.securedUser.service)!
     }
     
-    private static func getSecuredUser() -> AuthUser {
+    fileprivate static func getSecuredUser() -> AuthUser {
         
         var securedUser: AuthUser = AuthUser()
         
@@ -79,7 +79,7 @@ class Auth: NSObject, AuthDelegate {
     var custom: AuthCustom = AuthCustom.sharedInstance
     
     // MARK: - AuthDelegate
-    func loginSuccess(method: AuthMethodType, user: AuthUser, wasAlreadyLoggedIn: Bool = false) {
+    func loginSuccess(_ method: AuthMethodType, user: AuthUser, wasAlreadyLoggedIn: Bool = false) {
         
         if(wasAlreadyLoggedIn) {
             self.authUIDelegate?.authUILoginDidSucceed()
@@ -118,7 +118,7 @@ class Auth: NSObject, AuthDelegate {
         }
     }
     
-    func loginCancel(method: AuthMethodType) {
+    func loginCancel(_ method: AuthMethodType) {
         switch method {
         case .Google:
             print("Google login cancelled.")
@@ -131,7 +131,7 @@ class Auth: NSObject, AuthDelegate {
         self.authUIDelegate?.authUILoginDidCancel()
     }
 
-    func loginError(method: AuthMethodType, error: NSError?) {
+    func loginError(_ method: AuthMethodType, error: NSError?) {
         switch method {
         case .Google:
             print("Google login error.")
@@ -153,7 +153,7 @@ class Auth: NSObject, AuthDelegate {
         self.authUIDelegate?.authUILoginDidError(error)
     }
     
-    func didLogout(method: AuthMethodType) {
+    func didLogout(_ method: AuthMethodType) {
         switch method {
         case .Google:
             print("Google logout.")
@@ -164,7 +164,7 @@ class Auth: NSObject, AuthDelegate {
         }
     }
     
-    func didFailToLogout(method: AuthMethodType, error: NSError?) {
+    func didFailToLogout(_ method: AuthMethodType, error: NSError?) {
         switch method {
         case .Google:
             print("Google logout failure.")
@@ -182,7 +182,7 @@ class Auth: NSObject, AuthDelegate {
         return self.google.isLoggedIn() || self.facebook.isLoggedIn() || self.custom.isLoggedIn()
     }
     
-    func login(method: AuthMethodType, email: String? = nil, password: String? = nil) {
+    func login(_ method: AuthMethodType, email: String? = nil, password: String? = nil) {
         switch method {
         case .Google:
             print("Attempting Google login.")
@@ -209,7 +209,7 @@ class Auth: NSObject, AuthDelegate {
                 self.loginSuccess(method, user: self.securedUser, wasAlreadyLoggedIn: true)
             }
             else {
-                if let e = email, p = password {
+                if let e = email, let p = password {
                     self.custom.login(e, password: p)
                 }
                 else {

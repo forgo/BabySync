@@ -10,10 +10,10 @@ import Foundation
 
 // MARK: - AuthDelegate
 protocol AuthDelegate {
-    func loginSuccess(method: AuthMethodType, user: AuthUser, wasAlreadyLoggedIn: Bool)
-    func loginCancel(method: AuthMethodType)
-    func loginError(method: AuthMethodType, error: NSError?)
+    func loginSuccess(_ method: AuthMethodType, user: AuthUser, wasAlreadyLoggedIn: Bool)
+    func loginCancel(_ method: AuthMethodType)
+    func loginError(_ method: AuthMethodType, error: NSError?)
     
-    func didLogout(method: AuthMethodType)
-    func didFailToLogout(method: AuthMethodType, error: NSError?)
+    func didLogout(_ method: AuthMethodType)
+    func didFailToLogout(_ method: AuthMethodType, error: NSError?)
 }

@@ -20,39 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Geocache(REST, db, validate, errors, response) {
+module.exports = function Geocache(REST, utility) {
 
     // ---------------------------------------------------------------------
     // Geocache Validations
     // ---------------------------------------------------------------------
     var geocacheValidate = {
         title: function() {
-            return validate.regex(/(^[a-zA-Z][a-zA-Z0-9 ,.!@#$%^&*()\-+]{2,128}$)/);
+            return utility.validate.regex(/(^[a-zA-Z][a-zA-Z0-9 ,.!@#$%^&*()\-+]{2,128}$)/);
         },
         message: function() {
-            return validate.regex(/(^[a-zA-Z][a-zA-Z0-9 ,.!@#$%^&*()\-+]{2,256}$)/);
+            return utility.validate.regex(/(^[a-zA-Z][a-zA-Z0-9 ,.!@#$%^&*()\-+]{2,256}$)/);
         },
         lat: function() {
-            return validate.latitude();
+            return utility.validate.latitude();
         },
         lng: function() {
-            return validate.longitude();
+            return utility.validate.longitude();
         },
         currency: function() {
-            return validate.regex(/^(FLAP|DOGE|BITCOIN)$/);
+            return utility.validate.regex(/^(FLAP|DOGE|BITCOIN)$/);
         },
         amount: function() {
-            return validate.doubleRange({
+            return utility.validate.doubleRange({
                 min: 0.05,
                 max: 5000
             });
         },
         is_physical: function() {
-            return validate.bool();
+            return utility.validate.bool();
         },
         delay: function() {
             // Hours Between 1-360, excluding 0, padded 0s OK
-            return validate.regex(/^0*(?:[1-9][0-9]?|360)$/);
+            return utility.validate.regex(/^0*(?:[1-9][0-9]?|360)$/);
         }
     };
     
@@ -102,7 +102,7 @@ module.exports = function Geocache(REST, db, validate, errors, response) {
         test: geocacheValidate.delay()
     }];
 
-    var geocache = new REST("Geocache", "g", geocacheSchema, db, validate, errors, response);
+    var geocache = new REST("Geocache", "g", geocacheSchema, utility);
     geocache["schema"] = geocacheSchema;
     geocache["validate"] = geocacheValidate;
     return geocache;

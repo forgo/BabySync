@@ -20,23 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Private(babySync) {
+module.exports = function Security() {
 
-    var Router = require('koa-router');
-    var Private = new Router();
+    var fs = require('fs');
+    var jwt = require('koa-jwt');
 
-    // Logout Route
-    Private.get('/auth/logout', function * (next) {
-        this.body = "authController.logout";
+    // Public/Private key used for JWT verification
+    var publicKey = fs.readFileSync('v1/auth/ssl/demo.rsa.pub');
+    var privateKey = fs.readFileSync('v1/auth/ssl/demo.rsa');
+
+    // Private routes equire valid JWT
+    var checkJWT = jwt({
+        secret: publicKey,
+        algorithm: 'RS256',
+        key: 'jwtdata'
     });
 
-    // User routes
-    // Private.get('/user', babySync.user.get);
-    // Private.get('/user/:id', babySync.user.get);
-    // Private.put('/user', babySync.user.put);
-    // Private.put('/user/:id', babySync.user.put);
-    // Private.del('/user', babySync.user.del);
-    // Private.del('/user/:id', babySync.user.del);
+    // Set JWT for successful logins
+    var signJWT = function(issuerClaim, emailClaim, isAdminClaim) {
+        var claims = {
+            iss: issuerClaim,
+            email: emailClaim,
+            admin: isAdminClaim
+        };
+        var token = jwt.sign(claims, privateKey, {
+            algorithm: 'RS256',
+            expiresIn: 2*60*60 // 2 hours
+        });
+        return token;
+    } 
 
-    return Private;
+    var security = {
+        checkJWT: checkJWT,
+        signJWT: signJWT
+    };
+    return security;
 };

@@ -11,8 +11,8 @@ import UIKit
 
 // MARK: - AuthCustomDelegate Protocol
 protocol AuthCustomDelegate {
-    func didLogin(jwt: String, email: String)
-    func didEncounterLogin(errors: [Error])
+    func didLogin(_ jwt: String, email: String)
+    func didEncounterLogin(_ errors: [Error])
 }
 
 // MARK: - Custom Info Struct
@@ -37,7 +37,7 @@ class AuthCustom: NSObject, AuthAppMethod, AuthMethod, AuthCustomDelegate {
     
     // Singleton
     static let sharedInstance = AuthCustom()
-    private override init() {
+    fileprivate override init() {
         self.info = AuthCustomInfo()
     }
     
@@ -48,11 +48,11 @@ class AuthCustom: NSObject, AuthAppMethod, AuthMethod, AuthCustomDelegate {
     var info: AuthCustomInfo
     
     // MARK: - AuthAppMethod Protocol
-    func configure(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+    func configure(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable: Any]?) -> Bool {
         return true
     }
     
-    func openURL(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+    func openURL(_ application: UIApplication, openURL url: URL, sourceApplication: String?, annotation: AnyObject) -> Bool {
         return true
     }
     
@@ -61,8 +61,8 @@ class AuthCustom: NSObject, AuthAppMethod, AuthMethod, AuthCustomDelegate {
         return false
     }
     
-    func login(email: String?, password: String?) {
-        if let e = email, p = password {
+    func login(_ email: String?, password: String?) {
+        if let e = email, let p = password {
             BabySync.service.login(.Custom, email: e, password: p, accessToken: nil)
         }
         else {
@@ -80,12 +80,12 @@ class AuthCustom: NSObject, AuthAppMethod, AuthMethod, AuthCustomDelegate {
     }
     
     // MARK: - AuthCustomDelegate
-    func didLogin(jwt: String, email: String) {
+    func didLogin(_ jwt: String, email: String) {
         let authUser = AuthUser(service: .Custom, userId: "", accessToken: "", name: "Some Person", email: email, pic: AuthConstant.Default.ProfilePic, jwt: jwt)
         self.delegate?.loginSuccess(.Custom, user: authUser, wasAlreadyLoggedIn: false)
     }
     
-    func didEncounterLogin(errors: [Error]) {
+    func didEncounterLogin(_ errors: [Error]) {
         // TODO: Do we need to take into account errors past one if they exist?
         if(errors.count > 0) {
             let e: NSError? = BabySync.nsErrorFrom(errors[0])
