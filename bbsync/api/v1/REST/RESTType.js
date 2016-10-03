@@ -20,42 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Security() {
+module.exports = function RESTType(typeKey) {
 
-    var fs = require('fs');
-    var jwt = require('koa-jwt');
+    // Ensure Valid Type to Distinguish Special Behaviors in REST Operations
+    var ValidTypes = {default:"default",user:"user",userProxy:"userProxy"};
+    if(!(type in ValidTypes)) {
+        throw new Error('Invalid REST type \"'+type+'\" for \"'+label+'\"'+
+                        '\nValid types: '+Object.keys(ValidTypes).join(", "));
+    }
 
-    // Public/Private key used for JWT verification
-    var publicKey = fs.readFileSync('v1/auth/ssl/demo.rsa.pub');
-    var privateKey = fs.readFileSync('v1/auth/ssl/demo.rsa');
-
-    // Token Expiration Duration
-    var secondsToTokenExpiration = 2*60*60; // 2 hours
-
-    // Private routes equire valid JWT
-    var checkJWT = jwt({
-        secret: publicKey,
-        algorithm: 'RS256',
-        key: 'jwtdata'
-    });
-
-    // Set JWT for successful logins
-    var signJWT = function(issuerClaim, emailClaim, isAdminClaim) {
-        var claims = {
-            iss: issuerClaim,
-            email: emailClaim,
-            admin: isAdminClaim
-        };
-        var token = jwt.sign(claims, privateKey, {
-            algorithm: 'RS256',
-            expiresIn: secondsToTokenExpiration
-        });
-        return token;
-    } 
-
-    var security = {
-        checkJWT: checkJWT,
-        signJWT: signJWT
+    var restType = {
+        default: typeKey == ValidTypes.default,
+        user: typeKey == ValidTypes.user,
+        userProxy: typeKey == ValidTypes.userProxy
     };
-    return security;
+
+    return restType;
 };

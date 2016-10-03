@@ -22,6 +22,7 @@
 
 module.exports = function Response(errors) {
     var response = {
+        // Package data and errors in JSON format
         json_response: function(data, errorsArray) {
             var obj = {};
             if (data) {
@@ -32,6 +33,7 @@ module.exports = function Response(errors) {
             }
             return JSON.stringify(obj, null, 4);
         },
+        // Package data and errors as Javascript object
         object_response: function(data, errorsArray) {
             var obj = {};
             if (data) {
@@ -42,6 +44,8 @@ module.exports = function Response(errors) {
             }
             return obj;
         },
+        // Successful responses:
+        // - yield data as JSON
         success: function(data) {
             return function * (next) {
                 var json = response.json_response(data, null);
@@ -49,6 +53,8 @@ module.exports = function Response(errors) {
                 this.body = json;
             };
         },
+        // Invalid responses to immutable operations:
+        // - yield errors as JSON
         invalid: function(errors) {
             return function * (next) {
                 var json = response.json_response(null, errors);
@@ -56,6 +62,11 @@ module.exports = function Response(errors) {
                 this.body = json;
             };
         },
+        // Invalid responses to mutable operations:
+        // - yield failed input (pre) as data
+        // - yield errors describing why the input failed
+        // TODO: rename from "Post" to something that makes more sense universally
+        // IOW - name for type operations which take input
         invalidPost: function(pre, errors) {
             return function * (next) {
                 var json = response.json_response(pre, errors);
@@ -63,18 +74,36 @@ module.exports = function Response(errors) {
                 this.body = json;
             };
         },
+        // Catch unanticipated errors:
+        // - yield failed input (pre), if it exists, as data
+        // - yield generic error unless the catch found more useful errors
+        catchErrors: function(err, pre, context) {
+            return function * (next) {
+                var errs = [errors.UNKNOWN_ERROR(context)];
+                if (!err.success && err.errors) {
+                    errs = err.errors;
+                }
+                return yield response.invalidPost(pre, errs);
+            };
+        },
+        // Convenience security response for users who are not logged in
+        // and are trying to access a private resource.
         unauthorized: function * (next) {
             var json = response.json_response(null, [errors.UNAUTHORIZED()]);
             this.type = "application/json";
             this.status = 401;
             this.body = json;
         },
+        // Convenience security response for users who are logged in
+        // but do not have privileges to access a particular private resource.
         unprivileged: function * (next) {
             var json = response.json_response(null, [errors.UNPRIVILEGED()]);
             this.type = "application/json";
             this.status = 401;
             this.body = json;
         },
+        // Convenience security 401 handler to avoid early exposure to koa-jwt
+        // and other errors.
         custom401: function * (next) {
             try {
                 yield next;
@@ -85,15 +114,6 @@ module.exports = function Response(errors) {
                     throw err;
                 }
             }
-        },
-        catchErrors: function(err, pre, context) {
-            return function * (next) {
-                var errs = [errors.UNKNOWN_ERROR(context)];
-                if (!err.success && err.errors) {
-                    errs = err.errors;
-                }
-                return yield response.invalidPost(pre, errs);
-            };
         }
     };
     return response;

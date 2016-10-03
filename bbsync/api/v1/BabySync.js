@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function BabySync(development) {
+module.exports = function BabySync(environment) {
 
     // Errors/Validation/Response/Database
     var Utility     = require('./Utility.js');
@@ -76,10 +76,10 @@ module.exports = function BabySync(development) {
     var deleteTimer = new DeleteTimer(utility);
 
     // DEVELOPMENT
-    if(development) {
+    if(environment === 'development') {
         public.get('resetDatabase');
     }
-
+    
     // PUBLIC
     public.post('/user', user.post);
     public.get('/user', user.get);

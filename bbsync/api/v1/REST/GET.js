@@ -20,44 +20,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function FindFamily(utility, userSchema) {
+module.exports = function GET(type, label, alias, schema, utility) {
 
-    // Database Extensions for Complex App Queries
-    var dbBabySync = require('../DatabaseBabySync.js')(db);
+    var _ = require('lodash');
 
     var errors = utility.errors;
     var validate = utility.validate;
     var response = utility.response;
     var db = utility.db;
 
-    var findFamily = function * (next) {
-	    try {
+    var get = function * (next) {
+        try {
             // TODO: Be sure this is being requested by authenticated user w/proper privileges
 
             // No parameter provided in URL
-            if ((this.params.email == undefined || this.params.email == null) && _.isEmpty(this.query)) {
-                return yield response.invalid([errors.PARENT_EMAIL_REQUIRED()]);
+            if ((this.params.id == undefined || this.params.id == null) && _.isEmpty(this.query)) {
+                // Return all families
+                var allObjects = yield db.user_all(label, alias, schema);
+                if (allObjects.success) {
+                    return yield response.success(allObjects.data);
+                } else {
+                    return yield response.invalid(allObjects.errors);
+                }
             }
             // Parameter exists in URL
             else {
-                // Validate the email provided
-                var email_test = validate.attribute(userSchema, this.params.email, "email");
-				if (email_test.valid) {
-                    var familyByEmail = yield dbBabySync.family_find(email_test.data);
-                    console.log("FAMILY BY EMAIL = ", familyByEmail);
-                    if (familyByEmail.success) {
-                        return yield response.success(familyByEmail.data);
+                // BEGIN: User-Specific Logic
+                if(type.user) {
+                    // Try to identify existing user
+                    var user_test = yield validate.userID(this.params.id, schema, label, alias, schema, db);
+                    if (user_test.valid) {
+                        return yield response.success(user_test.data);
                     } else {
-                        return yield response.invalid([errors.FAMILY_NOT_FOUND(email_test.data)]);
+                        return yield response.invalid(user_test.errors);
                     }
-                } else {
-                	return yield response.invalid(email_test.errors);
                 }
+                // END: User-Specific Logic
             }
         } catch (e) {
             // Unknown Error
             return yield response.catchErrors(e, null);
         }
     }
-    return findFamily;
+
+    return get;
 };

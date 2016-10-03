@@ -51,14 +51,15 @@ module.exports = function V1() {
 
     // Development Switch
     if (app.env === 'development') {
-        // console.log("NODE_ENV = 'development'");
+        // NODE_ENV = 'development'
         // Use Development Logger
         // app.use(logger());
-        // Use Error Handler
-        babySync = new BabySync(true);
-    } else {
-        babySync = new BabySync(false);
+        // Use Dev Error Handler
+        // ???
     }
+
+    // Define BabySync API operations for environment stated
+    babySync = new BabySync(app.env);
 
     // Make static content available in 'public' folder
     app.use(staticContent.cache);

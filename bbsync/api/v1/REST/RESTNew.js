@@ -20,42 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Security() {
+module.exports = function RESTNew(typeKey, label, alias, schema, utility) {
 
-    var fs = require('fs');
-    var jwt = require('koa-jwt');
+    var errors = utility.errors;
+    var validate = utility.validate;
+    var response = utility.response;
+    var db = utility.db;
 
-    // Public/Private key used for JWT verification
-    var publicKey = fs.readFileSync('v1/auth/ssl/demo.rsa.pub');
-    var privateKey = fs.readFileSync('v1/auth/ssl/demo.rsa');
+    var RESTType = require('./RESTType.js');
+    var type = new RESTType(typeKey);
 
-    // Token Expiration Duration
-    var secondsToTokenExpiration = 2*60*60; // 2 hours
+    var POST = require('./POST.js');
+    var GET = require('./GET.js');
+    var PUT = require('./PUT.js');
+    var DEL = require('./DEL.js');
+    var post = new POST(type, label, alias, schema, utility);
+    var get = new GET(type, label, alias, schema, utility);
+    var put = new PUT(type, label, alias, schema, utility);
+    var del = new DEL(type, label, alias, schema, utility);
 
-    // Private routes equire valid JWT
-    var checkJWT = jwt({
-        secret: publicKey,
-        algorithm: 'RS256',
-        key: 'jwtdata'
-    });
-
-    // Set JWT for successful logins
-    var signJWT = function(issuerClaim, emailClaim, isAdminClaim) {
-        var claims = {
-            iss: issuerClaim,
-            email: emailClaim,
-            admin: isAdminClaim
-        };
-        var token = jwt.sign(claims, privateKey, {
-            algorithm: 'RS256',
-            expiresIn: secondsToTokenExpiration
-        });
-        return token;
-    } 
-
-    var security = {
-        checkJWT: checkJWT,
-        signJWT: signJWT
+    var restNew = {
+        login: null,
+        post: post,
+        get: get,
+        put: put,
+        del: del
     };
-    return security;
+
+    restNew.login = login;
+
+    return restNew;
 };

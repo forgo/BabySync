@@ -53,6 +53,9 @@ login: function * (next) {
                 var oAuthEmail = login_test.data.email
                 var oAuth = login_test.data.oAuth
 
+                // Regardless of login method, is email being used?
+                var emailExists
+
                 if(method == "Google") {
                     // Customized schema for Google login
                     var googleReturnSchema = schema.slice(0);
@@ -115,7 +118,7 @@ login: function * (next) {
                             test: validate.facebookID()
                         }
                     );
-                    // Password not needed to pass Google OAuth
+                    // Password not needed to pass Facebook OAuth
                     facebookReturnSchema = facebookReturnSchema.filter(function(s) {
                         return (s.attribute != "password");
                     });
