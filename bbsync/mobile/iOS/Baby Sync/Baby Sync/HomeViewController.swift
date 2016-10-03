@@ -311,7 +311,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         if (tableView == self.tableTimers) {
-            let editAction = UITableViewRowAction(style: UITableViewRowActionStyle(), title: "EDIT") { (action, indexPath) -> Void in
+            let editAction = UITableViewRowAction(style: .default, title: "EDIT") { (action, indexPath) -> Void in
                 // TODO: Edit timer handler
             }
             editAction.backgroundColor = BabySyncConstant.Color.Secondary
@@ -406,7 +406,7 @@ class HomeViewController: UIViewController, UICollectionViewDataSource, UICollec
         
     }
     
-    func didEncounter(_ errors: [Error]) {
+    func didEncounter(_ errorsAPI: [ErrorAPI]) {
         //        print("DID ENCOUNTER")
         //        let alertController: UIAlertController = UIAlertController(title: "Error code: "+String(error.code), message: error.message, preferredStyle: .Alert);
         //

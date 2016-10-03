@@ -193,7 +193,9 @@ class TimerView: UIView {
         activePath.move(to: origin)
         inactivePath.move(to: origin)
         
-        for var tick: UInt = 1; tick <= self.nTicks; tick += 1 {
+        for tick in stride(from: 1, through: self.nTicks, by: 1) {
+        //for tick in 1..<=self.nTicks {
+        //for var tick: UInt = 1; tick <= self.nTicks; tick += 1 {
             
             let startArcPoint: CGPoint = self.pointOnCircleWith(origin, radius: radius, angle: startAngle)
 

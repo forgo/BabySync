@@ -28,7 +28,7 @@ class AuthErrorViewController: UIViewController {
         // Size popover according to whom we are displaying
         if let parent = self.parentVC {
             
-            parent.view.constraints
+            //parent.view.constraints
             let popoverWidth: CGFloat = parent.view.frame.width - 40
             let popoverHeight: CGFloat = 100
             self.preferredContentSize = CGSize(width: popoverWidth, height: popoverHeight)

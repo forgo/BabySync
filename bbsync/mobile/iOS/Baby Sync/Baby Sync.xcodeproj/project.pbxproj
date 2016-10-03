@@ -23,6 +23,10 @@
 		4F08A3A11BE03C3C000DE4EF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4F08A3A01BE03C3C000DE4EF /* GoogleService-Info.plist */; };
 		4F09705F1BE348FB008D743B /* AuthLoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F09705E1BE348FB008D743B /* AuthLoginTextField.swift */; };
 		4F0970611BE356EE008D743B /* AuthLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0970601BE356EE008D743B /* AuthLoginButton.swift */; };
+		4F0E9F7C1DA2161B000659B4 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F0E9F761DA215C3000659B4 /* FBSDKCoreKit.framework */; };
+		4F0E9F7D1DA2161B000659B4 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F0E9F771DA215C3000659B4 /* FBSDKLoginKit.framework */; };
+		4F0E9F7E1DA2161B000659B4 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F0E9F781DA215C3000659B4 /* FBSDKShareKit.framework */; };
+		4F0E9F801DA21665000659B4 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F0E9F7F1DA21665000659B4 /* Bolts.framework */; };
 		4F23A8BF1BBBD7C7001FBCFF /* UIApplicationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8BE1BBBD7C7001FBCFF /* UIApplicationExtensions.swift */; };
 		4F23A8C91BBC55C7001FBCFF /* NewBabyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8C81BBC55C7001FBCFF /* NewBabyViewController.swift */; };
 		4F23A8CB1BBC55DB001FBCFF /* NewTimerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8CA1BBC55DB001FBCFF /* NewTimerViewController.swift */; };
@@ -31,9 +35,6 @@
 		4F23A8D11BBC5729001FBCFF /* ElapsedTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8D01BBC5729001FBCFF /* ElapsedTimeFormatter.swift */; };
 		4F23A8D31BBC5FEB001FBCFF /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8D21BBC5FEB001FBCFF /* MenuViewController.swift */; };
 		4F23A8D51BBC7960001FBCFF /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F23A8D41BBC7960001FBCFF /* MenuTableViewCell.swift */; };
-		4F446AB21BCDBEE000D0AD64 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AAF1BCDBEE000D0AD64 /* FBSDKCoreKit.framework */; };
-		4F446AB31BCDBEE000D0AD64 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AB01BCDBEE000D0AD64 /* FBSDKLoginKit.framework */; };
-		4F446AB41BCDBEE000D0AD64 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F446AB11BCDBEE000D0AD64 /* FBSDKShareKit.framework */; };
 		4F446ABB1BCE05E900D0AD64 /* BabySync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABA1BCE05E900D0AD64 /* BabySync.swift */; };
 		4F446ABD1BCE071100D0AD64 /* JSONExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */; };
 		4F446ABF1BCE159B00D0AD64 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F446ABE1BCE159B00D0AD64 /* Error.swift */; };
@@ -116,6 +117,11 @@
 		4F08A3A01BE03C3C000DE4EF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4F09705E1BE348FB008D743B /* AuthLoginTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthLoginTextField.swift; sourceTree = "<group>"; };
 		4F0970601BE356EE008D743B /* AuthLoginButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthLoginButton.swift; sourceTree = "<group>"; };
+		4F0E9F761DA215C3000659B4 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		4F0E9F771DA215C3000659B4 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		4F0E9F781DA215C3000659B4 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		4F0E9F7F1DA21665000659B4 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		4F0E9F811DA218A9000659B4 /* Baby Sync.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Baby Sync.entitlements"; sourceTree = "<group>"; };
 		4F23A8BE1BBBD7C7001FBCFF /* UIApplicationExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIApplicationExtensions.swift; sourceTree = "<group>"; };
 		4F23A8C81BBC55C7001FBCFF /* NewBabyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewBabyViewController.swift; sourceTree = "<group>"; };
 		4F23A8CA1BBC55DB001FBCFF /* NewTimerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewTimerViewController.swift; sourceTree = "<group>"; };
@@ -124,9 +130,6 @@
 		4F23A8D01BBC5729001FBCFF /* ElapsedTimeFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElapsedTimeFormatter.swift; sourceTree = "<group>"; };
 		4F23A8D21BBC5FEB001FBCFF /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		4F23A8D41BBC7960001FBCFF /* MenuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewCell.swift; sourceTree = "<group>"; };
-		4F446AAF1BCDBEE000D0AD64 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
-		4F446AB01BCDBEE000D0AD64 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
-		4F446AB11BCDBEE000D0AD64 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		4F446ABA1BCE05E900D0AD64 /* BabySync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BabySync.swift; sourceTree = "<group>"; };
 		4F446ABC1BCE071100D0AD64 /* JSONExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONExtension.swift; sourceTree = "<group>"; };
 		4F446ABE1BCE159B00D0AD64 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
@@ -179,9 +182,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F446AB21BCDBEE000D0AD64 /* FBSDKCoreKit.framework in Frameworks */,
-				4F446AB41BCDBEE000D0AD64 /* FBSDKShareKit.framework in Frameworks */,
-				4F446AB31BCDBEE000D0AD64 /* FBSDKLoginKit.framework in Frameworks */,
+				4F0E9F801DA21665000659B4 /* Bolts.framework in Frameworks */,
+				4F0E9F7C1DA2161B000659B4 /* FBSDKCoreKit.framework in Frameworks */,
+				4F0E9F7D1DA2161B000659B4 /* FBSDKLoginKit.framework in Frameworks */,
+				4F0E9F7E1DA2161B000659B4 /* FBSDKShareKit.framework in Frameworks */,
 				9F1EE6A9144C98A05D3E91BB /* Pods_Baby_Sync.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -288,6 +292,7 @@
 		4FD82E941BBB086900A06E0A /* Baby Sync */ = {
 			isa = PBXGroup;
 			children = (
+				4F0E9F811DA218A9000659B4 /* Baby Sync.entitlements */,
 				4F08A3811BDFF452000DE4EF /* Auth */,
 				4F446AB71BCE05C400D0AD64 /* Service */,
 				4F508D741BE8A8E900EE9D1A /* NBUIKitMainThreadGuard.swift */,
@@ -354,9 +359,10 @@
 		A40D782C687D34895D2B14AB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4F446AAF1BCDBEE000D0AD64 /* FBSDKCoreKit.framework */,
-				4F446AB01BCDBEE000D0AD64 /* FBSDKLoginKit.framework */,
-				4F446AB11BCDBEE000D0AD64 /* FBSDKShareKit.framework */,
+				4F0E9F7F1DA21665000659B4 /* Bolts.framework */,
+				4F0E9F761DA215C3000659B4 /* FBSDKCoreKit.framework */,
+				4F0E9F771DA215C3000659B4 /* FBSDKLoginKit.framework */,
+				4F0E9F781DA215C3000659B4 /* FBSDKShareKit.framework */,
 				6954D39A27CD490B5C692EA7 /* Pods_Baby_Sync.framework */,
 			);
 			name = Frameworks;
@@ -410,6 +416,11 @@
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = M9J358TQ9K;
 						LastSwiftMigration = 0800;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -679,13 +690,13 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Baby Sync/Baby Sync.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = "Baby Sync/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -705,13 +716,13 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Baby Sync/Baby Sync.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = "Baby Sync/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
