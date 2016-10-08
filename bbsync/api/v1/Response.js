@@ -44,7 +44,7 @@ module.exports = function Response(errors) {
             }
             return obj;
         },
-        // Successful responses:
+        // Successful response:
         // - yield data as JSON
         success: function(data) {
             return function * (next) {
@@ -53,7 +53,7 @@ module.exports = function Response(errors) {
                 this.body = json;
             };
         },
-        // Invalid responses to immutable operations:
+        // Invalid response
         // - yield errors as JSON
         invalid: function(errors) {
             return function * (next) {
@@ -62,28 +62,26 @@ module.exports = function Response(errors) {
                 this.body = json;
             };
         },
-        // Invalid responses to mutable operations:
-        // - yield failed input (pre) as data
+        // Invalid responses due to request payload
+        // - yield failed payload as data
         // - yield errors describing why the input failed
-        // TODO: rename from "Post" to something that makes more sense universally
-        // IOW - name for type operations which take input
-        invalidPost: function(pre, errors) {
+        invalidPayload: function(payload, errors) {
             return function * (next) {
-                var json = response.json_response(pre, errors);
+                var json = response.json_response(payload, errors);
                 this.type = "application/json";
                 this.body = json;
             };
         },
         // Catch unanticipated errors:
-        // - yield failed input (pre), if it exists, as data
+        // - yield failed input (payload), if it exists, as data
         // - yield generic error unless the catch found more useful errors
-        catchErrors: function(err, pre, context) {
+        catchErrors: function(err, payload, context) {
             return function * (next) {
                 var errs = [errors.UNKNOWN_ERROR(context)];
                 if (!err.success && err.errors) {
                     errs = err.errors;
                 }
-                return yield response.invalidPost(pre, errs);
+                return yield response.invalidPayload(payload, errs);
             };
         },
         // Convenience security response for users who are not logged in

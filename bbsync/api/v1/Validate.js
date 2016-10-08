@@ -44,7 +44,7 @@ module.exports = function Validate(errors) {
             }
             return count === 0;
         },
-        schema: function(sch, pre) {
+        schema: function(sch, payload) {
             var valid = true;
             var errorArray = [];
 
@@ -63,7 +63,7 @@ module.exports = function Validate(errors) {
             }
 
             // Fields Provided
-            var fields = Object.keys(pre);
+            var fields = Object.keys(payload);
 
             // Ensure Fields Provided are Unique
             var repeatedFields = _.uniqBy(_.filter(fields, function(x,i,fields) {
@@ -116,7 +116,7 @@ module.exports = function Validate(errors) {
                 // Is this scheme attribute missing or empty in provided data?
                 isFieldMissing = !(fields.indexOf(fieldAttribute) in fields);
                 if (!isFieldMissing) {
-                    fieldValue = pre[fieldAttribute].trim();
+                    fieldValue = payload[fieldAttribute].trim();
                     isFieldEmpty = validate.isEmpty(fieldValue);
                 }
 
@@ -130,7 +130,7 @@ module.exports = function Validate(errors) {
                     }
                     // Otherwise this field can be ignored as empty
                     else {
-                        pre[fieldAttribute] = "";
+                        payload[fieldAttribute] = "";
                     }
                     // Continue to the next scheme check without collecting futher errors
                     continue;
@@ -140,7 +140,7 @@ module.exports = function Validate(errors) {
                     if (typeof(scheme.test) == "function" && scheme.test.length == 2) {
                         var test = scheme.test(fieldAttribute, fieldValue ? fieldValue : "");
                         if (test.valid) {
-                            pre[fieldAttribute] = test.data;
+                            payload[fieldAttribute] = test.data;
                         } else {
                             valid = false;
                             errorArray = errorArray.concat(test.errors);
@@ -158,7 +158,7 @@ module.exports = function Validate(errors) {
             if (valid) {
                 return {
                     valid: valid,
-                    data: pre
+                    data: payload
                 };
             } else {
                 return {
@@ -167,7 +167,7 @@ module.exports = function Validate(errors) {
                 };
             }
         },
-        schemaForAttributes: function(sch, atts, pre) {
+        schemaForAttributes: function(sch, atts, payload) {
             // Provided Schema Should Never Be Empty
             if (validate.isEmpty(sch)) {
                 return {
@@ -215,15 +215,15 @@ module.exports = function Validate(errors) {
                 }
             }
             var modifiedSchema = _.filter(sch, function(s) {
-                // if s.attribute is a field in pre
+                // if s.attribute is a field in payload
                 var f = _.findIndex(atts, function(attribute) {
                     return attribute == s.attribute;
                 });
                 return f != -1;
             });
-            return validate.schema(modifiedSchema, pre);
+            return validate.schema(modifiedSchema, payload);
         },
-        schemaForUpdate: function(sch, pre) {
+        schemaForUpdate: function(sch, payload) {
             // Provided Schema Should Never Be Empty
             if (validate.isEmpty(sch)) {
                 return {
@@ -232,7 +232,7 @@ module.exports = function Validate(errors) {
                 };
             }
             // Make sure we are providing something to update at all
-            if ("false" in pre) {
+            if ("false" in payload) {
                 return {
                     valid: false,
                     errors: [errors.UPDATE_EMPTY()]
@@ -240,12 +240,12 @@ module.exports = function Validate(errors) {
             }
             // Modified schema returns common fields with update fields.
             // Calling validate.schema checks for empty schemas as well as
-            // extraneous fields in pre that aren't in sch. This means updates
+            // extraneous fields in payload that aren't in sch. This means updates
             // only pass when the fields provided are a subset or the same set 
             // as the attributes in sch
             var updateSchema = _.filter(sch, function(s) {
-                // if s.attribute is a field in pre
-                var f = _.findIndex(_.keys(pre), function(field) {
+                // if s.attribute is a field in payload
+                var f = _.findIndex(_.keys(payload), function(field) {
                     return field == s.attribute;
                 });
                 return f != -1;
@@ -256,9 +256,9 @@ module.exports = function Validate(errors) {
                     errors: [errors.UPDATE_MISMATCH()]
                 };
             }
-            return validate.schema(updateSchema, pre);
+            return validate.schema(updateSchema, payload);
         },
-        attribute: function(sch, pre, att) {
+        attribute: function(sch, payload, att) {
             // Extract Scheme from Schema Which Defines Attribute
             var attributeSchemes = sch.filter(function(s) {
                 return s.attribute == att;
@@ -269,19 +269,19 @@ module.exports = function Validate(errors) {
 
             if (typeof(attributeScheme.test) == "function" && attributeScheme.test.length == 2) {
                 console.log("att = ", att);
-                console.log("pre = ", pre);
-                return attributeScheme.test(att, pre ? pre : "");
+                console.log("payload = ", payload);
+                return attributeScheme.test(att, payload ? payload : "");
             }
             return {
                 valid: false,
                 errors: [errors.ATTRIBUTE_TEST_REQUIRED(att)]
             };
         },
-        id: function(pre) {
-            if (Number.isInteger(Number(pre)) && (pre !== null) && (pre !== undefined)) {
+        id: function(payload) {
+            if (Number.isInteger(Number(payload)) && (payload !== null) && (payload !== undefined)) {
                 return {
                     valid: true,
-                    data: pre
+                    data: payload
                 };
             }
             return {
@@ -329,7 +329,7 @@ module.exports = function Validate(errors) {
             return response;
         },
         ////////////////////////////////////////////////////////////////////////
-        login: function(sch, pre, req) {
+        login: function(sch, payload, req) {
             return function * (next) {
 
                 var response = {};
@@ -351,22 +351,22 @@ module.exports = function Validate(errors) {
 
                 // Extract/delete authMethod and token key/value from login object
                 var authMethod = "Custom";
-                if(pre.authMethod) {
+                if(payload.authMethod) {
                     var authMethodMatches = authMethods.filter(function(method) {
-                        return method.type == pre.authMethod;
+                        return method.type == payload.authMethod;
                     });
                     if (authMethodMatches.length == 1) {
 
                         // password unexpected with
                         // accessToken for oAuth provider and vice-versa
-                        if(pre.password && pre.accessToken) {
+                        if(payload.password && payload.accessToken) {
                             response.valid = false;
                             response.errors = [errors.LOGIN_FAILURE("expected password or accessToken, not both")];
                             return response;
                         }
 
                         // email must accompany accessToken in case we need to create a new user
-                        if(pre.accessToken && !pre.email) {
+                        if(payload.accessToken && !payload.email) {
                             response.valid = false;
                             response.errors = [errors.LOGIN_FAILURE("email must accompany accessToken")];
                             return response;
@@ -375,25 +375,25 @@ module.exports = function Validate(errors) {
                         // ensure email is clean before moving on
                         // (a valid oAuth token will try to create a user with this email 
                         //  if they don't already exist)
-                        console.log("THE PRE = ", pre);
-                        var oauth_email_test = validate.attribute(sch, pre.email, "email");
+                        console.log("THE PAYLOAD = ", payload);
+                        var oauth_email_test = validate.attribute(sch, payload.email, "email");
                         console.log("oauth_email_test = ", oauth_email_test);
                         if(oauth_email_test.valid) {
 
-                            authMethod = pre.authMethod;
-                            delete pre.authMethod;
+                            authMethod = payload.authMethod;
+                            delete payload.authMethod;
                             var method = authMethodMatches[0];
 
                             // No token was provided and auth method needs it
-                            if(!pre.accessToken && method.validTokenURL != null) {
+                            if(!payload.accessToken && method.validTokenURL != null) {
                                 response.valid = false;
                                 response.errors = [errors.LOGIN_TOKEN_EXPECTED(authMethod)];
                                 return response;
                             }
                             // Token provided and we have an auth service to check against
-                            else if(pre.accessToken && method.validTokenURL != null) {
+                            else if(payload.accessToken && method.validTokenURL != null) {
 
-                                var tokenURL = method.validTokenURL.replace(/\{accessToken\}/, pre.accessToken);
+                                var tokenURL = method.validTokenURL.replace(/\{accessToken\}/, payload.accessToken);
                                 var options = { url: tokenURL };
                                 var tokenCheckResponse = yield req(options);
 
@@ -417,7 +417,7 @@ module.exports = function Validate(errors) {
                                     return response
                                 }
                             }
-                            else if(pre.accessToken && method.validTokenURL == null) {
+                            else if(payload.accessToken && method.validTokenURL == null) {
                                 response.valid = false;
                                 response.errors = [errors.LOGIN_TOKEN_UNVERIFIABLE(authMethod)];
                             }
@@ -431,7 +431,7 @@ module.exports = function Validate(errors) {
                     }
                     else {
                         response.valid = false;
-                        response.errors = [errors.LOGIN_TYPE_INVALID(pre.authMethod)];
+                        response.errors = [errors.LOGIN_TYPE_INVALID(payload.authMethod)];
                         return response;
                     }
                 }
@@ -442,29 +442,29 @@ module.exports = function Validate(errors) {
                 }
 
                 // Remove Non-Schema Validatable Items Already Processed
-                if(pre.authMethod) {
-                    delete pre.authMethod;
+                if(payload.authMethod) {
+                    delete payload.authMethod;
                 }
 
-                if(pre.accessToken) {
-                    delete pre.accessToken;
+                if(payload.accessToken) {
+                    delete payload.accessToken;
                 }
 
                 //////
                 var isEmailAsUsername = true;
-                if(pre.email && pre.username) {
+                if(payload.email && payload.username) {
                     response.valid = false;
                     response.errors = [errors.LOGIN_FAILURE("expected email or username, not both")];
                     return response;
                 }
 
-                if(!pre.email && !pre.username) {
+                if(!payload.email && !payload.username) {
                     response.valid = false;
                     response.errors = [errors.LOGIN_FAILURE("expected email or username")];
                     return response;
                 }
 
-                if(pre.username) {
+                if(payload.username) {
                     isEmailAsUsername = false
                 }
                 /////
@@ -474,7 +474,7 @@ module.exports = function Validate(errors) {
                     return (s.attribute == (isEmailAsUsername ? "email" : "username")) || (s.attribute == "password");
                 });
 
-                var login_schema_test = validate.schema(modifiedSchema, pre);
+                var login_schema_test = validate.schema(modifiedSchema, payload);
 
                 if (login_schema_test.valid) {
                     response.valid = true;

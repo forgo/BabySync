@@ -40,8 +40,8 @@ module.exports = function RESTUser(label, alias, schema, utility) {
 // -----------------------------------------------------------------------------
 login: function * (next) {
     try {
-        var login_pre = yield parse(this);
-        var login_test = yield validate.login(schema, login_pre, req);
+        var payload = yield parse(this);
+        var login_test = yield validate.login(schema, payload, req);
         if (login_test.valid) {
 
             var userToCompare = null;
@@ -92,10 +92,10 @@ login: function * (next) {
                                     return yield response.success({ token: token, email: newGoogleUserCreate.data.email });
                                 } else {
                                     // Failed to create new user with Google ID
-                                    return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to create new user via Google")]);
+                                    return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("failed to create new user via Google")]);
                                 }
                             } else {
-                                return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to validate new user via Google")]);
+                                return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("failed to validate new user via Google")]);
                             }    
                         } else {
                             // User found with this valid Google ID
@@ -104,7 +104,7 @@ login: function * (next) {
                             return yield response.success({ token: token, email: userByGoogleID.data.email });
                         }
                     } else {
-                        return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to login via Google")]);
+                        return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("failed to login via Google")]);
                     }
                 }
                 else if(method == "Facebook") {
@@ -143,10 +143,10 @@ login: function * (next) {
                                     return yield response.success({ token: token, email: newFacebookUserCreate.data.email });
                                 } else {
                                     // Failed to create new user with Facebook ID
-                                    return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to create new user via Facebook")]);
+                                    return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("failed to create new user via Facebook")]);
                                 }
                             } else {
-                                return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to validate new user via Facebook")]);
+                                return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("failed to validate new user via Facebook")]);
                             }    
                         } else {
                             // User found with this valid Facebook ID
@@ -155,7 +155,7 @@ login: function * (next) {
                             return yield response.success({ token: token, email: userByFacebookID.data.email });
                         }
                     } else {
-                        return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to login via Facebook")]);
+                        return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("failed to login via Facebook")]);
                     }
                 }
             }
@@ -167,24 +167,24 @@ login: function * (next) {
                 if (userByEmail.success) {
                     if (userByEmail.data.length == 0) {
                         // Email not found (only return generic login failure error for security purposes)
-                        return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE()]);
+                        return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE()]);
                     } else {
                         userToCompare = userByEmail.data;
                     }
                 } else {
-                    return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE()]);
+                    return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE()]);
                 }
             } else {
                 var userByUsername = yield db.user_by_username_for_login(login_test.data.username, label, alias, schema);
                 if (userByUsername.success) {
                     if (userByUsername.data.length == 0) {
                         // Username not found (only return generic login failure error for security purposes)
-                        return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("username not found")]);
+                        return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("username not found")]);
                     } else {
                         userToCompare = userByUsername.data;
                     }
                 } else {
-                    return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("invalid field values")]);
+                    return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("invalid field values")]);
                 }
             }
 
@@ -204,18 +204,18 @@ login: function * (next) {
                     return yield response.success({ token: token, email: userUpdate.data.email });
                 } else {
                     // Failed to Update Last Login Date When Logging In
-                    return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to update login_on")]);
+                    return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("failed to update login_on")]);
                 }
             } else {
                 // Password incorrect (only return generic login failure error for security purposes)
-                return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("password incorrect")]);
+                return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("password incorrect")]);
             }
         } else {
             // Request was not valid
-            return yield response.invalidPost(login_pre, login_test.errors);
+            return yield response.invalidPayload(payload, login_test.errors);
         }
     } catch (e) {
-        return yield response.catchErrors(e, login_pre);
+        return yield response.catchErrors(e, payload);
     }
 },
 // -----------------------------------------------------------------------------
@@ -224,9 +224,9 @@ login: function * (next) {
         post: function * (next) {
             try {
                 // TODO: Be sure this is being requested by authenticated user w/proper privileges
-                var object_pre = yield parse(this);
-                console.log("object_pre:", object_pre);
-                var object_test = validate.schema(schema, object_pre);
+                var payload = yield parse(this);
+                console.log("payload:", payload);
+                var object_test = validate.schema(schema, payload);
                 console.log("object_test:", object_test);
                 if (object_test.valid) {
 
@@ -246,7 +246,7 @@ if(!_.isEmpty(object_test.data.username)) {
             takenErrors.push(errors.USERNAME_TAKEN("username"));
         }
     } else {
-        return yield response.invalidPost(object_pre, checkUsername.errors);
+        return yield response.invalidPayload(payload, checkUsername.errors);
     }
 }
 
@@ -257,11 +257,11 @@ if (checkEmail.success) {
         takenErrors.push(errors.EMAIL_TAKEN("email"));
     }
 } else {
-    return yield response.invalidPost(object_pre, checkEmail.errors);
+    return yield response.invalidPayload(payload, checkEmail.errors);
 }
 
 if (isTaken) {
-    return yield response.invalidPost(object_pre, takenErrors);
+    return yield response.invalidPayload(payload, takenErrors);
 }
 
 // Generate salt/hash using bcrypt
@@ -295,14 +295,14 @@ object_test.data.login_on = "";
                     if (create.success) {
                         return yield response.success(create.data);
                     } else {
-                        return yield response.invalidPost(object_pre, create.errors);
+                        return yield response.invalidPayload(payload, create.errors);
                     }
                 } else {
                     // Request was not valid,
-                    return yield response.invalidPost(object_pre, object_test.errors);
+                    return yield response.invalidPayload(payload, object_test.errors);
                 }
             } catch (e) {
-                return yield response.catchErrors(e, object_pre);
+                return yield response.catchErrors(e, payload);
             }
         },
         get: function * (next) {
@@ -348,21 +348,21 @@ if (user_test.valid) {
                 // TODO: Be sure this is being requested by authenticated user w/proper privileges
 
                 // Request payload
-                var object_pre = yield parse(this);
+                var payload = yield parse(this);
 
 
 
                 // No parameter provided in URL
                 if ((this.params.id == undefined && this.params.id == null) && _.isEmpty(this.query)) {
                     // Perhaps request is for a batch update
-                    // batch_test = validate.schemaForBatchUpdate(schema, object_pre);
+                    // batch_test = validate.schemaForBatchUpdate(schema, payload);
                     // if (batch_test.valid) {
                     //     // Loop through validated data and perform updates
                     // }
                     // else {
-                    //     return yield response.invalidPost(object_pre, batch_test.errors);
+                    //     return yield response.invalidPayload(payload, batch_test.errors);
                     // }
-                    return yield response.invalidPost(object_pre, [errors.UNSUPPORTED()]);
+                    return yield response.invalidPayload(payload, [errors.UNSUPPORTED()]);
                 }
                 // Parameter exists in URL
                 else {
@@ -377,7 +377,7 @@ var user_test = yield validate.userID(this.params.id, schema, label, alias, sche
 if (user_test.valid) {
     existingObject = user_test.data
 } else {
-    return yield response.invalidPost(object_pre, user_test.errors);
+    return yield response.invalidPayload(payload, user_test.errors);
 }
 // -----------------------------------------------------------------------------
 // END USER SPECIFIC LOGIC
@@ -385,7 +385,7 @@ if (user_test.valid) {
 
                     // If we got this far, we must have found a match.
                     // Now validate what we're trying to update
-                    object_test = validate.schemaForUpdate(schema, object_pre);
+                    object_test = validate.schemaForUpdate(schema, payload);
                     if (object_test.valid) {
 
 // -----------------------------------------------------------------------------
@@ -413,14 +413,14 @@ if (object_test.data.password) {
                         if (objectUpdate.success) {
                             return yield response.success(objectUpdate.data);
                         } else {
-                            return yield response.invalidPost(object_pre, objectUpdate.errors);
+                            return yield response.invalidPayload(payload, objectUpdate.errors);
                         }
                     } else {
-                        return yield response.invalidPost(object_pre, object_test.errors);
+                        return yield response.invalidPayload(payload, object_test.errors);
                     }
                 }
             } catch (e) {
-                return yield response.catchErrors(e, object_pre);
+                return yield response.catchErrors(e, payload);
             }
         },
         del: function * (next) {
@@ -429,19 +429,19 @@ if (object_test.data.password) {
                 // TODO: Be sure this is being requested by authenticated user w/proper privileges
 
                 // Request payload
-                var object_pre = yield parse(this);
+                var payload = yield parse(this);
                 
                 // No parameter provided in URL
                 if ((this.params.id == undefined && this.params.id == null) && _.isEmpty(this.query)) {
                     // Perhaps request is for a batch delete
-                    // batch_test = validate.schemaForBatchDelete(schema, object_pre);
+                    // batch_test = validate.schemaForBatchDelete(schema, payload);
                     // if (batch_test.valid) {
                     //     // Loop through validated data and perform deletes
                     // }
                     // else {
-                    //     return yield response.invalidPost(object_pre, batch_test.errors);
+                    //     return yield response.invalidPayload(payload, batch_test.errors);
                     // }
-                    return yield response.invalidPost(object_pre, [errors.UNSUPPORTED()]);
+                    return yield response.invalidPayload(payload, [errors.UNSUPPORTED()]);
                 }
                 // Parameter exists in URL
                 else {
@@ -456,7 +456,7 @@ var user_test = yield validate.userID(this.params.id, schema, label, alias, sche
 if (user_test.valid) {
     existingObject = user_test.data
 } else {
-    return yield response.invalidPost(object_pre, user_test.errors);
+    return yield response.invalidPayload(payload, user_test.errors);
 }
 // -----------------------------------------------------------------------------
 // END USER SPECIFIC LOGIC
@@ -473,7 +473,7 @@ if (user_test.valid) {
                     }
                 }
             } catch (e) {
-                return yield response.catchErrors(e, object_pre);
+                return yield response.catchErrors(e, payload);
             }
         }
     }

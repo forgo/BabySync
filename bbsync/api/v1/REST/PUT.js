@@ -37,21 +37,21 @@ module.exports = function PUT(type, label, alias, schema, utility) {
             // TODO: Be sure this is being requested by authenticated user w/proper privileges
 
             // Request payload
-            var object_pre = yield parse(this);
+            var payload = yield parse(this);
 
             // No parameter provided in URL
             if ((this.params.id == undefined && this.params.id == null) && _.isEmpty(this.query)) {
                 // TODO: Batch PUT updates (embedded IDs in request body)
                 // TODO: distinguish batch updates for user/non-user
                 // Perhaps request is for a batch update
-                // batch_test = validate.schemaForBatchUpdate(schema, object_pre);
+                // batch_test = validate.schemaForBatchUpdate(schema, payload);
                 // if (batch_test.valid) {
                 //     // Loop through validated data and perform updates
                 // }
                 // else {
-                //     return yield response.invalidPost(object_pre, batch_test.errors);
+                //     return yield response.invalidPayload(payload, batch_test.errors);
                 // }
-                return yield response.invalidPost(object_pre, [errors.UNSUPPORTED()]);
+                return yield response.invalidPayload(payload, [errors.UNSUPPORTED()]);
             }
             // Parameter exists in URL
             else {
@@ -68,7 +68,7 @@ module.exports = function PUT(type, label, alias, schema, utility) {
                         existingObject = id_test.data;
                     } else {
                         // can't update an object we can't find
-                        return yield response.invalidPost(object_pre, id_test.errors);
+                        return yield response.invalidPayload(payload, id_test.errors);
                     }
                 } else {
                     // validate the object ID provided
@@ -78,21 +78,21 @@ module.exports = function PUT(type, label, alias, schema, utility) {
                         existingObject = yield db.object_by_id(id_test.data.toString(), label, alias, schema);
                         if (!existingObject.success) {
                             // can't update an object we can't find
-                            return yield response.invalidPost(object_pre, existingObject.errors);
+                            return yield response.invalidPayload(payload, existingObject.errors);
                         }
                     } else {
-                        return yield response.invalidPost(object_pre, [errors.UNIDENTIFIABLE(this.params.id)]);
+                        return yield response.invalidPayload(payload, [errors.UNIDENTIFIABLE(this.params.id)]);
                     }
                 }
 
                 // need to be sure object for update not an empty array!
                 if (existingObject.data.length == 0) {
-                    return yield response.invalidPost(object_pre, [errors.UNIDENTIFIABLE(this.params.id)]);
+                    return yield response.invalidPayload(payload, [errors.UNIDENTIFIABLE(this.params.id)]);
                 }
 
                 // if we got this far, we must have found a match to update
                 // now validate data in update request
-                object_test = validate.schemaForUpdate(schema, object_pre);
+                object_test = validate.schemaForUpdate(schema, payload);
                 if (object_test.valid) {
 
                     if(type.user) {
@@ -123,14 +123,14 @@ module.exports = function PUT(type, label, alias, schema, utility) {
                     if (objectUpdate.success) {
                         return yield response.success(objectUpdate.data);
                     } else {
-                        return yield response.invalidPost(object_pre, objectUpdate.errors);
+                        return yield response.invalidPayload(payload, objectUpdate.errors);
                     }
                 } else {
-                    return yield response.invalidPost(object_pre, object_test.errors);
+                    return yield response.invalidPayload(payload, object_test.errors);
                 }
             }
         } catch (e) {
-            return yield response.catchErrors(e, object_pre);
+            return yield response.catchErrors(e, payload);
         }
     }
 

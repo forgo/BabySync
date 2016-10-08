@@ -34,9 +34,9 @@ module.exports = function POST(type, label, alias, schema, utility) {
     var post = function * (next) {
        try {
             // TODO: Be sure this is being requested by authenticated user w/proper privileges
-            var object_pre = yield parse(this);
-            console.log("object_pre:", object_pre);
-            var object_test = validate.schema(schema, object_pre);
+            var payload = yield parse(this);
+            console.log("payload:", payload);
+            var object_test = validate.schema(schema, payload);
             console.log("object_test:", object_test);
             if (object_test.valid) {
 
@@ -55,7 +55,7 @@ module.exports = function POST(type, label, alias, schema, utility) {
                                 takenErrors.push(errors.USERNAME_TAKEN("username"));
                             }
                         } else {
-                            return yield response.invalidPost(object_pre, checkUsername.errors);
+                            return yield response.invalidPayload(payload, checkUsername.errors);
                         }
                     }
 
@@ -67,11 +67,11 @@ module.exports = function POST(type, label, alias, schema, utility) {
                             takenErrors.push(errors.EMAIL_TAKEN("email"));
                         }
                     } else {
-                        return yield response.invalidPost(object_pre, checkEmail.errors);
+                        return yield response.invalidPayload(payload, checkEmail.errors);
                     }
 
                     if (isTaken) {
-                        return yield response.invalidPost(object_pre, takenErrors);
+                        return yield response.invalidPayload(payload, takenErrors);
                     }
 
                     // generate user salt/hash using bcrypt
@@ -104,14 +104,14 @@ module.exports = function POST(type, label, alias, schema, utility) {
                 if (create.success) {
                     return yield response.success(create.data);
                 } else {
-                    return yield response.invalidPost(object_pre, create.errors);
+                    return yield response.invalidPayload(payload, create.errors);
                 }
             } else {
                 // Request was not valid,
-                return yield response.invalidPost(object_pre, object_test.errors);
+                return yield response.invalidPayload(payload, object_test.errors);
             }
         } catch (e) {
-            return yield response.catchErrors(e, object_pre);
+            return yield response.catchErrors(e, payload);
         } 
     }
 

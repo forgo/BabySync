@@ -36,8 +36,8 @@ module.exports = function LOGIN(type, label, alias, schema, utility) {
 
     var login = function * (next) {
         try {
-            var login_pre = yield parse(this);
-            var login_test = yield validate.login(schema, login_pre, req);
+            var payload = yield parse(this);
+            var login_test = yield validate.login(schema, payload, req);
             if (login_test.valid) {
 
                 var userToCompare = null;
@@ -88,10 +88,10 @@ module.exports = function LOGIN(type, label, alias, schema, utility) {
                                         return yield response.success({ token: token, email: newGoogleUserCreate.data.email });
                                     } else {
                                         // Failed to create new user with Google ID
-                                        return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to create new user via Google")]);
+                                        return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("failed to create new user via Google")]);
                                     }
                                 } else {
-                                    return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to validate new user via Google")]);
+                                    return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("failed to validate new user via Google")]);
                                 }    
                             } else {
                                 // User found with this valid Google ID
@@ -100,7 +100,7 @@ module.exports = function LOGIN(type, label, alias, schema, utility) {
                                 return yield response.success({ token: token, email: userByGoogleID.data.email });
                             }
                         } else {
-                            return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to login via Google")]);
+                            return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("failed to login via Google")]);
                         }
                     }
                     else if(method == "Facebook") {
@@ -139,10 +139,10 @@ module.exports = function LOGIN(type, label, alias, schema, utility) {
                                         return yield response.success({ token: token, email: newFacebookUserCreate.data.email });
                                     } else {
                                         // Failed to create new user with Facebook ID
-                                        return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to create new user via Facebook")]);
+                                        return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("failed to create new user via Facebook")]);
                                     }
                                 } else {
-                                    return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to validate new user via Facebook")]);
+                                    return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("failed to validate new user via Facebook")]);
                                 }    
                             } else {
                                 // User found with this valid Facebook ID
@@ -151,7 +151,7 @@ module.exports = function LOGIN(type, label, alias, schema, utility) {
                                 return yield response.success({ token: token, email: userByFacebookID.data.email });
                             }
                         } else {
-                            return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to login via Facebook")]);
+                            return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("failed to login via Facebook")]);
                         }
                     }
                 }
@@ -163,24 +163,24 @@ module.exports = function LOGIN(type, label, alias, schema, utility) {
                     if (userByEmail.success) {
                         if (userByEmail.data.length == 0) {
                             // Email not found (only return generic login failure error for security purposes)
-                            return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE()]);
+                            return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE()]);
                         } else {
                             userToCompare = userByEmail.data;
                         }
                     } else {
-                        return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE()]);
+                        return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE()]);
                     }
                 } else {
                     var userByUsername = yield db.user_by_username_for_login(login_test.data.username, label, alias, schema);
                     if (userByUsername.success) {
                         if (userByUsername.data.length == 0) {
                             // Username not found (only return generic login failure error for security purposes)
-                            return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("username not found")]);
+                            return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("username not found")]);
                         } else {
                             userToCompare = userByUsername.data;
                         }
                     } else {
-                        return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("invalid field values")]);
+                        return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("invalid field values")]);
                     }
                 }
 
@@ -200,18 +200,18 @@ module.exports = function LOGIN(type, label, alias, schema, utility) {
                         return yield response.success({ token: token, email: userUpdate.data.email });
                     } else {
                         // Failed to Update Last Login Date When Logging In
-                        return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("failed to update login_on")]);
+                        return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("failed to update login_on")]);
                     }
                 } else {
                     // Password incorrect (only return generic login failure error for security purposes)
-                    return yield response.invalidPost(login_pre, [errors.LOGIN_FAILURE("password incorrect")]);
+                    return yield response.invalidPayload(payload, [errors.LOGIN_FAILURE("password incorrect")]);
                 }
             } else {
                 // Request was not valid
-                return yield response.invalidPost(login_pre, login_test.errors);
+                return yield response.invalidPayload(payload, login_test.errors);
             }
         } catch (e) {
-            return yield response.catchErrors(e, login_pre);
+            return yield response.catchErrors(e, payload);
         }
     }
 

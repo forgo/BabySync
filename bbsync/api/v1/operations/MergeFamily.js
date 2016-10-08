@@ -37,11 +37,11 @@ module.exports = function MergeFamily(utility, parentSchema, familySchema) {
         try {
             // TODO: Be sure this is being requested by authenticated user w/proper privileges
             
-            var parent_pre = yield parse(this);
+            var payload = yield parse(this);
 
             // No parameter provided in URL
             if ((this.params.id == undefined && this.params.id == null) && _.isEmpty(this.query)) {
-                return yield response.invalidPost(parent_pre, [errors.FAMILY_ID_REQUIRED()]);
+                return yield response.invalidPayload(payload, [errors.FAMILY_ID_REQUIRED()]);
             }
             // Parameter exists in URL
             else {
@@ -54,37 +54,37 @@ module.exports = function MergeFamily(utility, parentSchema, familySchema) {
                 if (id_test.valid) {
                     existingFamily = yield db.object_by_id(id_test.data.toString(), "Family", "f", familySchema);
                     if (!existingFamily.success) {
-                        return yield response.invalidPost(parent_pre, existingFamily.errors);
+                        return yield response.invalidPayload(payload, existingFamily.errors);
                     }
                 } else {
-                    return yield response.invalidPost(parent_pre, [errors.UNIDENTIFIABLE(this.params.id)]);
+                    return yield response.invalidPayload(payload, [errors.UNIDENTIFIABLE(this.params.id)]);
                 }
 
                 // Need to be sure this gives back an object and not empty array!
                 if (existingFamily.data.length == 0) {
-                    return yield response.invalidPost(parent_pre, [errors.UNIDENTIFIABLE(this.params.id)]);
+                    return yield response.invalidPayload(payload, [errors.UNIDENTIFIABLE(this.params.id)]);
                 }
 
                 // If we got this far, we must have found a match.
                 // Now validate email of parent who wants to merge the new family
-				var parent_test = validate.schemaForAttributes(parentSchema, ["email"], parent_pre);
+				var parent_test = validate.schemaForAttributes(parentSchema, ["email"], payload);
 	            if (parent_test.valid) {
 	            	// Request DB Family Join
 	            	var merge = yield dbBabySync.family_merge(existingFamily.data.id, parent_test.data.email);
 	                if (merge.success) {
 	                    return yield response.success(merge.data);
 	                } else {
-	                    return yield response.invalidPost(parent_pre, merge.errors);
+	                    return yield response.invalidPayload(payload, merge.errors);
 	                }
 	            }
 	            else {
 	            	// Request was not valid,
-	                return yield response.invalidPost(parent_pre, parent_test.errors);
+	                return yield response.invalidPayload(payload, parent_test.errors);
 	            }
 	        }
 
         } catch (e) {
-            return yield response.catchErrors(e, parent_pre);
+            return yield response.catchErrors(e, payload);
         }
     }
     return mergeFamily;

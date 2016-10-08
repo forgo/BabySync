@@ -37,8 +37,8 @@ module.exports = function CreateFamily(utility, parentSchema) {
         try {
             console.log("CREATE FAMILY");
             // TODO: Be sure this is being requested by authenticated user w/proper privileges
-            var parent_pre = yield parse(this);
-            var parent_test = validate.schema(parentSchema, parent_pre);
+            var payload = yield parse(this);
+            var parent_test = validate.schema(parentSchema, payload);
             if (parent_test.valid) {
                 // Add automatic date fields
                 var now = new Date();
@@ -49,14 +49,14 @@ module.exports = function CreateFamily(utility, parentSchema) {
                 if (create.success) {
                     return yield response.success(create.data);
                 } else {
-                    return yield response.invalidPost(parent_pre, create.errors);
+                    return yield response.invalidPayload(payload, create.errors);
                 }
             } else {
                 // Request was not valid,
-                return yield response.invalidPost(parent_pre, parent_test.errors);
+                return yield response.invalidPayload(payload, parent_test.errors);
             }
         } catch (e) {
-            return yield response.catchErrors(e, parent_pre);
+            return yield response.catchErrors(e, payload);
         }
     }
     return createFamily;

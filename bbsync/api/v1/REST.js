@@ -35,8 +35,8 @@ module.exports = function REST(label, alias, schema, utility) {
             try {
                 // TODO: Be sure this is being requested by authenticated user w/proper privileges
 
-                var object_pre = yield parse(this);
-                var object_test = validate.schema(schema, object_pre);
+                var payload = yield parse(this);
+                var object_test = validate.schema(schema, payload);
                 if (object_test.valid) {
 
                     // Add automatic date fields
@@ -48,14 +48,14 @@ module.exports = function REST(label, alias, schema, utility) {
                     if (create.success) {
                         return yield response.success(create.data);
                     } else {
-                        return yield response.invalidPost(object_pre, create.errors);
+                        return yield response.invalidPayload(payload, create.errors);
                     }
                 } else {
                     // Request was not valid,
-                    return yield response.invalidPost(object_pre, object_test.errors);
+                    return yield response.invalidPayload(payload, object_test.errors);
                 }
             } catch (e) {
-                return yield response.catchErrors(e, object_pre);
+                return yield response.catchErrors(e, payload);
             }
         },
         get: function * (next) {
@@ -103,19 +103,19 @@ module.exports = function REST(label, alias, schema, utility) {
                 // TODO: Be sure this is being requested by authenticated user w/proper privileges
 
                 // Request payload
-                var object_pre = yield parse(this);
+                var payload = yield parse(this);
 
                 // No parameter provided in URL
                 if ((this.params.id == undefined && this.params.id == null) && _.isEmpty(this.query)) {
                     // Perhaps request is for a batch update
-                    // batch_test = validate.schemaForBatchUpdate(schema, object_pre);
+                    // batch_test = validate.schemaForBatchUpdate(schema, payload);
                     // if (batch_test.valid) {
                     //     // Loop through validated data and perform updates
                     // }
                     // else {
-                    //     return yield response.invalidPost(object_pre, batch_test.errors);
+                    //     return yield response.invalidPayload(payload, batch_test.errors);
                     // }
-                    return yield response.invalidPost(object_pre, [errors.UNSUPPORTED()]);
+                    return yield response.invalidPayload(payload, [errors.UNSUPPORTED()]);
                 }
                 // Parameter exists in URL
                 else {
@@ -127,20 +127,20 @@ module.exports = function REST(label, alias, schema, utility) {
                     if (id_test.valid) {
                         existingObject = yield db.object_by_id(id_test.data.toString(), label, alias, schema);
                         if (!existingObject.success) {
-                            return yield response.invalidPost(object_pre, existingObject.errors);
+                            return yield response.invalidPayload(payload, existingObject.errors);
                         }
                     } else {
-                        return yield response.invalidPost(object_pre, [errors.UNIDENTIFIABLE(this.params.id)]);
+                        return yield response.invalidPayload(payload, [errors.UNIDENTIFIABLE(this.params.id)]);
                     }
 
                     // Need to be sure this gives back an object and not empty array!
                     if (existingObject.data.length == 0) {
-                        return yield response.invalidPost(object_pre, [errors.UNIDENTIFIABLE(this.params.id)]);
+                        return yield response.invalidPayload(payload, [errors.UNIDENTIFIABLE(this.params.id)]);
                     }
 
                     // If we got this far, we must have found a match.
                     // Now validate what we're trying to update
-                    object_test = validate.schemaForUpdate(schema, object_pre);
+                    object_test = validate.schemaForUpdate(schema, payload);
                     if (object_test.valid) {
                         // Add automatic date fields
                         var now = new Date();
@@ -150,14 +150,14 @@ module.exports = function REST(label, alias, schema, utility) {
                         if (objectUpdate.success) {
                             return yield response.success(objectUpdate.data);
                         } else {
-                            return yield response.invalidPost(object_pre, objectUpdate.errors);
+                            return yield response.invalidPayload(payload, objectUpdate.errors);
                         }
                     } else {
-                        return yield response.invalidPost(object_pre, object_test.errors);
+                        return yield response.invalidPayload(payload, object_test.errors);
                     }
                 }
             } catch (e) {
-                return yield response.catchErrors(e, object_pre);
+                return yield response.catchErrors(e, payload);
             }
         },
         del: function * (next) {
@@ -166,19 +166,19 @@ module.exports = function REST(label, alias, schema, utility) {
                 // TODO: Be sure this is being requested by authenticated user w/proper privileges
 
                 // Request payload
-                var object_pre = yield parse(this);
+                var payload = yield parse(this);
 
                 // No parameter provided in URL
                 if (this.params.id == undefined && this.params.id == null) {
                     // Perhaps request is for a batch delete
-                    // batch_test = validate.schemaForBatchDelete(schema, object_pre);
+                    // batch_test = validate.schemaForBatchDelete(schema, payload);
                     // if (batch_test.valid) {
                     //     // Loop through validated data and perform deletes
                     // }
                     // else {
-                    //     return yield response.invalidPost(object_pre, batch_test.errors);
+                    //     return yield response.invalidPayload(payload, batch_test.errors);
                     // }
-                    return yield response.invalidPost(object_pre, [errors.UNSUPPORTED()]);
+                    return yield response.invalidPayload(payload, [errors.UNSUPPORTED()]);
                 }
                 // Parameter exists in URL
                 else {
@@ -210,7 +210,7 @@ module.exports = function REST(label, alias, schema, utility) {
                     }
                 }
             } catch (e) {
-                return yield response.catchErrors(e, object_pre);
+                return yield response.catchErrors(e, payload);
             }
         }
     }

@@ -36,23 +36,23 @@ module.exports = function DetachFamily(utility, parentSchema, familySchema) {
     var detachFamily = function * (next) {
     	try {
     	    // TODO: Be sure this is being requested by authenticated user w/proper privileges
-            var parent_pre = yield parse(this);
-            var parent_test = validate.schemaForAttributes(parentSchema, ["email"], parent_pre);
+            var payload = yield parse(this);
+            var parent_test = validate.schemaForAttributes(parentSchema, ["email"], payload);
             if (parent_test.valid) {
             	// Request DB Family Join
             	var detach = yield dbBabySync.family_detach(parent_test.data.email);
                 if (detach.success) {
                     return yield response.success(detach.data);
                 } else {
-                    return yield response.invalidPost(parent_pre, detach.errors);
+                    return yield response.invalidPayload(payload, detach.errors);
                 }
             }
             else {
             	// Request was not valid,
-                return yield response.invalidPost(parent_pre, parent_test.errors);
+                return yield response.invalidPayload(payload, parent_test.errors);
             }
         } catch (e) {
-            return yield response.catchErrors(e, parent_pre);
+            return yield response.catchErrors(e, payload);
         }
     }
     return detachFamily;

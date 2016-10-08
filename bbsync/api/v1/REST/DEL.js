@@ -36,21 +36,21 @@ module.exports = function DEL(type, label, alias, schema, utility) {
             // TODO: Be sure this is being requested by authenticated user w/proper privileges
 
             // Request payload
-            var object_pre = yield parse(this);
+            var payload = yield parse(this);
             
             // No parameter provided in URL
             if ((this.params.id == undefined && this.params.id == null) && _.isEmpty(this.query)) {
                 // TODO: Batch DEL deletes (embedded IDs in request body)
                 // TODO: distinguish batch updates for user/non-user
                 // Perhaps request is for a batch delete
-                // batch_test = validate.schemaForBatchDelete(schema, object_pre);
+                // batch_test = validate.schemaForBatchDelete(schema, payload);
                 // if (batch_test.valid) {
                 //     // Loop through validated data and perform deletes
                 // }
                 // else {
-                //     return yield response.invalidPost(object_pre, batch_test.errors);
+                //     return yield response.invalidPayload(payload, batch_test.errors);
                 // }
-                return yield response.invalidPost(object_pre, [errors.UNSUPPORTED()]);
+                return yield response.invalidPayload(payload, [errors.UNSUPPORTED()]);
             }
             // Parameter exists in URL
             else {
@@ -67,7 +67,7 @@ module.exports = function DEL(type, label, alias, schema, utility) {
                         existingObject = id_test.data
                     } else {
                         // can't delete an object we can't find
-                        return yield response.invalidPost(object_pre, id_test.errors);
+                        return yield response.invalidPayload(payload, id_test.errors);
                     }
                 } else {
                     // validate the ID provided
@@ -101,7 +101,7 @@ module.exports = function DEL(type, label, alias, schema, utility) {
                 }
             }
         } catch (e) {
-            return yield response.catchErrors(e, object_pre);
+            return yield response.catchErrors(e, payload);
         }
     }
 
