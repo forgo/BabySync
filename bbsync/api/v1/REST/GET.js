@@ -35,8 +35,16 @@ module.exports = function GET(type, label, alias, schema, utility) {
 
             // No parameter provided in URL
             if ((this.params.id == undefined || this.params.id == null) && _.isEmpty(this.query)) {
-                // Return all families
-                var allObjects = yield db.user_all(label, alias, schema);
+
+                var allObjects = {};
+                if(type.user) {
+                    // return all users
+                    allObjects = yield db.user_all(label, alias, schema);
+                } else {
+                    // return all objects
+                    allObjects = yield db.object_all(label, alias, schema);
+                }
+
                 if (allObjects.success) {
                     return yield response.success(allObjects.data);
                 } else {
@@ -45,17 +53,34 @@ module.exports = function GET(type, label, alias, schema, utility) {
             }
             // Parameter exists in URL
             else {
-                // BEGIN: User-Specific Logic
+                var id_test = {};
                 if(type.user) {
-                    // Try to identify existing user
-                    var user_test = yield validate.userID(this.params.id, schema, label, alias, schema, db);
-                    if (user_test.valid) {
-                        return yield response.success(user_test.data);
+                    // validate/identify existing user (calls DB)
+                    id_test = yield validate.userID(this.params.id, schema, label, alias, schema, db);
+                    // user id heuristics should return user object if valid
+                    if (id_test.valid) {
+                        return yield response.success(id_test.data);
                     } else {
-                        return yield response.invalid(user_test.errors);
+                        return yield response.invalid(id_test.errors);
                     }
                 }
-                // END: User-Specific Logic
+                else {
+                    // validate the object ID provided
+                    id_test = validate.id(this.params.id);
+                    if(id.test.valid) {
+                        // unlike user ID validation, regular objects still need DB call
+                        var oneObject = yield db.object_by_id(id_test.data.toString(), label, alias, schema);
+                        if (oneObject.success) {
+                            // need to be sure this gives back an object and not empty array!
+                            if (oneObject.data.length == 0) {
+                                return yield response.invalid([errors.UNIDENTIFIABLE(this.params.id)]);
+                            }
+                            return yield response.success(oneObject.data);
+                        } else {
+                            return yield response.invalid(oneObject.errors);
+                        }
+                    }
+                }
             }
         } catch (e) {
             // Unknown Error

@@ -42,7 +42,7 @@ module.exports = function POST(type, label, alias, schema, utility) {
 
                 // BEGIN: User-Specific Logic
                 if(type.user) {
-                    // Check if username / email already in use
+                    // check if username / email already in use
                     var takenErrors = [];
                     var isTaken = false;
 
@@ -59,6 +59,7 @@ module.exports = function POST(type, label, alias, schema, utility) {
                         }
                     }
 
+                    // email is mandatory for user type
                     var checkEmail = yield db.user_email_taken(object_test.data.email, label, alias);
                     if (checkEmail.success) {
                         if (checkEmail.taken) {
@@ -73,16 +74,16 @@ module.exports = function POST(type, label, alias, schema, utility) {
                         return yield response.invalidPost(object_pre, takenErrors);
                     }
 
-                    // Generate salt/hash using bcrypt
+                    // generate user salt/hash using bcrypt
                     var salt = yield bcrypt.genSalt(10);
                     var hash = yield bcrypt.hash(object_test.data.password, salt);
 
-                    // Delete password key/value from post object, replace w/hash
+                    // delete password key/value from post object, replace w/hash
                     var pw = object_test.data.password;
                     delete object_test.data.password;
                     object_test.data.hash = hash;
 
-                    // Creating new user so login_on is empty
+                    // creating new user, login_on is initially empty
                     object_test.data.login_on = "";
                 }
                 // END: User-Specific Logic
@@ -93,8 +94,13 @@ module.exports = function POST(type, label, alias, schema, utility) {
                 object_test.data.updated_on = now;
 
                 // Request DB Create Node and Respond Accordingly
-                var create = yield db.user_create(object_test.data, label, alias, schema);
-
+                var create = {};
+                if(type.user) {
+                    create = yield db.user_create(object_test.data, label, alias, schema);
+                } else {
+                    create = yield db.object_create(object_test.data, label, alias, schema);
+                }
+                
                 if (create.success) {
                     return yield response.success(create.data);
                 } else {

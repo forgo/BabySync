@@ -40,6 +40,8 @@ module.exports = function DEL(type, label, alias, schema, utility) {
             
             // No parameter provided in URL
             if ((this.params.id == undefined && this.params.id == null) && _.isEmpty(this.query)) {
+                // TODO: Batch DEL deletes (embedded IDs in request body)
+                // TODO: distinguish batch updates for user/non-user
                 // Perhaps request is for a batch delete
                 // batch_test = validate.schemaForBatchDelete(schema, object_pre);
                 // if (batch_test.valid) {
@@ -54,22 +56,41 @@ module.exports = function DEL(type, label, alias, schema, utility) {
             else {
                 // Try to identify existing object
                 var existingObject = undefined;
+                var id_test = {};
 
-// -----------------------------------------------------------------------------
-// START USER SPECIFIC LOGIC
-// -----------------------------------------------------------------------------
-// Try to identify existing user
-var user_test = yield validate.userID(this.params.id, schema, label, alias, schema, db);
-if (user_test.valid) {
-existingObject = user_test.data
-} else {
-return yield response.invalidPost(object_pre, user_test.errors);
-}
-// -----------------------------------------------------------------------------
-// END USER SPECIFIC LOGIC
-// -----------------------------------------------------------------------------
+                if(type.user) {
+                    // validate/identify existing user (calls DB)
+                    id_test = yield validate.userID(this.params.id, schema, label, alias, schema, db);
+                    // user id heuristics should return user object if valid
+                    if (id_test.valid) {
+                        // hold on to existing object is found valid
+                        existingObject = id_test.data
+                    } else {
+                        // can't delete an object we can't find
+                        return yield response.invalidPost(object_pre, id_test.errors);
+                    }
+                } else {
+                    // validate the ID provided
+                    id_test = validate.id(this.params.id);
+                    if (id_test.valid) {
+                        // unlike user ID validation, regular objects still need DB call
+                        existingObject = yield db.object_by_id(id_test.data.toString(), label, alias, schema);
+                        if (!existingObject.success) {
+                            // can't delete an object we can't find
+                            return yield response.invalid(existingObject.errors);
+                        }
+                    } else {
+                        return yield response.invalid([errors.UNIDENTIFIABLE(this.params.id)]);
+                    }
+                }
 
-                // If we got this far, we must have found a match to delete.
+                // Need to be sure this gives back an object and not empty array!
+                if (existingObject.data.length == 0) {
+                    return yield response.invalid([errors.UNIDENTIFIABLE(this.params.id)]);
+                }
+
+                // if we got this far, we must have found a match to delete
+                // request DB delete
                 var objectDelete = yield db.user_delete_by_id(existingObject.id, label, alias);
                 console.log(objectDelete);
 

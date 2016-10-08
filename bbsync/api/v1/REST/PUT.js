@@ -39,10 +39,10 @@ module.exports = function PUT(type, label, alias, schema, utility) {
             // Request payload
             var object_pre = yield parse(this);
 
-
-
             // No parameter provided in URL
             if ((this.params.id == undefined && this.params.id == null) && _.isEmpty(this.query)) {
+                // TODO: Batch PUT updates (embedded IDs in request body)
+                // TODO: distinguish batch updates for user/non-user
                 // Perhaps request is for a batch update
                 // batch_test = validate.schemaForBatchUpdate(schema, object_pre);
                 // if (batch_test.valid) {
@@ -57,48 +57,69 @@ module.exports = function PUT(type, label, alias, schema, utility) {
             else {
                 // Try to identify existing object
                 var existingObject = undefined;
+                var id_test = {};
 
-// -----------------------------------------------------------------------------
-// START USER SPECIFIC LOGIC
-// -----------------------------------------------------------------------------
-// Try to identify existing user
-var user_test = yield validate.userID(this.params.id, schema, label, alias, schema, db);
-if (user_test.valid) {
-existingObject = user_test.data
-} else {
-return yield response.invalidPost(object_pre, user_test.errors);
-}
-// -----------------------------------------------------------------------------
-// END USER SPECIFIC LOGIC
-// -----------------------------------------------------------------------------
+                if(type.user) {
+                    // validate/identify existing user (calls DB)
+                    id_test = yield validate.userID(this.params.id, schema, label, alias, schema, db);
+                    // user id heuristics should return user object if valid
+                    if (id_test.valid) {
+                        // hold on to existing object is found valid
+                        existingObject = id_test.data;
+                    } else {
+                        // can't update an object we can't find
+                        return yield response.invalidPost(object_pre, id_test.errors);
+                    }
+                } else {
+                    // validate the object ID provided
+                    id_test = validate.id(this.params.id);
+                    if (id_test.valid) {
+                        // unlike user ID validation, regular objects still need DB call
+                        existingObject = yield db.object_by_id(id_test.data.toString(), label, alias, schema);
+                        if (!existingObject.success) {
+                            // can't update an object we can't find
+                            return yield response.invalidPost(object_pre, existingObject.errors);
+                        }
+                    } else {
+                        return yield response.invalidPost(object_pre, [errors.UNIDENTIFIABLE(this.params.id)]);
+                    }
+                }
 
-                // If we got this far, we must have found a match.
-                // Now validate what we're trying to update
+                // need to be sure object for update not an empty array!
+                if (existingObject.data.length == 0) {
+                    return yield response.invalidPost(object_pre, [errors.UNIDENTIFIABLE(this.params.id)]);
+                }
+
+                // if we got this far, we must have found a match to update
+                // now validate data in update request
                 object_test = validate.schemaForUpdate(schema, object_pre);
                 if (object_test.valid) {
 
-// -----------------------------------------------------------------------------
-// START USER SPECIFIC LOGIC
-// -----------------------------------------------------------------------------
-// Is the user trying to change their password?
-if (object_test.data.password) {
-// Generate new salt/hash using bcrypt
-var salt = yield bcrypt.genSalt(10);
-var hash = yield bcrypt.hash(object_test.data.password, salt);
-// Delete password key/value from update object, replace w/hash
-var pw = object_test.data.password;
-delete object_test.data.password;
-object_test.data.hash = hash;
-}
-// -----------------------------------------------------------------------------
-// END USER SPECIFIC LOGIC
-// -----------------------------------------------------------------------------
+                    if(type.user) {
+                        // Is the user trying to change their password?
+                        if (object_test.data.password) {
+                            // Generate new salt/hash using bcrypt
+                            var salt = yield bcrypt.genSalt(10);
+                            var hash = yield bcrypt.hash(object_test.data.password, salt);
+                            // Delete password key/value from update object, replace w/hash
+                            var pw = object_test.data.password;
+                            delete object_test.data.password;
+                            object_test.data.hash = hash;
+                        } 
+                    }
 
                     // Add automatic date fields
                     var now = new Date();
                     object_test.data.updated_on = now;
+
                     // Request DB update
-                    var objectUpdate = yield db.user_update(existingObject.id, object_test.data, label, alias, schema);
+                    var objectUpdate = {};
+                    if(type.user) {
+                        objectUpdate = yield db.user_update(existingObject.id, object_test.data, label, alias, schema);
+                    } else {
+                        objectUpdate = yield db.object_update(existingObject.data.id, object_test.data, label, alias, schema);
+                    }
+
                     if (objectUpdate.success) {
                         return yield response.success(objectUpdate.data);
                     } else {
