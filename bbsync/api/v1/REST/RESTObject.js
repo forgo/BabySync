@@ -20,26 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Utility(config) {
+module.exports = function RESTObject(Template, utility) {
 
-    var Security    = require('./Security.js');
-    var Errors      = require('./Errors.js');
-    var Validate    = require('./Validate.js');
-    var Response    = require('./Response.js');
-    var Database    = require('./Database.js');
-    
-    var security    = new Security();
-    var errors      = new Errors();
-    var validate    = new Validate(errors);
-    var response    = new Response(errors);
-    var db          = new Database(config.db, errors);
+    var template = new Template(utility.validate)
 
-    var utility = {
-        security: security,
-        errors: errors,
-        validate: validate,
-        response: response,
-        db: db
+    //TODO: try catch for conformance here, anything special?
+    var Model = require('../Models/Model.js');
+    var model = new Model(template);
+
+    var POST = require('./POST.js');
+    var GET = require('./GET.js');
+    var PUT = require('./PUT.js');
+    var DEL = require('./DEL.js');
+    var post = new POST(model, utility);
+    var get = new GET(model, utility);
+    var put = new PUT(model, utility);
+    var del = new DEL(model, utility);
+
+    var restObject = {
+        // Data
+        template: template,
+        model: model,
+        // REST Middleware 
+        login: null,
+        post: post,
+        get: get,
+        put: put,
+        del: del
     };
-    return utility;
+
+    if(model.type.user) {
+        var LOGIN = require('./LOGIN.js');
+        var login = new LOGIN(model, utility);
+        restObject.login = login;
+    }
+
+    return restObject;
 };

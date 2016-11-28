@@ -20,26 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Utility(config) {
+module.exports = function ModelSchema(attributes) {
 
-    var Security    = require('./Security.js');
-    var Errors      = require('./Errors.js');
-    var Validate    = require('./Validate.js');
-    var Response    = require('./Response.js');
-    var Database    = require('./Database.js');
+	var ModelSchemaAttribute = require('./ModelSchemaAttribute.js');
+
+	// Each attribute pushed onto schema must conform to a precise format
+	// the Attribute constructor will throw an error if non-conformant
+	var schema = [];
+	var formalAttribute = null;
+	attributes.forEach(function(a) {
+		try {
+			formalAttribute = new ModelSchemaAttribute(a);
+			schema.push(formalAttribute);
+		} catch(e) {
+			// ERROR: HOW TO HANDLE?
+			throw new Error("Invalid attribute:\n" + JSON.stringify(a, null, 4) + "\nReason:\n" + e);
+		}
+	});
     
-    var security    = new Security();
-    var errors      = new Errors();
-    var validate    = new Validate(errors);
-    var response    = new Response(errors);
-    var db          = new Database(config.db, errors);
-
-    var utility = {
-        security: security,
-        errors: errors,
-        validate: validate,
-        response: response,
-        db: db
-    };
-    return utility;
+	// E
+    Object.freeze(schema);
+    return schema;
 };

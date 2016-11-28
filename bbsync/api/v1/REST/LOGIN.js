@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function LOGIN(type, label, alias, schema, utility) {
+module.exports = function LOGIN(model, utility) {
 
     var parse = require('co-body');
     var _ = require('lodash');
@@ -28,6 +28,11 @@ module.exports = function LOGIN(type, label, alias, schema, utility) {
     var fs = require('fs');
     var jwt = require('koa-jwt');
     var req = require('koa-request');
+
+    var type = model.type;
+    var label = model.label;
+    var alias = model.alias;
+    var schema = model.schema;
 
     var errors = utility.errors;
     var validate = utility.validate;
@@ -64,8 +69,8 @@ module.exports = function LOGIN(type, label, alias, schema, utility) {
                             }
                         );
                         // Password not needed to pass Google OAuth
-                        googleReturnSchema = googleReturnSchema.filter(function(s) {
-                            return (s.attribute != "password");
+                        googleReturnSchema = googleReturnSchema.filter(function(attribute) {
+                            return (attribute.name != "password");
                         });
 
                         // Check for existence of User with this valid Google ID
@@ -115,8 +120,8 @@ module.exports = function LOGIN(type, label, alias, schema, utility) {
                             }
                         );
                         // Password not needed to pass Facebook OAuth
-                        facebookReturnSchema = facebookReturnSchema.filter(function(s) {
-                            return (s.attribute != "password");
+                        facebookReturnSchema = facebookReturnSchema.filter(function(attribute) {
+                            return (attribute.name != "password");
                         });
 
                         // Check for existence of User with this valid Facebook ID

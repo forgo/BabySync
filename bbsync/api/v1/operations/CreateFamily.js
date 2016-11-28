@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function CreateFamily(utility, parentSchema) {
+module.exports = function CreateFamily(utility, parent) {
     
     // Database Extensions for Complex App Queries
     var dbBabySync = require('../DatabaseBabySync.js')(db);
@@ -38,7 +38,7 @@ module.exports = function CreateFamily(utility, parentSchema) {
             console.log("CREATE FAMILY");
             // TODO: Be sure this is being requested by authenticated user w/proper privileges
             var payload = yield parse(this);
-            var parent_test = validate.schema(parentSchema, payload);
+            var parent_test = validate.schema(parent.model.schema, payload);
             if (parent_test.valid) {
                 // Add automatic date fields
                 var now = new Date();

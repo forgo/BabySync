@@ -80,8 +80,8 @@ module.exports = function Validate(errors) {
             // Required or not, if a field provided is not in the schema, error
             // This also does a sanity check on your schema for multiple definitions
             for (var i = 0; i < uniqueFields.length; i++) {
-                var schemesForField = sch.filter(function(s) {
-                    return s.attribute == uniqueFields[i];
+                var schemesForField = sch.filter(function(attribute) {
+                    return attribute.name == uniqueFields[i];
                 });
                 // Should never pass data that doesn't exist in schema
                 // Generic updates use validate.schemaForUpddate to properly modify schema
@@ -106,8 +106,8 @@ module.exports = function Validate(errors) {
 
             // For each scheme defined in schema
             for (var i = 0; i < sch.length; i++) {
-                var scheme = sch[i];
-                var fieldAttribute = scheme.attribute;
+                var attribute = sch[i];
+                var fieldAttribute = attribute.name;
 
                 var isFieldMissing = false;
                 var isFieldEmpty = false;
@@ -204,8 +204,8 @@ module.exports = function Validate(errors) {
             }
             // Attribute filter must contain attributes in schema
             for (var i = 0; i < atts.length; i++) {
-                var schemesForAttribute = sch.filter(function(s) {
-                    return s.attribute == atts[i];
+                var schemesForAttribute = sch.filter(function(attribute) {
+                    return attribute.name == atts[i];
                 });
                 if(schemesForAttribute.length == 0) {
                     return {
@@ -214,10 +214,10 @@ module.exports = function Validate(errors) {
                     };
                 }
             }
-            var modifiedSchema = _.filter(sch, function(s) {
-                // if s.attribute is a field in payload
+            var modifiedSchema = _.filter(sch, function(attribute) {
+                // if attribute.name is a field in payload
                 var f = _.findIndex(atts, function(attribute) {
-                    return attribute == s.attribute;
+                    return attribute == attribute.name;
                 });
                 return f != -1;
             });
@@ -243,10 +243,10 @@ module.exports = function Validate(errors) {
             // extraneous fields in payload that aren't in sch. This means updates
             // only pass when the fields provided are a subset or the same set 
             // as the attributes in sch
-            var updateSchema = _.filter(sch, function(s) {
-                // if s.attribute is a field in payload
+            var updateSchema = _.filter(sch, function(attribute) {
+                // if attribute.name is a field in payload
                 var f = _.findIndex(_.keys(payload), function(field) {
-                    return field == s.attribute;
+                    return field == attribute.name;
                 });
                 return f != -1;
             });
@@ -260,8 +260,8 @@ module.exports = function Validate(errors) {
         },
         attribute: function(sch, payload, att) {
             // Extract Scheme from Schema Which Defines Attribute
-            var attributeSchemes = sch.filter(function(s) {
-                return s.attribute == att;
+            var attributeSchemes = sch.filter(function(attribute) {
+                return attribute.name == att;
             });
             var attributeScheme = attributeSchemes[0];
 
@@ -470,8 +470,8 @@ module.exports = function Validate(errors) {
                 /////
 
                 // We only care about email/username and password for login schema
-                var modifiedSchema = sch.filter(function(s) {
-                    return (s.attribute == (isEmailAsUsername ? "email" : "username")) || (s.attribute == "password");
+                var modifiedSchema = sch.filter(function(attribute) {
+                    return (attribute.name == (isEmailAsUsername ? "email" : "username")) || (attribute.name == "password");
                 });
 
                 var login_schema_test = validate.schema(modifiedSchema, payload);

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function REST(label, alias, schema, utility) {
+module.exports = function RESTOld(label, alias, schema, utility) {
 
     var parse = require('co-body');
     var _ = require('lodash');

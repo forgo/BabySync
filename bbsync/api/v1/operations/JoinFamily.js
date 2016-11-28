@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function JoinFamily(utility, parentSchema, familySchema) {
+module.exports = function JoinFamily(utility, parent, family) {
     
     // Database Extensions for Complex App Queries
     var dbBabySync = require('../DatabaseBabySync.js')(db);
@@ -52,7 +52,7 @@ module.exports = function JoinFamily(utility, parentSchema, familySchema) {
                 var id_test = validate.id(this.params.id);
 
                 if (id_test.valid) {
-                    existingFamily = yield db.object_by_id(id_test.data.toString(), "Family", "f", familySchema);
+                    existingFamily = yield db.object_by_id(id_test.data.toString(), "Family", "f", family.model.schema);
                     if (!existingFamily.success) {
                         return yield response.invalidPayload(payload, existingFamily.errors);
                     }
@@ -67,7 +67,7 @@ module.exports = function JoinFamily(utility, parentSchema, familySchema) {
 
                 // If we got this far, we must have found a match.
                 // Now validate parent who wants to join the new family
-	            var parent_test = validate.schemaForAttributes(parentSchema, ["email"], payload);
+	            var parent_test = validate.schemaForAttributes(parent.model.schema, ["email"], payload);
 	            if (parent_test.valid) {
 	            	// Request DB Family Join
 	            	var join = yield dbBabySync.family_join(existingFamily.data.id, parent_test.data.email);

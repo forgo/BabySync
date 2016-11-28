@@ -68,8 +68,8 @@ login: function * (next) {
                         }
                     );
                     // Password not needed to pass Google OAuth
-                    googleReturnSchema = googleReturnSchema.filter(function(s) {
-                        return (s.attribute != "password");
+                    googleReturnSchema = googleReturnSchema.filter(function(attribute) {
+                        return (attribute.name != "password");
                     });
 
                     // Check for existence of User with this valid Google ID
@@ -119,8 +119,8 @@ login: function * (next) {
                         }
                     );
                     // Password not needed to pass Facebook OAuth
-                    facebookReturnSchema = facebookReturnSchema.filter(function(s) {
-                        return (s.attribute != "password");
+                    facebookReturnSchema = facebookReturnSchema.filter(function(attribute) {
+                        return (attribute.name != "password");
                     });
 
                     // Check for existence of User with this valid Facebook ID

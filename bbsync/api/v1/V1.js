@@ -28,21 +28,24 @@
 /** Bootstrap for Baby Sync API and Web UI Applications */
 module.exports = function V1() {
 
+    // Initialization Config
+    var Config = require('./Config.js');
+    var config = new Config();
+
     // koa packages
     var koa = require('koa');
     var logger = require('koa-logger');
     var mount = require('koa-mount');
     var compose = require('koa-compose');
 
-    // Static Content
+    // static content
     var StaticContent = require('./StaticContent.js');
-    var staticContent = new StaticContent();
+    var staticContent = new StaticContent(config);
 
     // BabySync API
     var BabySync    = require('./BabySync.js');
-    var babySync = null;
 
-    // Web Routing
+    // web routing
     var Web = require('./Web.js');
     var web = new Web(staticContent);
 
@@ -58,14 +61,18 @@ module.exports = function V1() {
         // ???
     }
 
+    // Errors/Validation/Response/Database
+    var Utility         = require('./Utility.js');
+    var utility         = new Utility(config);
+
     // Define BabySync API operations for environment stated
-    babySync = new BabySync(app.env);
+    babySync = new BabySync(app, utility);
 
     // Make static content available in 'public' folder
     app.use(staticContent.cache);
 
     // Custom 401 handling (avoids exposing koa-jwt errors to user)
-    app.use(babySync.utility.response.custom401);
+    app.use(utility.response.custom401);
 
     // Mount public routes (do not require valid JWT)
     app.use(mount('/api/v1', babySync.public));
@@ -74,7 +81,7 @@ module.exports = function V1() {
     app.use(mount('/web', web));
 
     // Mount private routes (require valid JWT)
-    app.use(mount('/api/v1', compose([babySync.utility.security.checkJWT, babySync.private])));
+    app.use(mount('/api/v1', compose([utility.security.checkJWT, babySync.private])));
 
     return app;
 };

@@ -20,20 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function RESTType(typeKey) {
-
-    // Ensure Valid Type to Distinguish Special Behaviors in REST Operations
-    var ValidTypes = {default:"default",user:"user",userProxy:"userProxy"};
-    if(!(type in ValidTypes)) {
-        throw new Error('Invalid REST type \"'+type+'\" for \"'+label+'\"'+
-                        '\nValid types: '+Object.keys(ValidTypes).join(", "));
+module.exports = function Timer(validate) {
+    return {
+        type: "default",
+        label: "Timer",
+        alias: "t",
+        attributes: [
+            {
+                name: "resetDate",
+                type: "Date",
+                required: true,
+                test: validate.minuteWindow({past: 1, future: 1})
+            },
+            {
+                name: "enabled",
+                type: "Boolean",
+                required: true,
+                test: validate.bool()
+            },
+            {
+                name: "push",
+                type: "Boolean",
+                required: true,
+                test: validate.bool()
+            }
+        ]
     }
-
-    var restType = {
-        default: typeKey == ValidTypes.default,
-        user: typeKey == ValidTypes.user,
-        userProxy: typeKey == ValidTypes.userProxy
-    };
-
-    return restType;
 };

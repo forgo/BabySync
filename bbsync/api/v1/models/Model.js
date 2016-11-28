@@ -20,26 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Utility(config) {
+module.exports = function Model(template) {
 
-    var Security    = require('./Security.js');
-    var Errors      = require('./Errors.js');
-    var Validate    = require('./Validate.js');
-    var Response    = require('./Response.js');
-    var Database    = require('./Database.js');
-    
-    var security    = new Security();
-    var errors      = new Errors();
-    var validate    = new Validate(errors);
-    var response    = new Response(errors);
-    var db          = new Database(config.db, errors);
+	var model = {};
 
-    var utility = {
-        security: security,
-        errors: errors,
-        validate: validate,
-        response: response,
-        db: db
-    };
-    return utility;
+    var ModelType = require('./ModelType.js');
+    var type = new ModelType(template.type);
+    model["type"] = type;
+
+    var ModelLabel = require('./ModelLabel.js');
+    var label = ModelLabel(template.label);
+    model["label"] = label;
+
+    var ModelAlias = require('./ModelAlias.js');
+    var alias = ModelAlias(template.alias);
+    model["alias"] = alias;
+
+    var Schema = require('./ModelSchema.js');
+    try {
+        var schema = new Schema(template.attributes);
+        model["schema"] = schema;
+    } catch(e) {
+        throw new Error("Invalid schema for template:\n" + JSON.stringify(template, null, 4) + "\nReason:\n" + e);
+    }
+    console.log("MODEL::: ", model);
+    return model;
 };

@@ -20,11 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function POST(type, label, alias, schema, utility) {
+module.exports = function POST(model, utility) {
 
     var parse = require('co-body');
     var _ = require('lodash');
     var bcrypt = require('co-bcrypt');
+
+    var type = model.type;
+    var label = model.label;
+    var alias = model.alias;
+    var schema = model.schema;
 
     var errors = utility.errors;
     var validate = utility.validate;
@@ -41,7 +46,7 @@ module.exports = function POST(type, label, alias, schema, utility) {
             if (object_test.valid) {
 
                 // BEGIN: User-Specific Logic
-                if(type.user) {
+                if(model.type.user) {
                     // check if username / email already in use
                     var takenErrors = [];
                     var isTaken = false;
@@ -95,7 +100,7 @@ module.exports = function POST(type, label, alias, schema, utility) {
 
                 // Request DB Create Node and Respond Accordingly
                 var create = {};
-                if(type.user) {
+                if(model.type.user) {
                     create = yield db.user_create(object_test.data, label, alias, schema);
                 } else {
                     create = yield db.object_create(object_test.data, label, alias, schema);

@@ -212,8 +212,8 @@ module.exports = function Database(config, errors) {
         // ---------------------------------------------------------------------
         schemaAttributes: function(schema) {
             var attributes = Array();
-            schema.forEach(function(scheme, index) {
-                attributes.push(scheme.attribute);
+            schema.forEach(function(attribute, index) {
+                attributes.push(attribute.name);
             });
             return attributes;
         },

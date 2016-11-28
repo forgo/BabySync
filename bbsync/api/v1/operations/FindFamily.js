@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function FindFamily(utility, userSchema) {
+module.exports = function FindFamily(utility, user) {
 
     // Database Extensions for Complex App Queries
     var dbBabySync = require('../DatabaseBabySync.js')(db);
@@ -41,7 +41,7 @@ module.exports = function FindFamily(utility, userSchema) {
             // Parameter exists in URL
             else {
                 // Validate the email provided
-                var email_test = validate.attribute(userSchema, this.params.email, "email");
+                var email_test = validate.attribute(user.model.schema, this.params.email, "email");
 				if (email_test.valid) {
                     var familyByEmail = yield dbBabySync.family_find(email_test.data);
                     console.log("FAMILY BY EMAIL = ", familyByEmail);

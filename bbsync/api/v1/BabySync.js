@@ -20,84 +20,80 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function BabySync(environment) {
+module.exports = function BabySync(app, utility) {
 
-    // Errors/Validation/Response/Database
-    var Utility     = require('./Utility.js');
-    var utility = new Utility();
+    // API Templates
+    var User            = require('./templates/User.js');
+    var Family          = require('./templates/Family.js');
+    var Parent          = require('./templates/Parent.js');
+    var Activity        = require('./templates/Activity.js');
+    var Baby            = require('./templates/Baby.js');
+    var Timer           = require('./templates/Timer.js');
+    var Geocache        = require('./templates/Geocache.js');
+
+    var Templates = [User, Family, Parent, Activity, Baby, Timer, Geocache];
+
+    // Convert Templates into Middleware
+    var REST            = require('./REST/REST.js');
+    var rest            = new REST(Templates, utility);
+
+    // API Operations
+    var CreateFamily    = require('./operations/CreateFamily.js');
+    var FindFamily      = require('./operations/FindFamily.js');
+    var JoinFamily      = require('./operations/JoinFamily.js');
+    var MergeFamily     = require('./operations/MergeFamily.js');
+    var DetachFamily    = require('./operations/DetachFamily.js');
+    var CreateActivity  = require('./operations/CreateActivity.js');
+    var DeleteActivity  = require('./operations/DeleteActivity.js');
+    var CreateBaby      = require('./operations/CreateBaby.js');
+    var DeleteBaby      = require('./operations/DeleteBaby.js');
+    var CreateTimer     = require('./operations/CreateTimer.js');
+    var DeleteTimer     = require('./operations/DeleteTimer.js');
+
+    // Database Extensions for Complex App Queries
+    var dbBabySync = require('./DatabaseBabySync.js')(utility.db);
+
+    // Convert Operations Into Middleware
+    var createFamily    = new CreateFamily(utility, rest.Parent);
+    var findFamily      = new FindFamily(utility, rest.User);
+    var joinFamily      = new JoinFamily(utility, rest.Parent, rest.Family);
+    var mergeFamily     = new MergeFamily(utility, rest.Parent, rest.Family);
+    var detachFamily    = new DetachFamily(utility, rest.Parent);
+    var createActivity  = new CreateActivity(utility);
+    var deleteActivity  = new DeleteActivity(utility);
+    var createBaby      = new CreateBaby(utility);
+    var deleteBaby      = new DeleteBaby(utility);
+    var createTimer     = new CreateTimer(utility);
+    var deleteTimer     = new DeleteTimer(utility);
 
     // Public/Private Routers
-    var Router = require('koa-router');
-    var public = new Router();
-    var private = new Router();
+    var Router          = require('koa-router');
+    var public          = new Router();
+    var private         = new Router();
 
-    // RESTful User Operations
-    var RESTUser = require('./RESTUser.js');
-    var User = require('./models/User.js');
-    var user = new User(RESTUser, utility);
-
-    // RESTful Model Operations
-    var REST = require('./REST.js');
-    var Family = require('./models/Family.js');
-    var Parent = require('./models/Parent.js');
-    var Activity = require('./models/Activity.js');
-    var Baby = require('./models/Baby.js');
-    var Timer = require('./models/Timer.js');
-    var Geocache = require('./models/Geocache.js');
-    var family = new Family(REST, utility);
-    var parent = new Parent(REST, utility);
-    var activity = new Activity(REST, utility);
-    var baby = new Baby(REST, utility);
-    var timer = new Timer(REST, utility);
-    var geocache = new Geocache(REST, utility);
-
-    // Complex/Derived Operations
-    var CreateFamily = require('./operations/CreateFamily.js');
-    var FindFamily = require('./operations/FindFamily.js');
-    var JoinFamily = require('./operations/JoinFamily.js');
-    var MergeFamily = require('./operations/MergeFamily.js');
-    var DetachFamily = require('./operations/DetachFamily.js');
-    var CreateActivity = require('./operations/CreateActivity.js');
-    var DeleteActivity = require('./operations/DeleteActivity.js');
-    var CreateBaby = require('./operations/CreateBaby.js');
-    var DeleteBaby = require('./operations/DeleteBaby.js');
-    var CreateTimer = require('./operations/CreateTimer.js');
-    var DeleteTimer = require('./operations/DeleteTimer.js');
-    var createFamily = new CreateFamily(utility, parent.schema);
-    var findFamily = new FindFamily(utility, user.schema);
-    var joinFamily = new JoinFamily(utility, parent.schema, family.schema);
-    var mergeFamily = new MergeFamily(utility, parent.schema, family.schema);
-    var detachFamily = new DetachFamily(utility, parent.schema, family.schema);
-    var createActivity = new CreateActivity(utility);
-    var deleteActivity = new DeleteActivity(utility);
-    var createBaby = new CreateBaby(utility);
-    var deleteBaby = new DeleteBaby(utility);
-    var createTimer = new CreateTimer(utility);
-    var deleteTimer = new DeleteTimer(utility);
-
-    // DEVELOPMENT
-    if(environment === 'development') {
+    // DEVELOPMENT ENDPOINTS
+    if(app.env === 'development') {
         public.get('resetDatabase');
     }
-    
-    // PUBLIC
-    public.post('/user', user.post);
-    public.get('/user', user.get);
-    public.get('/user/:id', user.get);
-    public.put('/user', user.put);
-    public.put('/user/:id', user.put);
-    public.del('/user', user.del);
-    public.del('/user/:id', user.del);
+
+    // PUBLIC ENDPOINTS
+    public.post('/user', rest.User.post);
+    public.get('/user', rest.User.get);
+    public.get('/user/:id', rest.User.get);
+    public.put('/user', rest.User.put);
+    public.put('/user/:id', rest.User.put);
+    public.del('/user', rest.User.del);
+    public.del('/user/:id', rest.User.del);
 
     // ---------------------------
     // BabySync Service Operations
     // ---------------------------
-    public.post('/user/auth', user.login);
+    public.post('/user/auth', rest.User.login);
     public.post('/family', createFamily);
 
     // After this point should expect token
     // TODO: move these operations to the private section
-    public.get('/family/find/:email', findFamily);
+    public.get('/family/find/:email',findFamily);
 
     public.put('/family/join/:id', joinFamily);
     public.put('/family/merge/:id', mergeFamily);

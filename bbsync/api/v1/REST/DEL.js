@@ -20,11 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function DEL(type, label, alias, schema, utility) {
+module.exports = function DEL(model, utility) {
 
     var parse = require('co-body');
     var _ = require('lodash');
 
+    var type = model.type;
+    var label = model.label;
+    var alias = model.alias;
+    var schema = model.schema;
+    
     var errors = utility.errors;
     var validate = utility.validate;
     var response = utility.response;
@@ -58,7 +63,7 @@ module.exports = function DEL(type, label, alias, schema, utility) {
                 var existingObject = undefined;
                 var id_test = {};
 
-                if(type.user) {
+                if(model.type.user) {
                     // validate/identify existing user (calls DB)
                     id_test = yield validate.userID(this.params.id, schema, label, alias, schema, db);
                     // user id heuristics should return user object if valid

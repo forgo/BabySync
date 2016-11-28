@@ -20,11 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function PUT(type, label, alias, schema, utility) {
+module.exports = function PUT(model, utility) {
 
     var parse = require('co-body');
     var _ = require('lodash');
     var bcrypt = require('co-bcrypt');
+
+    var type = model.type;
+    var label = model.label;
+    var alias = model.alias;
+    var schema = model.schema;
 
     var errors = utility.errors;
     var validate = utility.validate;
@@ -59,7 +64,7 @@ module.exports = function PUT(type, label, alias, schema, utility) {
                 var existingObject = undefined;
                 var id_test = {};
 
-                if(type.user) {
+                if(model.type.user) {
                     // validate/identify existing user (calls DB)
                     id_test = yield validate.userID(this.params.id, schema, label, alias, schema, db);
                     // user id heuristics should return user object if valid
@@ -95,7 +100,7 @@ module.exports = function PUT(type, label, alias, schema, utility) {
                 object_test = validate.schemaForUpdate(schema, payload);
                 if (object_test.valid) {
 
-                    if(type.user) {
+                    if(model.type.user) {
                         // Is the user trying to change their password?
                         if (object_test.data.password) {
                             // Generate new salt/hash using bcrypt
@@ -114,7 +119,7 @@ module.exports = function PUT(type, label, alias, schema, utility) {
 
                     // Request DB update
                     var objectUpdate = {};
-                    if(type.user) {
+                    if(model.type.user) {
                         objectUpdate = yield db.user_update(existingObject.id, object_test.data, label, alias, schema);
                     } else {
                         objectUpdate = yield db.object_update(existingObject.data.id, object_test.data, label, alias, schema);

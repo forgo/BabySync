@@ -66,11 +66,9 @@ gulp.task('watch', function() {
 });
 
 gulp.task('mocha', function() {
-
-    // Forcing a 1 second delay in mocha task to clean up  async console messages.
+    // Forcing a short delay in mocha task to clean up  async console messages.
     setTimeout(
         function() {
-
             process.env.NODE_ENV = 'test';
             process.env.PORT = 8111;
             gulp.src(['v1/test/test_*.js'])

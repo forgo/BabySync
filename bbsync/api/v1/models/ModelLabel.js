@@ -20,29 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Baby(REST, utility) {
+module.exports = function ModelLabel(label) {
 
-    // ---------------------------------------------------------------------
-    // Baby Validations
-    // ---------------------------------------------------------------------
-    var babyValidate = {
-        name: function() {
-            return utility.validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/);
-        }
-    };
-
-    // ---------------------------------------------------------------------
-    // Baby Schema
-    // ---------------------------------------------------------------------
-    var babySchema = [{
-        attribute: "name",
-        type: "String",
-        required: true,
-        test: babyValidate.name()
-    }];
-
-    var baby = new REST("Baby", "b", babySchema, utility);
-    baby["schema"] = babySchema;
-    baby["validate"] = babyValidate;
-    return baby;
+    // Ensure Unique Label to Prevent Conflicting Dynamic Queries
+    // TODO: gather global list?
+    var modelLabel = label;
+    return modelLabel;
 };

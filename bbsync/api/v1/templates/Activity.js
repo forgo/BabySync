@@ -20,29 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Parent(REST, utility) {
 
-    // ---------------------------------------------------------------------
-    // Parent Validations
-    // ---------------------------------------------------------------------
-    var parentValidate = {
-        name: function() {
-            return utility.validate.regex(/^([a-zA-Z]{2,29})([\s]{1})([a-zA-Z]{2,29})$/);
-        }
-    };
-    
-    // ---------------------------------------------------------------------
-    // Parent Schema
-    // ---------------------------------------------------------------------
-    var parentSchema = [{
-        attribute: "name",
-        type: "String",
-        required: true,
-        test: parentValidate.name()
-    }];
-
-    var parent = new REST("Parent", "p", parentSchema, utility);
-    parent["schema"] = parentSchema;
-    parent["validate"] = parentValidate;
-    return parent;
+module.exports = function Activity(validate) {
+    return {
+        type: "default",
+        label: "Activity",
+        alias: "a",
+        attributes: [
+            {
+                name: "name",
+                type: "String",
+                required: true,
+                test: validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/)
+            },
+            {
+                name: "icon",
+                type: "String",
+                required: true,
+                test: validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/)
+            },
+            {
+                name: "warn",
+                type: "Double",
+                required: true,
+                test: validate.doubleRange({min: 600.0, max: 604800.0})
+            },
+            {
+                name: "critical",
+                type: "Double",
+                required: true,
+                test: validate.doubleRange({min: 600.0, max: 604800.0})
+            }
+        ]
+    }
 };

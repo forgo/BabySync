@@ -20,23 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function StaticContent() {
+module.exports = function StaticContent(config) {
 
     var Q = require('q');
 
     var path = require('path');
     var staticCache = require('koa-static-cache');
 
-    var staticPrefix = "/public";
-
     // Public Static Content Path Constant
-    var publicPath = path.join(__dirname, staticPrefix);
+    console.log("CONFIG: ", config);
+    var publicPath = path.join(__dirname, config.static.prefix);
 
     // Create Promise for Serving Files Without Templating Engine
     var readFilePromise = function(src) {
         var deferred = Q.defer();
         var srcPath = path.join(publicPath, src);
-        fs.readFile(srcPath, {'encoding': 'utf8'}, function(error, data) {
+        fs.readFile(srcPath, {'encoding': config.static.encoding}, function(error, data) {
             if(error) deferred.reject(error);
             else deferred.resolve(data);
         });
@@ -45,19 +44,19 @@ module.exports = function StaticContent() {
 
     var options = {
         dir: publicPath,
-        maxAge: 60 * 60 * 24 * 365,
+        maxAge: config.static.cache.maxAge,
         cacheControl: "",
         buffer: true,
         gzip: true,
         alias: {},
-        prefix: staticPrefix,
+        prefix: config.static.prefix,
         dynamic: true
     };
 
     var files = {};
 
     var staticContent = {
-        cache: staticCache(path.join(__dirname, staticPrefix), options, files),
+        cache: staticCache(path.join(__dirname, config.static.prefix), options, files),
         readFilePromise: readFilePromise
     };
     return staticContent;

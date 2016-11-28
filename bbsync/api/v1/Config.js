@@ -20,26 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Utility(config) {
-
-    var Security    = require('./Security.js');
-    var Errors      = require('./Errors.js');
-    var Validate    = require('./Validate.js');
-    var Response    = require('./Response.js');
-    var Database    = require('./Database.js');
-    
-    var security    = new Security();
-    var errors      = new Errors();
-    var validate    = new Validate(errors);
-    var response    = new Response(errors);
-    var db          = new Database(config.db, errors);
-
-    var utility = {
-        security: security,
-        errors: errors,
-        validate: validate,
-        response: response,
-        db: db
-    };
-    return utility;
+module.exports = function Config() {
+    return {
+        db: "http://neo4j:Tddktlzv@localhost:7474",
+        static: {
+        	prefix: "/public",
+        	encoding: "utf8",
+        	cache: {
+        		maxAge: 60 * 60 * 24 * 365 // 1 year
+        	}
+        }
+    }
 };

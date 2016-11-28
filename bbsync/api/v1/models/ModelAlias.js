@@ -20,29 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Family(REST, utility) {
+module.exports = function ModelAlias(alias) {
 
-    // ---------------------------------------------------------------------
-    // Family Validations
-    // ---------------------------------------------------------------------
-    var familyValidate = {
-        name: function() {
-            return utility.validate.regex(/^[a-zA-Z][a-zA-Z0-9' _]{2,29}$/);
-        }
-    };
-    
-    // ---------------------------------------------------------------------
-    // Family Schema
-    // ---------------------------------------------------------------------
-    var familySchema = [{
-        attribute: "name",
-        type: "String",
-        required: true,
-        test: familyValidate.name()
-    }];
+    // Ensure Unique Alias to Prevent Conflicting Dynamic Queries
+    // TODO: gather global list?
+    var modelAlias = alias;
 
-    var family = new REST("Family", "f", familySchema, utility);
-    family["schema"] = familySchema;
-    family["validate"] = familyValidate;
-    return family;
+    return modelAlias;
 };

@@ -20,9 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function GET(type, label, alias, schema, utility) {
+module.exports = function GET(model, utility) {
 
     var _ = require('lodash');
+
+    var type = model.type;
+    var label = model.label;
+    var alias = model.alias;
+    var schema = model.schema;
 
     var errors = utility.errors;
     var validate = utility.validate;
@@ -37,7 +42,7 @@ module.exports = function GET(type, label, alias, schema, utility) {
             if ((this.params.id == undefined || this.params.id == null) && _.isEmpty(this.query)) {
 
                 var allObjects = {};
-                if(type.user) {
+                if(model.type.user) {
                     // return all users
                     allObjects = yield db.user_all(label, alias, schema);
                 } else {
@@ -54,7 +59,7 @@ module.exports = function GET(type, label, alias, schema, utility) {
             // Parameter exists in URL
             else {
                 var id_test = {};
-                if(type.user) {
+                if(model.type.user) {
                     // validate/identify existing user (calls DB)
                     id_test = yield validate.userID(this.params.id, schema, label, alias, schema, db);
                     // user id heuristics should return user object if valid

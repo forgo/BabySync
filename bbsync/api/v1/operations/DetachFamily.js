@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function DetachFamily(utility, parentSchema, familySchema) {
+module.exports = function DetachFamily(utility, parent) {
 
     // Database Extensions for Complex App Queries
     var dbBabySync = require('../DatabaseBabySync.js')(db);
@@ -37,7 +37,7 @@ module.exports = function DetachFamily(utility, parentSchema, familySchema) {
     	try {
     	    // TODO: Be sure this is being requested by authenticated user w/proper privileges
             var payload = yield parse(this);
-            var parent_test = validate.schemaForAttributes(parentSchema, ["email"], payload);
+            var parent_test = validate.schemaForAttributes(parent.model.schema, ["email"], payload);
             if (parent_test.valid) {
             	// Request DB Family Join
             	var detach = yield dbBabySync.family_detach(parent_test.data.email);

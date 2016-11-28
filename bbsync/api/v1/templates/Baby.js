@@ -20,26 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function Utility(config) {
-
-    var Security    = require('./Security.js');
-    var Errors      = require('./Errors.js');
-    var Validate    = require('./Validate.js');
-    var Response    = require('./Response.js');
-    var Database    = require('./Database.js');
-    
-    var security    = new Security();
-    var errors      = new Errors();
-    var validate    = new Validate(errors);
-    var response    = new Response(errors);
-    var db          = new Database(config.db, errors);
-
-    var utility = {
-        security: security,
-        errors: errors,
-        validate: validate,
-        response: response,
-        db: db
-    };
-    return utility;
+module.exports = function Baby(validate) {
+    return {
+        type: "default",
+        label: "Baby",
+        alias: "b",
+        attributes: [
+            {
+                name: "name",
+                type: "String",
+                required: true,
+                test: validate.regex(/^[a-zA-Z][a-zA-Z0-9_]{2,29}$/)
+            }
+        ]
+    }
 };

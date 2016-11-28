@@ -20,34 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-module.exports = function RESTNew(typeKey, label, alias, schema, utility) {
+module.exports = function ModelType(typeKey) {
 
-    var errors = utility.errors;
-    var validate = utility.validate;
-    var response = utility.response;
-    var db = utility.db;
+    // Ensure Valid Type to Distinguish Special Behaviors in REST Operations
+    var ValidTypes = {default:"default",user:"user",userProxy:"userProxy"};
+    if(!(typeKey in ValidTypes)) {
+        throw new Error('Invalid Model type \"'+type+'\" for \"'+label+'\"'+
+                        '\nValid types: '+Object.keys(ValidTypes).join(", "));
+    }
 
-    var RESTType = require('./RESTType.js');
-    var type = new RESTType(typeKey);
-
-    var POST = require('./POST.js');
-    var GET = require('./GET.js');
-    var PUT = require('./PUT.js');
-    var DEL = require('./DEL.js');
-    var post = new POST(type, label, alias, schema, utility);
-    var get = new GET(type, label, alias, schema, utility);
-    var put = new PUT(type, label, alias, schema, utility);
-    var del = new DEL(type, label, alias, schema, utility);
-
-    var restNew = {
-        login: null,
-        post: post,
-        get: get,
-        put: put,
-        del: del
+    var modelType = {
+        default: typeKey == ValidTypes.default,
+        user: typeKey == ValidTypes.user,
+        userProxy: typeKey == ValidTypes.userProxy
     };
 
-    restNew.login = login;
-
-    return restNew;
+    return modelType;
 };
